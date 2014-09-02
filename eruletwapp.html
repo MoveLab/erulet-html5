@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <title>Erulet</title>
+    <meta charset="UTF-8">
+    <meta Name="description" Content="Erulet HTML5 web application.">
+    <meta HTTP-EQUIV="description" Content="Erulet HTML5 web application.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css">
+    <link rel="stylesheet" href="css/eruletwapp.css">
+    <link rel="apple-touch-icon-precomposed" href="images/ic_launcher.png">
+    <link rel="apple-touch-startup-image" href="images/ic_launcher.png">
+    <link rel="icon" type="image/jpg" href="images/ic_launcher.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
+
+    <script src="js/localization.js"></script>
+</head>
+<body>
+<div data-role="page" id="switchboard" data-theme="b">
+
+    <div data-role="header">
+        <h1 class="localizable" data-lclstring="app_name"></h1>
+    </div><!-- /header -->
+
+    <div data-role="content" role="main" class="ui-content">
+        <div class="switchboard-content-wrapper">
+            <img class="img_center" src="images/ic_erulet_new.png" style="max-height:64px;" >
+            <p class="localizable" data-lclstring="erulet" style="text-align:center;"></p>
+            <p class="localizable" data-lclstring="erulet_lore" style="font-size:12px;"></p>
+
+                <div class="ui-grid-solo"><a href="#user_manual" id="switchboard_button_manual" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-infoicon ui-mini localizable" data-lclstring="user_manual"></a></div>
+                <div class="ui-grid-solo"><a href="#security_recom" id="switchboard_button_security" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-infoicon ui-mini localizable" data-lclstring="security_recomm"></a></div>
+                <div class="ui-grid-solo"><a href="#credits" id="switchboard_button_credits" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-infoicon ui-mini localizable" data-lclstring="credits" ></a></div>
+                <div class="ui-grid-solo"><a href="#trip_select" id="switchboard_button_trip" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="trip_selection"></a></div>
+        </div>
+    </div><!-- /content -->
+
+<!--
+    <div data-role="footer">
+        <h4>My Footer</h4>
+    </div><!-- /footer -->
+
+</div><!-- /page -->
+
+<!-- Start of second page -->
+<div data-role="page" id="user_manual" data-theme="b">
+    <div data-role="header">
+        <h1 class="localizable" data-lclstring="app_name"></h1>
+        <a href="/eruletwapp.html" class="ui-btn-left" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+    </div><!-- /header -->
+</div><!-- End of second page -->
+
+<!-- Start of third page -->
+<div data-role="page" id="security_recom" data-theme="b">
+
+    <div data-role="header">
+        <h1 class="localizable" data-lclstring="app_name"></h1>
+        <a href="/eruletwapp.html" class="ui-btn-left" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+    </div><!-- /header -->
+</div><!-- End of third page -->
+
+<!-- Start of fourth page -->
+<div data-role="page" id="credits" data-theme="b">
+
+    <div data-role="header">
+        <h1 class="localizable" data-lclstring="app_name"></h1>
+        <a href="/eruletwapp.html" class="ui-btn-left" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+    </div><!-- /header -->
+</div><!-- End of fourth page -->
+
+<!-- Start of fifth page -->
+<div data-role="page" id="trip_select" data-theme="b">
+
+    <div data-role="header">
+        <h1 class="localizable" data-lclstring="app_name"></h1>
+        <a href="/eruletwapp.html" class="ui-btn-left" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+    </div><!-- /header -->
+</div><!-- End of fifth page -->
+</body>
+</html>

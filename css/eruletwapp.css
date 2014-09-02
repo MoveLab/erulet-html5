@@ -1,0 +1,22 @@
+.img_center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.ui-icon-infoicon:after { /* For SVG */
+	background-image: url("../icons/ic_info_icon.png");
+}
+/* Fallback */
+.ui-nosvg .ui-icon-infoicon:after {
+	background-image: url("../icons/ic_info_icon.png");
+}
+
+.ui-icon-itineraryicon:after { /* For SVG */
+	background-image: url("../icons/ic_itinerary_icon.png");
+}
+/* Fallback */
+.ui-nosvg .ui-icon-itineraryicon:after {
+	background-image: url("../icons/ic_itinerary_icon.png");
+}

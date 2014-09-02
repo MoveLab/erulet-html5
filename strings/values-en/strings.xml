@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Erulet</string>
+    <string name="current_language">Anglès</string>
+    <string name="action_settings">Settings</string>
+    <string name="internal_message_id">net.movelab.sudeau.internal_message</string>
+    <string name="tracking_notification_initial">Erulet tracking!</string>
+    <string name="tracking_notification_subject">Erulet tracking</string>
+    <string name="tracking_notification">Erulet is tracking your trip.</string>
+    <string name="content_provider_authority_uploadqueue">net.movelab.sudeau.content_provider.uploadqueue</string>
+    <string name="content_provider_authority_fixes">net.movelab.sudeau.content_provider.fixes</string>
+    
+    <string name="trip_option">Tria la opció de ruta que prefereixes:</string>
+    <string name="trip_option_1">Vull visualitzar la ruta, sense fer un seguiment de la meva posició.</string>
+    <string name="trip_option_2">Vull recórrer la ruta, fent un seguiment en tot moment de la meva posició.</string>
+    <string name="trip_option_3">Vull recórrer la ruta, fent un seguiment en tot moment i desar la meva pròpia versió de la ruta.</string>
+    
+    <string name="choose_it_my_itineraries">Els meus itineraris...</string>
+    <string name="choose_it_shared_itineraries">Itineraris compartits...</string>
+    <string name="no_route_selected">No hi ha cap ruta seleccionada; si us plau tria una ruta...</string>
+    
+    <string name="trips">Itineraris</string>
+    <string name="compass">Brúixola</string>
+    
+    <string name="location_not_enabled">La localització del dispositiu no està activada; cal activar-la.</string>
+	<string name="enable_location">Accedir a activar localització</string>
+	
+	<string name="cancel">Cancel·lar</string>
+	<string name="name_null">Nom: no assignat</string>
+	<string name="name">Nom:</string>
+	<string name="point_no_name">El punt no té nom</string>
+	<string name="point_no_description">El punt no té descripció</string>
+	
+	<string name="distance">Distància:  </string>
+	<string name="current_location">Ubicació actual: </string>
+	<string name="destination">Ubicació destí: </string>
+	<string name="bearing">Orientació: </string>
+	<string name="degrees">graus</string>
+	
+	<string name="nav_to_point">Navegació a punt...</string>
+	<string name="dist_undef">Distància: ????</string>
+	<string name="current_location_undef">Ubicació actual: ????</string>
+	<string name="destination_undef">Ubicació destí: ????</string>
+
+	<string name="finish_trip">Finalització d\'itinerari</string>
+	<string name="finish_trip_long">Estàs capturant un itinerari. Si prems el botó \'Stop\', es desarà i tancarà l\'itinerari. Segur que vols acabar l\'itinerari?</string>
+	<string name="finish_trip_leave_long">Estàs capturant una ruta. Si abandones la pantalla de mapa, s\'aturarà la captura i es deixarà la ruta tal com està ara mateix. Confirmes que vols sortir?</string>
+	
+	<string name="yes">Sí</string>
+	<string name="no">No</string>
+	
+	<string name="user_cancel">Cancel·lat per l\'usuari</string>
+	
+	<string name="envir_data">Dades ambientals</string>
+	<string name="interactive_pic">Fotografia interactiva</string>
+	
+	<string name="no_points_in_trip">Encara no hi ha punts a la ruta, espera un moment...</string>
+	<string name="still_lost">No sé on som ... torna-ho a provar en una estoneta</string>
+	
+	<string name="empty_marker">Marcador buit</string>
+	<string name="click_add_data">Fes clic per afegir dades...</string>
+	
+	<string name="temp_marker">Marcador temporal</string> 
+	<string name="add_or_not">Afegim o no?</string>
+	<string name="add_marker_confirm">Vols afegir aquest marcador?</string>
+	
+	<string name="error_gplay_connect">Error en connexió a serveis de Google Play</string>
+	<string name="follow_trip">Seguiment itinerari...</string>
+	
+	<string name="date">Data: </string>
+	<string name="latitude">Latitud: </string>
+	<string name="latitude_short">Lat: </string>
+	<string name="longitude">Longitud: </string>
+	<string name="longitude_short">Long: </string>
+	<string name="altitude">Altitud: </string>
+	
+	<string name="error_video_capture">Error capturant video...</string>
+	<string name="error_image_capture">Error capturant imatge...</string>
+
+	<string name="add_info_point">Afegir informació a punt...</string>
+	<string name="point_name">Nom del punt: </string>
+	<string name="description">Descripció: </string>
+	<string name="add_image_video">Afegir imatge o capturar video:</string>
+	<string name="image">Imatge</string>
+	<string name="video">Video</string>
+	<string name="nothing">Res</string>
+	<string name="save">Desar</string>
+	
+	<string name="save_succesful">Canvis desats amb èxit...</string>
+	
+	<string name="trip_data_edition">Edició de dades de la ruta...</string>
+	<string name="total_distance">Distància total</string>
+	<string name="total_time">Temps total</string>
+	<string name="points_number">Número punts</string>
+    <string name="points_of_interest_number">Número punts interès</string>
+    <string name="slope">Desnivell</string>
+    <string name="trip_name">Nom de la ruta: </string>
+    <string name="trip_name_comp">Nom de la ruta</string>
+    <string name="trip_name_hint">Un nom curt, fàcil de reconèixer</string>
+    <string name="trip_description">Descripció de la ruta: </string>
+    <string name="trip_description_comp">Descripció de la ruta</string>
+    <string name="trip_description_hint">Una descripció més llarga</string>
+    
+    <string name="restart_needed">S\'ha canviat l\'idioma de l\'aplicació. Per tal que els canvis tinguin efecte, cal reiniciar.</string>
+    <string name="restart_now">Reiniciar ara?</string>
+    
+    <string name="preferences">Preferències</string>
+    <string name="language">Idioma:</string>
+    <string name="lang_ca">Català</string>
+    <string name="lang_gsc_es">Aranès</string>
+    <string name="lang_es_es">Castellà</string>
+    <string name="lang_en">Anglès</string>
+    <string name="lang_fr">Francès</string>
+    <string name="lang_device">Usar l\'idioma del dispositiu</string>
+    
+    <string name="you_are_here_exp">Ets aquí!</string>
+    <string name="more_or_less_par">(més o menys)</string>
+    
+    <string name="confirm_delete">Confirmar esborrat...</string>
+    <string name="about_to_delete">S\'esborrarà la ruta:</string>
+    <string name="really_continue">Segur que vols continuar?</string>
+    
+    <string name="my_itineraries">Els meus itineraris...</string>
+    <string name="shared_itineraries">Itineraris compartits...</string>
+    
+    <string name="no_data_access">No tens accés a dades.</string>
+    <string name="already_registered">Ja estàs registrat.</string>
+    <string name="register_user">Registrar usuari</string>
+    
+    <string name="erulet">Erulet</string>
+    <string name="erulet_lore">És un personatge de la mitologia aranesa. És un follet que viu amagat als boscos, i representa l’esperit de la Natura. Aquesta aplicació permet a Erulet introduïr-se en el vostre dispositiu, i guiar-vos al llarg de diversos itineraris en espais naturals en els que l’aigua és protagonista.</string>
+    <string name="user_manual">Manual d\'ús</string>
+    <string name="security_recomm">Normes de comportament i recomanacions de seguretat</string>
+    <string name="credits">Crèdits</string>
+    <string name="trip_selection">Selecció d\'Itineraris</string>
+    
+    <string name="finish_edit_trip_leave_long">S\'han modificat les dades de l\'itinerari, vols desar els canvis?</string>
+    <string name="finish_edit_trip">Edició d\'itinerari</string>
+    <string name="point_type">Tipus de punt:</string>
+    <string name="point_type_waypoint">Punt de ruta</string>
+    <string name="point_type_poi">Punt d\'interès</string>
+    <string name="point_type_alert">Alerta</string>
+    
+    <string name="trip_start">Inici ruta</string>
+    <string name="trip_end">Fi ruta</string>    
+    
+    <string name="your_rating">La teva valoració</string>
+    <string name="global_rating">Valoració global</string>
+    <string name="detail_highlight">Vista de detall</string>
+    
+    <string name="meters">metres</string>
+    <string name="kilometers">kilòmetres</string>
+    <string name="hour">hora</string>
+    <string name="hours">hores</string>
+    <string name="minutes">minuts</string>
+    <string name="seconds">segons</string>
+    <string name="avg_speed">Velocitat mitjana</string>
+    <string name="avg_distance_samples">Distància mitjana entre mostres</string>
+	<string name="info">Informació</string>
+	
+	<string name="location">Ubicació:</string>
+</resources>
