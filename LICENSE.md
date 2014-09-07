@@ -1,6 +1,6 @@
-Code uses <a href="https://stuk.github.io/jszip/">JSZip</a> from Stuart Knightley for handle ZIP files,
+<p>Code uses <a href="https://stuk.github.io/jszip/">JSZip</a> from Stuart Knightley for handle ZIP files,
 <a href="https://github.com/ismyrnow/Leaflet.functionaltilelayer">Leaflet.functionaltilelayer</a> from Ishmael Smyrnow for
-handling the offline layer and <a href="http://pouchdb.com/">PouchDBr</a> for storing tiles offline.
+handling the offline layer and <a href="http://pouchdb.com/">PouchDBr</a> for storing tiles offline.</p>
 
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
