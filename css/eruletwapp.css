@@ -4,6 +4,9 @@
     margin-right: auto;
 }
 
+#map {
+    height: 500px;
+}
 
 .ui-icon-infoicon:after { /* For SVG */
 	background-image: url("../icons/ic_info_icon.png");

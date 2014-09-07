@@ -160,4 +160,12 @@
 	<string name="info">Informació</string>
 	
 	<string name="location">Ubicació:</string>
+
+
+    <string name="home">Home</string>
+    <string name="dl_r1">Download route #1</string>
+    <string name="dl_r2">Download route #2</string>
+    <string name="dl_r3">Download route #3</string>
+    <string name="dl_clear">Clean data</string>
+    <string name="offline_advice">To use the offline layer, please download first one of these routes</string>
 </resources>

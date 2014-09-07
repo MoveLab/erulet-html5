@@ -153,4 +153,11 @@
 	<string name="info">Informació</string>
 	
 	<string name="location">Ubicació:</string>
+
+    <string name="home">Inici</string>
+    <string name="dl_r1">Descarrega ruta 1</string>
+    <string name="dl_r2">Descarrega ruta 2</string>
+    <string name="dl_r3">Descarrega ruta 3</string>
+    <string name="dl_clear">Neteja dades</string>
+    <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
 </resources>

@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css">
     <link rel="stylesheet" href="css/eruletwapp.css">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link rel="apple-touch-icon-precomposed" href="images/ic_launcher.png">
     <link rel="apple-touch-startup-image" href="images/ic_launcher.png">
     <link rel="icon" type="image/jpg" href="images/ic_launcher.png">
@@ -16,7 +17,22 @@
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
 
-    <script src="js/localization.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="js/leaflet.functionaltilelayer.js"></script>
+
+    <script src="js/jszip.min.js"></script>
+    <script type="text/javascript" src="js/jszip-utils.min.js"></script>
+    <!--
+    Mandatory in IE 6, 7, 8 and 9.
+    -->
+    <!--[if IE]>
+    <script type="text/javascript" src="js/jszip-utils-ie.min.js"></script>
+    <![endif]-->
+
+    <script src="js/pouchdb-3.0.4.min.js"></script>
+    <script src="js/offlinemaps.js"></script>
+    <script src="js/localizandroid.js"></script>
+    <script src="js/global.js"></script>
 </head>
 <body>
 <div data-role="page" id="switchboard" data-theme="b">
@@ -75,9 +91,35 @@
 <div data-role="page" id="trip_select" data-theme="b">
 
     <div data-role="header">
-        <h1 class="localizable" data-lclstring="app_name"></h1>
-        <a href="/eruletwapp.html" class="ui-btn-left" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
-    </div><!-- /header -->
+        <h1 class="localizable" data-lclstring="trips"></h1>
+        <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+    </div><!-- /header --><div id="imgBox">
+</div>
+    <p class="localizable" data-lclstring="offline_advice"></p>
+    <div data-role="controlgroup" data-type="horizontal">
+        <button id="dl_r1" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r1"></button>
+        <button id="dl_r2" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r2" disabled></button>
+        <button id="dl_r3" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r3" disabled></button>
+        <button id="dl_clear" class="ui-btn ui-mini localizable" data-lclstring="dl_clear"></button>
+        <script>
+        $("#dl_r1").click(function(e) {
+            $.mobile.loading("show", {
+                text: "downloading files",
+                textVisible: true,
+                theme: "b",
+                html: ""
+            });
+           getBundleFile("/vielha");
+        });
+        $("#dl_clear").click(function(e) {
+           deleteDB();
+        });
+
+    </script>
+    </div>
+
+    <div id="map"></div>
+
 </div><!-- End of fifth page -->
 </body>
 </html>
