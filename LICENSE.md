@@ -1,6 +1,10 @@
-<p>Code uses <a href="https://stuk.github.io/jszip/">JSZip</a> from Stuart Knightley for handle ZIP files,
-<a href="https://github.com/ismyrnow/Leaflet.functionaltilelayer">Leaflet.functionaltilelayer</a> from Ishmael Smyrnow for
-handling the offline layer and <a href="http://pouchdb.com/">PouchDBr</a> for storing tiles offline.</p>
+Code uses [JSZip][link_jszip] from Stuart Knightley for handle ZIP files,
+[Leaflet.functionaltilelayer][link_leafunc] from Ishmael Smyrnow for
+handling the offline layer and [PouchDB][link_pouch] for storing tiles offline.
+
+[link_jszip]: http://stuk.github.io/jszip/
+[link_leafunc]: https://github.com/ismyrnow/Leaflet.functionaltilelayer
+[link_pouch]: http://pouchdb.com
 
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
