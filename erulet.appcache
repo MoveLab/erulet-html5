@@ -1,0 +1,35 @@
+CACHE MANIFEST
+# v0 - 2014-09-17
+
+# Local
+/eruletwapp.html
+css/eruletwapp.css
+js/leaflet.functionaltilelayer.js
+js/localizandroid.js
+js/offlinemaps.js
+js/pouchdb-3.0.4.min.js
+js/jszip.min.js
+js/jszip-utils.min.js
+js/jszip-utils-ie.min.js
+strings/values-ca/strings.xml
+strings/values-oc/strings.xml
+strings/values-fr/strings.xml
+strings/values-es/strings.xml
+strings/values-en/strings.xml
+
+icons/ic_info_icon.png
+icons/ic_itinerary_icon.png
+
+images/ic_erulet_new.png
+images/ic_launcher.png
+images/ajax-loader.gif
+
+# From CDN
+http://code.jquery.com/jquery-1.11.1.min.js
+http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js
+http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css
+http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js
+http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css
+
+FALLBACK:
+/ offline.html
