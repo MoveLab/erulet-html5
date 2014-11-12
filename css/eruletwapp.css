@@ -17,9 +17,25 @@
 }
 
 .ui-icon-itineraryicon:after { /* For SVG */
-	background-image: url("../icons/ic_itinerary_icon.png");
+	background-image: url("../icons/ic_route_select.png");
 }
 /* Fallback */
 .ui-nosvg .ui-icon-itineraryicon:after {
-	background-image: url("../icons/ic_itinerary_icon.png");
+	background-image: url("../icons/ic_route_select.png");
+}
+
+.ui-icon-creditsicon:after { /* For SVG */
+	background-image: url("../icons/ic_credits.png");
+}
+/* Fallback */
+.ui-nosvg .ui-icon-creditsicon:after {
+	background-image: url("../icons/ic_credits.png");
+}
+
+.ui-icon-referenceicon:after { /* For SVG */
+	background-image: url("../icons/ic_reference.png");
+}
+/* Fallback */
+.ui-nosvg .ui-icon-referenceicon:after {
+	background-image: url("../icons/ic_reference.png");
 }

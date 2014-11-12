@@ -1,12 +1,16 @@
 CACHE MANIFEST
-# v0 - 2014-09-17
+# v1 - 2014-11-12
 
 # Local
 /eruletwapp.html
 css/eruletwapp.css
+css/jquery.mobile.structure-1.4.3.min.css
+css/jquery.mobile.theme-1.4.3.min.css
+css/leaflet.css
 js/leaflet.functionaltilelayer.js
 js/localizandroid.js
 js/offlinemaps.js
+js/utils.js
 js/pouchdb-3.0.4.min.js
 js/jszip.min.js
 js/jszip-utils.min.js
@@ -17,12 +21,51 @@ strings/values-fr/strings.xml
 strings/values-es/strings.xml
 strings/values-en/strings.xml
 
-icons/ic_info_icon.png
-icons/ic_itinerary_icon.png
-
-images/ic_erulet_new.png
-images/ic_launcher.png
+html/about_ca.html
+html/about_es.html
+html/about_oc.html
+html/about_fr.html
+html/about_en.html
+html/before_leaving_ca.html
+html/before_leaving_es.html
+html/before_leaving_oc.html
+html/before_leaving_fr.html
+html/before_leaving_en.html
+html/manual_ca.html
+html/manual_es.html
+html/manual_oc.html
+html/manual_fr.html
+html/manual_en.html
 images/ajax-loader.gif
+images/erulet_stone.png
+images/ic_erulet_new.png
+images/launcher200.png
+icons/ic_credits.png
+icons/ic_info_icon.png
+icons/ic_reference.png
+icons/ic_route_select.png
+static/frontulet/icons/before_leaving/environment.png
+static/frontulet/icons/before_leaving/safety.png
+static/frontulet/icons/before_leaving/sat.png
+static/frontulet/icons/manual/add_info.png
+static/frontulet/icons/manual/alert.png
+static/frontulet/icons/manual/compass.png
+static/frontulet/icons/manual/delete.png
+static/frontulet/icons/manual/edit.png
+static/frontulet/icons/manual/point_of_interest.png
+static/frontulet/icons/manual/stop.png
+static/frontulet/icons/manual/upload.png
+static/frontulet/icons/manual/waypoint.png
+static/frontulet/icons/manual/where.png
+static/frontulet/icons/erulet_stone.png
+static/frontulet/icons/ic_erulet_new.png
+static/frontulet/icons/launcher200.png
+static/frontulet/logos/ajuntament.jpg
+static/frontulet/logos/ceab-uab-creaf.jpg
+static/frontulet/logos/logoLOOP.png
+static/frontulet/logos/movelab.jpg
+static/frontulet/logos/SUDEAU2blue.jpg
+static/frontulet/logos/sudeu.jpg
 
 # From CDN
 http://code.jquery.com/jquery-1.11.1.min.js

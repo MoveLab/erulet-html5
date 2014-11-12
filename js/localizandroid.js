@@ -8,7 +8,12 @@
 
 
 $(function() {
-	
+	$.mobile.loading("show", {
+                        text: "initializing",
+                        textVisible: true,
+                        theme: "b",
+                        html: ""
+                    });
 	// Configure the following variables to your needs
     var AVAILABLE_CODES = new Array("oc","ca", "en", "es");
     var DEFAULT_CODE = "en";
@@ -39,6 +44,7 @@ $(function() {
                         $(this).html(text);
                     }
                 });
+                $.mobile.loading('hide');
             });
             $(xml).find('string-array').each(function() { //Parse string arrays
                 var pos = $.inArray($(this).attr('name'), ARRAY_NAMES);
@@ -54,9 +60,9 @@ $(function() {
                         }
 
                     });
+                    $.mobile.loading('hide');
                 }
             });
-
         }
     });
 });
