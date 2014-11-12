@@ -118,7 +118,21 @@
         <button id="dl_r1" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r1"></button>
         <button id="dl_r2" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r2" disabled></button>
         <button id="dl_r3" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r3" disabled></button>
-        <button id="dl_clear" class="ui-btn ui-mini localizable" data-lclstring="dl_clear"></button>
+        <!--<button id="dl_clear" class="ui-btn ui-mini localizable" data-lclstring="dl_clear"></button>-->
+        <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-mini localizable" data-lclstring="dl_clear"></a>
+
+
+
+        <div data-role="popup" id="popupDialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+            <div data-role="header" data-theme="a">
+                <h1 class="localizable" data-lclstring="app_name">Erulet</h1>
+            </div>
+            <div role="main" class="ui-content">
+                <h3 class="ui-title localizable" data-lclstring="confirm_delete"></h3>
+                <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="cancel" data-rel="back">Cancel</a>
+                <a href="#" id="dl_clear" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="yes" data-rel="back" data-transition="flow">Delete</a>
+            </div>
+        </div>
         <script>
         $("#dl_r1").click(function(e) {
             if (navigator.onLine) {         // No internet, can't download
@@ -136,13 +150,13 @@
         });
         $("#dl_clear").click(function(e) {
            deleteDB();
+           $.mobile.navigate("#switchboard");
         });
 
         </script>
-
         <div data-role="popup" id="popupNoInternet" data-overlay-theme="b" data-theme="b" style="max-width:400px;">
             <div data-role="header" data-theme="b">
-                <h1>Erulet</h1>
+                <h1 class="localizable" data-lclstring="app_name">Erulet</h1>
             </div>
             <div role="main" class="ui-content">
                 <p class="localizable" data-lclstring="no_data_access"></p>

@@ -195,7 +195,7 @@ function deleteDB() {
     console.log("offlinemaps.js: deleteDB()");
     DB.destroy(function(err, info) {
        if(err) {
-           alert("Could not delete DB: ", info);
+           alert("Could not delete DB: ", err);
            throw err;
        }
        else {
@@ -203,16 +203,6 @@ function deleteDB() {
            manifest = null;
        }
     });
-    /*PouchDB.destroy(dbname, function(err, info) {
-        if(err) {
-            alert("Could not delete DB: ", info);
-            throw err;
-        }
-        else {
-            console.log("Database deleted");
-            manifest = null;
-        }
-    });*/
 }
 
 function putImage(name, blob) {
