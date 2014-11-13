@@ -29,7 +29,7 @@
     <script type="text/javascript" src="js/jszip-utils-ie.min.js"></script>
     <![endif]-->
 
-    <script src="js/pouchdb-3.0.4.min.js"></script>
+    <script src="js/pouchdb-3.1.0.min.js"></script>
     <script src="js/offlinemaps.js"></script>
     <script src="js/localizandroid.js"></script>
     <script src="js/utils.js"></script>
@@ -133,6 +133,7 @@
                 <a href="#" id="dl_clear" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="yes" data-rel="back" data-transition="flow">Delete</a>
             </div>
         </div>
+
         <script>
         $("#dl_r1").click(function(e) {
             if (navigator.onLine) {         // No internet, can't download
@@ -145,10 +146,12 @@
                getBundleFile("/vielha");
            }
            else {
+                $('#popupNoInternet').popup();
                 $('#popupNoInternet').popup('open');
            }
         });
         $("#dl_clear").click(function(e) {
+            e.preventDefault(); // it's an anchor
            deleteDB();
            $.mobile.navigate("#switchboard");
         });

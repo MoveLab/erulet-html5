@@ -1,164 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ Loco xml export: Android string resources
+ Project: Eth Holet
+ Release: Working copy
+ Locale: es_ES, Spanish
+ Tagged: Android String File
+ Exported by: John Palmer
+ Exported at: Fri, 31 Oct 2014 19:01:05 +0000
+-->
 <resources>
-
-    <string name="app_name">Erulet</string>
-    <string name="current_language">Castellà</string>
-    <string name="action_settings">Ajustos</string>
-    <string name="internal_message_id">net.movelab.sudeau.internal_message</string>
-    <string name="tracking_notification_initial">Erulet et guia!</string>
-    <string name="tracking_notification_subject">Erulet et guia</string>
-    <string name="tracking_notification">Erulet està guiant el teu trajecte.</string>
-    <string name="content_provider_authority_uploadqueue">net.movelab.sudeau.content_provider.uploadqueue</string>
+    <string name="about_to_delete">Se borrará la ruta:</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="add_image_video">Añadir imagen o capturar vídeo:</string>
+    <string name="add_info_point">Añadir información a punto...</string>
+    <string name="add_marker_confirm">¿Quieres añadir este marcador?</string>
+    <string name="add_or_not">¿Añadimos o no?</string>
+    <string name="already_registered">Ya estás registrado/a.</string>
+    <string name="altitude">Altitud:</string>
+    <string name="app_name">Eth Holet</string>
+    <string name="avg_distance_samples">Distancia media entre muestras</string>
+    <string name="avg_speed">Velocidad media</string>
+    <string name="bearing">Orientación:</string>
+    <string name="cancel">Cancelar</string>
+    <string name="choose_it_my_itineraries">Mis itinerarios...</string>
+    <string name="choose_it_shared_itineraries">Itinerarios compartidos...</string>
+    <string name="click_add_data">Haz clic para añadir datos...</string>
+    <string name="compass">Brújula</string>
+    <string name="confirm_delete">Confirmar borrado...</string>
     <string name="content_provider_authority_fixes">net.movelab.sudeau.content_provider.fixes</string>
-    
-    <string name="trip_option">Tria la opció de ruta que prefereixes:</string>
-    <string name="trip_option_1">Vull visualitzar la ruta, sense fer un seguiment de la meva posició.</string>
-    <string name="trip_option_2">Vull recórrer la ruta, fent un seguiment en tot moment de la meva posició.</string>
-    <string name="trip_option_3">Vull recórrer la ruta, fent un seguiment en tot moment i desar la meva pròpia versió de la ruta.</string>
-    
-    <string name="choose_it_my_itineraries">Els meus itineraris...</string>
-    <string name="choose_it_shared_itineraries">Itineraris compartits...</string>
-    <string name="no_route_selected">No hi ha cap ruta seleccionada; si us plau tria una ruta...</string>
-    
-    <string name="trips">Itineraris</string>
-    <string name="compass">Brúixola</string>
-    
-    <string name="location_not_enabled">La localització del dispositiu no està activada; cal activar-la.</string>
-	<string name="enable_location">Accedir a activar localització</string>
-	
-	<string name="cancel">Cancel·lar</string>
-	<string name="name_null">Nom: no assignat</string>
-	<string name="name">Nom:</string>
-	<string name="point_no_name">El punt no té nom</string>
-	<string name="point_no_description">El punt no té descripció</string>
-	
-	<string name="distance">Distància:  </string>
-	<string name="current_location">Ubicació actual: </string>
-	<string name="destination">Ubicació destí: </string>
-	<string name="bearing">Orientació: </string>
-	<string name="degrees">graus</string>
-	
-	<string name="nav_to_point">Navegació a punt...</string>
-	<string name="dist_undef">Distància: ????</string>
-	<string name="current_location_undef">Ubicació actual: ????</string>
-	<string name="destination_undef">Ubicació destí: ????</string>
-
-	<string name="finish_trip">Finalització d\'itinerari</string>
-	<string name="finish_trip_long">Estàs capturant un itinerari. Si prems el botó \'Stop\', es desarà i tancarà l\'itinerari. Segur que vols acabar l\'itinerari?</string>
-	<string name="finish_trip_leave_long">Estàs capturant una ruta. Si abandones la pantalla de mapa, s\'aturarà la captura i es deixarà la ruta tal com està ara mateix. Confirmes que vols sortir?</string>
-	
-	<string name="yes">Sí</string>
-	<string name="no">No</string>
-	
-	<string name="user_cancel">Cancel·lat per l\'usuari</string>
-	
-	<string name="envir_data">Dades ambientals</string>
-	<string name="interactive_pic">Fotografia interactiva</string>
-	
-	<string name="no_points_in_trip">Encara no hi ha punts a la ruta, espera un moment...</string>
-	<string name="still_lost">No sé on som ... torna-ho a provar en una estoneta</string>
-	
-	<string name="empty_marker">Marcador buit</string>
-	<string name="click_add_data">Fes clic per afegir dades...</string>
-	
-	<string name="temp_marker">Marcador temporal</string> 
-	<string name="add_or_not">Afegim o no?</string>
-	<string name="add_marker_confirm">Vols afegir aquest marcador?</string>
-	
-	<string name="error_gplay_connect">Error en connexió a serveis de Google Play</string>
-	<string name="follow_trip">Seguiment itinerari...</string>
-	
-	<string name="date">Data: </string>
-	<string name="latitude">Latitud: </string>
-	<string name="latitude_short">Lat: </string>
-	<string name="longitude">Longitud: </string>
-	<string name="longitude_short">Long: </string>
-	<string name="altitude">Altitud: </string>
-	
-	<string name="error_video_capture">Error capturant video...</string>
-	<string name="error_image_capture">Error capturant imatge...</string>
-
-	<string name="add_info_point">Afegir informació a punt...</string>
-	<string name="point_name">Nom del punt: </string>
-	<string name="description">Descripció: </string>
-	<string name="add_image_video">Afegir imatge o capturar video:</string>
-	<string name="image">Imatge</string>
-	<string name="video">Video</string>
-	<string name="nothing">Res</string>
-	<string name="save">Desar</string>
-	
-	<string name="save_succesful">Canvis desats amb èxit...</string>
-	
-	<string name="trip_data_edition">Edició de dades de la ruta...</string>
-	<string name="total_distance">Distància total</string>
-	<string name="total_time">Temps total</string>
-	<string name="points_number">Número punts</string>
-    <string name="points_of_interest_number">Número punts interès</string>
-    <string name="slope">Desnivell</string>
-    <string name="trip_name">Nom de la ruta: </string>
-    <string name="trip_name_comp">Nom de la ruta</string>
-    <string name="trip_name_hint">Un nom curt, fàcil de reconèixer</string>
-    <string name="trip_description">Descripció de la ruta: </string>
-    <string name="trip_description_comp">Descripció de la ruta</string>
-    <string name="trip_description_hint">Una descripció més llarga</string>
-    
-    <string name="restart_needed">S\'ha canviat l\'idioma de l\'aplicació. Per tal que els canvis tinguin efecte, cal reiniciar.</string>
-    <string name="restart_now">Reiniciar ara?</string>
-    
-    <string name="preferences">Preferències</string>
-    <string name="language">Idioma:</string>
-    <string name="lang_ca">Català</string>
-    <string name="lang_gsc_es">Aranès</string>
-    <string name="lang_es_es">Castellà</string>
-    <string name="lang_en">Anglès</string>
-    <string name="lang_fr">Francès</string>
-    <string name="lang_device">Usar l\'idioma del dispositiu</string>
-    
-    <string name="you_are_here_exp">Ets aquí!</string>
-    <string name="more_or_less_par">(més o menys)</string>
-    
-    <string name="confirm_delete">Confirmar esborrat...</string>
-    <string name="about_to_delete">S\'esborrarà la ruta:</string>
-    <string name="really_continue">Segur que vols continuar?</string>
-    
-    <string name="my_itineraries">Els meus itineraris...</string>
-    <string name="shared_itineraries">Itineraris compartits...</string>
-    
-    <string name="no_data_access">No tens accés a dades.</string>
-    <string name="already_registered">Ja estàs registrat.</string>
-    <string name="register_user">Registrar usuari</string>
-    
-    <string name="erulet">Erulet</string>
-    <string name="erulet_lore">És un personatge de la mitologia aranesa. És un follet que viu amagat als boscos, i representa l’esperit de la Natura. Aquesta aplicació permet a Erulet introduïr-se en el vostre dispositiu, i guiar-vos al llarg de diversos itineraris en espais naturals en els que l’aigua és protagonista.</string>
-    <string name="user_manual">Manual d\'ús</string>
-    <string name="security_recomm">Normes de comportament i recomanacions de seguretat</string>
-    <string name="credits">Crèdits</string>
-    <string name="trip_selection">Selecció d\'Itineraris</string>
-    
-    <string name="trip_start">Inici ruta</string>
-    <string name="trip_end">Fi ruta</string>
-	
-    <string name="your_rating">La teva valoració</string>
-    <string name="global_rating">Valoració global</string>
-    <string name="detail_highlight">Vista de detall</string>
-    
-    <string name="meters">metres</string>
-    <string name="kilometers">kilòmetres</string>
+    <string name="content_provider_authority_uploadqueue">net.movelab.sudeau.content_provider.uploadqueue</string>
+    <string name="credits">Créditos</string>
+    <string name="current_language">Por defecto</string>
+    <string name="current_location">Ubicación actual:</string>
+    <string name="current_location_undef">Ubicación actual: ????</string>
+    <string name="date">Fecha:</string>
+    <string name="degrees">grados</string>
+    <string name="description">Descripción:</string>
+    <string name="destination">Ubicación destino:</string>
+    <string name="destination_undef">Ubicación destino: ????</string>
+    <string name="detail_highlight">Vista de detalle</string>
+    <string name="discard_trip">Eliminar ruta</string>
+    <string name="dist_undef">Distancia: ????</string>
+    <string name="distance">Distancia:</string>
+    <string name="empty_marker">Marcador vacío</string>
+    <string name="enable_location">Acceder a activar localización</string>
+    <string name="envir_data">Datos ambientales</string>
+    <string name="error_gplay_connect">Error en la conexión a servicios de Google Play</string>
+    <string name="error_image_capture">Error capturando imagen...</string>
+    <string name="error_video_capture">Error capturando el vídeo...</string>
+    <string name="erulet">Eth Holet</string>
+    <string name="erulet_lore">Eth Holet (pronunciación: er-ulet) es un personaje de la mitología aranesa. Es un duende que vive escondido en los bosques, y representa el espíritu de la Naturaleza. Esta aplicación permite a Eth Holet introducirse en vuestro dispositivo, y guiaros a lo largo de varios itinerarios en espacios naturales en los que el agua es protagonista.</string>
+    <string name="finish_edit_trip">Edición de itinerario</string>
+    <string name="finish_edit_trip_leave_long">Se han modificado los datos del itinerario, ¿quieres guardar los cambios?</string>
+    <string name="finish_trip">Finalización del itinerario</string>
+    <string name="finish_trip_leave_long">Estás capturando una ruta. Si abandonas la pantalla de mapa, se detendrá la captura y se quedará la ruta tal y como está ahora mismo. ¿Confirmas que quieres salir?</string>
+    <string name="finish_trip_long">Estás capturando un itinerario. Si pulsas el botón \'Stop\', se guardará y cerrará el itinerario. ¿Seguro que quieres acabar el itinerario?</string>
+    <string name="follow_trip">Seguimiento itinerario...</string>
+    <string name="global_rating">Valoración global</string>
     <string name="hour">hora</string>
-    <string name="hours">hores</string>
-    <string name="minutes">minuts</string>
-    <string name="seconds">segons</string>
-    <string name="avg_speed">Velocitat mitjana</string>
-    <string name="avg_distance_samples">Distància mitjana entre mostres</string>
-    <string name="info">Informació</string>
-    
-    <string name="location">Ubicació:</string>
-
-    <!-- HTML5 strings -->
-    <string name="home">Inici</string>
-    <string name="dl_r1">Descarrega ruta 1</string>
-    <string name="dl_r2">Descarrega ruta 2</string>
-    <string name="dl_r3">Descarrega ruta 3</string>
-    <string name="dl_clear">Neteja dades</string>
-    <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
+    <string name="hours">horas</string>
+    <string name="image">Imagen</string>
+    <string name="info">Información</string>
+    <string name="interactive_pic">Fotografía interactiva</string>
+    <string name="internal_message_id">net.movelab.sudeau.internal_message</string>
+    <string name="kilometers">kilómetros</string>
+    <string name="lang_ca">Català</string>
+    <string name="lang_device">Usar el idioma del dispositivo</string>
+    <string name="lang_en">English</string>
+    <string name="lang_es_es">Español</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_gsc_es">Aranes</string>
+    <string name="language">Idioma:</string>
+    <string name="latitude">Latitud:</string>
+    <string name="latitude_short">Lat:</string>
+    <string name="location">Ubicación:</string>
+    <string name="location_not_enabled">La localización del dispositivo no está activada; hay que activarla.</string>
+    <string name="longitude">Longitud:</string>
+    <string name="longitude_short">Long:</string>
+    <string name="meters">metros</string>
+    <string name="minutes">minutos</string>
+    <string name="more_or_less_par">(más o menos)</string>
+    <string name="my_itineraries">Mis itinerarios...</string>
+    <string name="name">Nombre:</string>
+    <string name="name_null">Nombre: no asignado</string>
+    <string name="nav_to_point">Navegación a punto...</string>
+    <string name="no">No</string>
+    <string name="no_data_access">No tienes acceso a los datos</string>
+    <string name="no_points_in_trip">Todavía no hay puntos en la ruta, espera un momento...</string>
+    <string name="no_route_selected">No se ha seleccionado ningún itinerario; por favor, escoge uno...</string>
+    <string name="nothing">Nada</string>
+    <string name="point_name">Nombre del punto:</string>
+    <string name="point_no_description">El punto no tiene descripción</string>
+    <string name="point_no_name">El punto no tiene nombre</string>
+    <string name="point_type">Tipo de punto:</string>
+    <string name="point_type_alert">Alerta</string>
+    <string name="point_type_poi">Punto de interés</string>
+    <string name="point_type_waypoint">Punto de ruta</string>
+    <string name="points_number">Número puntos</string>
+    <string name="points_of_interest_number">Número puntos interés</string>
+    <string name="preferences">Preferencias</string>
+    <string name="really_continue">¿Seguro que quieres continuar?</string>
+    <string name="register_user">Registrar usuario/a</string>
+    <string name="restart_needed">Se ha cambiado el idioma de la aplicación. Para que los cambios tengan efecto hace falta reiniciar.</string>
+    <string name="restart_now">¿Reiniciar ahora?</string>
+    <string name="save">Guardar</string>
+    <string name="save_succesful">Cambios guardados con éxito...</string>
+    <string name="seconds">segundos</string>
+    <string name="security_recomm">Antes de salir</string>
+    <string name="shared_itineraries">Itinerarios compartidos...</string>
+    <string name="slope">Desnivel</string>
+    <string name="still_lost">No sé donde estamos... vuelve a probar en un ratito</string>
+    <string name="temp_marker">Marcador temporal</string>
+    <string name="total_distance">Distancia total</string>
+    <string name="total_time">Tiempo total</string>
+    <string name="tracking_notification">Eth Holet está siguiendo tu ruta</string>
+    <string name="tracking_notification_initial">¡Eth Holet está rastreando!</string>
+    <string name="tracking_notification_subject">Eth Holet está rastreando</string>
+    <string name="trip_data_edition">Edición de datos de la ruta...</string>
+    <string name="trip_description">Descripción de la ruta:</string>
+    <string name="trip_description_comp">Descripción de la ruta</string>
+    <string name="trip_description_hint">Una descripción más larga</string>
+    <string name="trip_end">Final ruta</string>
+    <string name="trip_name">Nombre de la ruta:</string>
+    <string name="trip_name_comp">Nombre de la ruta</string>
+    <string name="trip_name_hint">Un nombre corto, fácil de reconocer</string>
+    <string name="trip_option">Escoge la opción de ruta que prefieres:</string>
+    <string name="trip_option_1">Quiero visualizar la ruta.</string>
+    <string name="trip_option_2">Quiero recorrer la ruta.</string>
+    <string name="trip_option_3">Quiero recorrer la ruta, haciendo un seguimiento en todo momento y guardar mi propia versión de la ruta.</string>
+    <string name="trip_selection">Selección de itinerarios</string>
+    <string name="trip_start">Inicio ruta</string>
+    <string name="trip_statistics">Estadísticas de la ruta</string>
+    <string name="trip_with_less_than_2_steps">La ruta que has grabado tiene menos de 2 puntos. ¿Seguro que quieres guardarla?¿O quieres descartarla?</string>
+    <string name="trips">Itinerarios</string>
+    <string name="user_cancel">Cancelado por el usuario/a</string>
+    <string name="user_manual">Manual de uso</string>
+    <string name="video">Vídeo</string>
+    <string name="yes">Sí</string>
+    <string name="you_are_here_exp">¡Estás aquí!</string>
+    <string name="your_rating">Tu valoración</string>
 </resources>

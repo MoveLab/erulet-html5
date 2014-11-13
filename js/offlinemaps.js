@@ -40,7 +40,10 @@ $(document).on('pageshow', '#trip_select', function() {
 
 function openDB() {
     console.log("offlinemaps.js: openDB()");
-    DB = new PouchDB(dbname);
+    DB = new PouchDB(dbname, {adapter: 'websql'});
+    if (!DB.adapter) { // websql not supported by this browser
+      DB = new PouchDB(dbname);
+    }
     DB.get("MANIFEST", function(err,doc) {
         if(err) {
             console.warn("Manifest fetch error: ", err.error, " reason: ", err.reason, " status: ", err.status);
@@ -69,17 +72,25 @@ function dbMap(map) {
     var offlineLayer = new L.TileLayer.Functional(function(view) {
         var deferred = new jQuery.Deferred();
         var id = view.zoom + "/" + view.tile.column + "/" + view.tile.row + ".png";
-        DB.get(id, function(err, response) {
+        DB.getAttachment(id, id+'/pic', function(err, response) {
             if(err) {
-                console.warn("Couldn't find tile");
+                console.warn("Couldn't find tile" + id);
             }
             else {
-                console.log("Got " + response._id);
-                //var blob = new Blob(response.data, {type:"image/png"});
-                //var imgURL = window.URL.createObjectURL(blob);
-                var imgURL = response.data;
-                deferred.resolve(imgURL);
-                URL.revokeObjectURL(imgURL);
+
+                var reader = new FileReader();
+                reader.addEventListener("loadend", function() {
+                   // reader.result contains the contents of blob as a typed array
+
+                    //console.log("Got " + reader.result);
+                    //var blob = new Blob(response.data, {type:"image/png"});
+                    //var imgURL = window.URL.createObjectURL(blob);
+                    var imgURL = reader.result;
+
+                    deferred.resolve(imgURL);
+                    URL.revokeObjectURL(imgURL);
+                });
+                reader.readAsDataURL(response);
             }
         });
         return deferred;
@@ -131,7 +142,7 @@ function parseManifest(zip) {
        html: ""
     });
     var data = $.parseJSON(zip.file(manifestURL).asBinary());
-    console.log("offlinemaps.js: Route parsed: ", data.path);
+    console.log("offlinemaps.js: Map parsed: ", data.title);
     manifest = data;
     DB.put({_id: "MANIFEST", data: manifest}, function(err, response) {
         if(err) {
@@ -140,7 +151,7 @@ function parseManifest(zip) {
             throw err;
         }
         else {
-            console.log("saved: ", response.id + " rev: " + response.rev);
+            //console.log("saved: ", response.id + " rev: " + response.rev);
             fillDB(zip);
         }
     });
@@ -160,32 +171,40 @@ function fillDB(zip) {
         return;
     }
     else {
-        console.log("Fetching tiles");
-        $.each(zip.files, function() {
+        var count = manifest.files;
+        var i = 0;
+        console.log("Fetching " + manifest.files + " tiles");
+        $.each(zip.files, function(index, value) {
+            console.log(index + " - " + value);
             var file = this;//zip.file(this.path);
             if(file.name.indexOf("png")!=-1) {  // avoid folders, not needed
-                var blob = "data:" + manifest.imageType +";base64," + JSZip.base64.encode(file.asBinary());
-                //putImage(file.name, blob);
+                var blob = /*"data:" + manifest.imageType +";base64," +*/ JSZip.base64.encode(file.asBinary());
 
-                /*
-                *  TODO: WE MUST INSERT PNGs AS ATTACHMENTS (putImage()). FIX THIS ASAP
-                *
-                */
-                DB.put({_id:file.name, data:blob}, function(err, response) {
+                DB.put({_id:file.name/*, data:blob*/}, function(err, response) {
                     if(err) {
                         alert(err);
                         $.mobile.loading("hide");
                         throw err;
                     }
                     else {
-                        //console.log("saved: ", response.id + " rev: " + response.rev);
-                     //   fillDB(zip);
+                        //putImage(response.id, response.rev, blob);
 
-                        $.mobile.loading("hide");
+                        //DB.putAttachment(name, name + '/pic', rev, blob, manifest.imageType,  function(err, response) {
+                        DB.putAttachment(response.id, response.id + '/pic', response.rev, blob, manifest.imageType,  function(err, response) {
+                            if(err) {
+                                alert(err);
+                                $.mobile.loading("hide");
+                                throw err;
+                            }
+                            else {
+                                i = i+1;
+                                console.log("saved: ",response.id+ " rev: "+ response.rev  + " count: " + i);
+                                if(i==count) { $.mobile.loading("hide"); }
+                            }
+                        });
                     }
                 });
             }
-
         });
     }
 }
@@ -205,8 +224,8 @@ function deleteDB() {
     });
 }
 
-function putImage(name, blob) {
-    DB.putAttachment(name + '/pic', blob, manifest.imageType,  function(err, response) {
+function putImage(name, rev, blob) {
+    DB.putAttachment(name, name + '/pic', rev, blob, manifest.imageType,  function(err, response) {
         if(err) {
             alert(err);
             $.mobile.loading("hide");
