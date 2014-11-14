@@ -35,6 +35,29 @@ $(document).on('pageshow', '#trip_select', function() {
         openDB();
         dbMap(map);
     }
+
+    // Handle buttons
+    $("#dl_r1").click(function(e) {
+        if (navigator.onLine) {         // No internet, can't download
+            $.mobile.loading("show", {
+                text: "downloading files",
+                textVisible: true,
+                theme: "b",
+                html: ""
+            });
+           getBundleFile("/vielha");
+       }
+       else {
+            $('#popupNoInternet').popup();
+            $('#popupNoInternet').popup('open');
+       }
+    });
+    $("#dl_clear").click(function(e) {
+        e.preventDefault(); // it's an anchor
+       deleteDB();
+       $.mobile.navigate("#switchboard");
+    });
+
 });
 
 
@@ -146,7 +169,13 @@ function parseManifest(zip) {
     manifest = data;
     DB.put({_id: "MANIFEST", data: manifest}, function(err, response) {
         if(err) {
-            alert(err);
+            if(err.status==500) {
+                $('#popupDataPresent').popup();
+                $('#popupDataPresent').popup('open');
+            }
+            else {
+                alert(err);
+            }
             $.mobile.loading("hide");
             throw err;
         }

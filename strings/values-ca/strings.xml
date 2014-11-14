@@ -148,4 +148,6 @@
     <string name="dl_r3">Descarrega ruta 3</string>
     <string name="dl_clear">Neteja dades</string>
     <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
+    <string name="data_present">Aquesta ruta ja és present al dispositiu, no cal descarregar-la</string>
+
 </resources>

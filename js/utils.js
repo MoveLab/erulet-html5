@@ -1,3 +1,12 @@
+/*$( document ).on( "pageshow", "#switchboard", function( event ) {
+    $.mobile.loading("show", {
+           text: "parsing files",
+           textVisible: true,
+           theme: "b",
+           html: ""
+        });
+});*/
+
 $(document).ready( function() {
 
     // Load file
