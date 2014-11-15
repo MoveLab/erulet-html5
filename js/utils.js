@@ -44,3 +44,36 @@ $(document).ready( function() {
     });
 
 });
+
+$(document).on("pageshow", "#trip_select", function() {
+    console.log("Retrieving routes...");
+    $.mobile.loading("show", {
+       text: "retrieving routes",
+       textVisible: true,
+       theme: "b",
+       html: ""
+    });
+    $.ajax({
+        type: "GET",
+        url: HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES,
+        //crossDomain: true,
+        //withCredentials: true,
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", HOLETSERVER_AUTHORIZATION);
+        },
+        success: function(data) {
+            var count = data.length;
+            var lang = getLanguage();
+            console.log("Fetched " + count + " elements: " );
+            console.log(data);
+            $(data).each(function(index, value) {
+                console.log(index + ". " + value.server_id + " - " +value["name_"+lang]);
+                $("#routeButtons").append('<button id="dl_' + (index+1) + '" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini" >' + value["name_"+lang] + '</button>');
+                if(index<=count) { $.mobile.loading("hide"); }
+            });
+        },
+        error: function(error) {
+            console.log("ERROR: " + error.responseText);
+        }
+    });
+});
