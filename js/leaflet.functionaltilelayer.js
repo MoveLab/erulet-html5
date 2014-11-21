@@ -18,14 +18,16 @@ L.TileLayer.Functional = L.TileLayer.extend({
       se = crs.project(map.unproject(sePoint, zoom)),
       bbox = [nw.x, se.y, se.x, nw.y].join(',');
 
+      //console.log((this._getWrapTileNum().y-tilePoint.y-1) + " - " + tilePoint.y);
+
     // Setup object to send to tile function.
     var view = {
       bbox: bbox,
       width: tileSize,
       height: tileSize,
       zoom: zoom,
-      tile: {
-        row: this.options.tms ? this._tileNumBounds.max.y - tilePoint.y : tilePoint.y,
+      tile: {   // Commented row because it's the only way to get it work
+        row: /*this.options.tms ? this._getWrapTileNum().y - tilePoint.y-1 :*/ tilePoint.y,
         column: tilePoint.x
       },
       subdomain: this._getSubdomain(tilePoint)

@@ -1,8 +1,10 @@
-Code uses [JSZip][link_jszip] from Stuart Knightley for handle ZIP files,
-[Leaflet.functionaltilelayer][link_leafunc] from Ishmael Smyrnow for
-handling the offline layer and [PouchDB][link_pouch] for storing tiles offline.
+Code uses [Leaflet.functionaltilelayer][link_leafunc] from Ishmael Smyrnow for
+handling the offline layer, [sql.js][link_sqljs] from Alon Zakai for reading
+.mbtiles files, [L.Grid][link_lgrid] from Jan Pieter Waagmeester for showing a
+ reference grid on Leaflet, and [PouchDB][link_pouch] for storing tiles offline.
 
-[link_jszip]: http://stuk.github.io/jszip/
+[link_lgrid]: https://github.com/jieter/Leaflet.Grid
+[link_sqljs]: https://github.com/kripken/sql.js
 [link_leafunc]: https://github.com/ismyrnow/Leaflet.functionaltilelayer
 [link_pouch]: http://pouchdb.com
 

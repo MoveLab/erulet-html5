@@ -17,23 +17,18 @@
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
 
+    <!--<script>L_PREFER_CANVAS = true;</script>-->
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="js/leaflet.functionaltilelayer.js"></script>
-
-    <script src="js/jszip.min.js"></script>
-    <script type="text/javascript" src="js/jszip-utils.min.js"></script>
-    <!--
-    Mandatory in IE 6, 7, 8 and 9.
-    -->
-    <!--[if IE]>
-    <script type="text/javascript" src="js/jszip-utils-ie.min.js"></script>
-    <![endif]-->
+    <script src="js/L.Grid.js"></script>
 
     <script src="js/pouchdb-3.1.0.min.js"></script>
     <script src="js/offlinemaps.js"></script>
     <script src="js/localizandroid.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/global.js"></script>
+    <script src="js/sql.js"></script> <!-- load asynchronous to avoid UI freeze (it takes over 2 seconds to load) -->
+
 </head>
 <body>
 <div data-role="page" id="switchboard" data-theme="b">
@@ -115,8 +110,8 @@
 </div>
     <p class="localizable" data-lclstring="offline_advice"></p>
     <div data-role="controlgroup" id="routeButtons">
-        <!--<button id="dl_r1" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r1"></button>
-        <button id="dl_r2" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r2" disabled></button>
+        <button id="dl_r0" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButtons" data-mapid="58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles">Test</button>
+        <!--<button id="dl_r2" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r2" disabled></button>
         <button id="dl_r3" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r3" disabled></button>
         -->
         <!--<button id="dl_clear" class="ui-btn ui-mini localizable" data-lclstring="dl_clear"></button>-->
@@ -151,7 +146,7 @@
         </div>
         <div role="main" class="ui-content">
             <h3 class="ui-title localizable" data-lclstring="data_present"></h3>
-            <a href="#" id="dataPresentButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="si" data-rel="back">OK</a>
+            <a href="#" id="dataPresentButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
         </div>
     </div>
     <div id="map"></div>

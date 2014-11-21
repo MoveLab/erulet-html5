@@ -39,3 +39,9 @@
 .ui-nosvg .ui-icon-referenceicon:after {
 	background-image: url("../icons/ic_reference.png");
 }
+
+.leaflet-grid-label .lng {
+    margin-left: 8px;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}

@@ -4,17 +4,11 @@ CACHE MANIFEST
 # Local
 /eruletwapp.html
 css/eruletwapp.css
-css/jquery.mobile.structure-1.4.3.min.css
-css/jquery.mobile.theme-1.4.3.min.css
-css/leaflet.css
 js/leaflet.functionaltilelayer.js
 js/localizandroid.min.js
 js/offlinemaps.js
 js/utils.js
 js/pouchdb-3.1.0.min.js
-js/jszip.min.js
-js/jszip-utils.min.js
-js/jszip-utils-ie.min.js
 strings/values-ca/strings.xml
 strings/values-oc/strings.xml
 strings/values-fr/strings.xml

@@ -56,24 +56,59 @@ $(document).on("pageshow", "#trip_select", function() {
     $.ajax({
         type: "GET",
         url: HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES,
-        //crossDomain: true,
-        //withCredentials: true,
+        crossDomain: true,
+        withCredentials: true,
+        //headers: { Authorization: HOLETSERVER_AUTHORIZATION },
         beforeSend: function(request) {
             request.setRequestHeader("Authorization", HOLETSERVER_AUTHORIZATION);
         },
         success: function(data) {
             var count = data.length;
             var lang = getLanguage();
-            console.log("Fetched " + count + " elements: " );
-            console.log(data);
+            //console.log("Fetched " + count + " elements: " );
+            //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
+            //console.table(data  );
             $(data).each(function(index, value) {
-                console.log(index + ". " + value.server_id + " - " +value["name_"+lang]);
-                $("#routeButtons").append('<button id="dl_' + (index+1) + '" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini" >' + value["name_"+lang] + '</button>');
-                if(index<=count) { $.mobile.loading("hide"); }
+                /*console.log(index + ". " + value.server_id + " - " +value["name_"+lang]);
+                console.log(value.map.map_file_name);*/
+                $("#routeButtons").append('<button id="dl_r' + (index+1) + '" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButton" data-mapid="' + value.map.map_file_name + '">' + value["name_"+lang] + '</button>');
+
             });
         },
         error: function(error) {
-            console.log("ERROR: " + error.responseText);
+            //console.log(error);
+            alert("ERROR: Probably a CORS issue");
+            $.mobile.loading("hide");
         }
+    }).done( function() {
+        $.mobile.loading("hide");
+        setUpButtons(); });
     });
-});
+
+function setUpButtons() {
+
+    $(".routeButton").click(function(e) {
+    //$("#dl_r1").click(function(e) {
+        if (navigator.onLine) {         // No internet, can't download
+            $.mobile.loading("show", {
+                text: "downloading files",
+                textVisible: true,
+                theme: "b",
+                html: ""
+            });
+           //getBundleFile("/vielha");
+           //var filename = $("#dl_r1").data('mapid');
+           var filename = $(this).data('mapid');
+           //We'll use zip to avoid 5 mb quota limit of localStorage
+           //filename = filename.replace('.mbtiles', '.mbtiles.zip');
+           //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
+           getBundleFile(filename);
+       }
+       else {
+            $('#popupNoInternet').popup();
+            $('#popupNoInternet').popup('open');
+       }
+    });
+
+
+}
