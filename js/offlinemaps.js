@@ -136,10 +136,10 @@ function initMap() {
     map = L.map('map',{
         maxZoom: maxZ,
         minZoom: minZ,
-        zoom: maxZ-4,
+        zoom: maxZ,
         layers: [onlineLayer],
         center: [0.802911, 42.707002]
-    }).setView(new L.LatLng(42.707002, 0.802911), maxZ-4);
+    }).setView(new L.LatLng(42.707002, 0.802911), maxZ-8);
 
     baseMaps = {
         "Online": onlineLayer

@@ -1,11 +1,5 @@
-/*$( document ).on( "pageshow", "#switchboard", function( event ) {
-    $.mobile.loading("show", {
-           text: "parsing files",
-           textVisible: true,
-           theme: "b",
-           html: ""
-        });
-});*/
+var routesData = null;
+var lang = getLanguage();
 
 $(document).ready( function() {
 
@@ -64,16 +58,17 @@ $(document).on("pageshow", "#trip_select", function() {
         },
         success: function(data) {
             var count = data.length;
-            var lang = getLanguage();
             //console.log("Fetched " + count + " elements: " );
             //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
             //console.table(data  );
             $(data).each(function(index, value) {
-                /*console.log(index + ". " + value.server_id + " - " +value["name_"+lang]);
-                console.log(value.map.map_file_name);*/
-                //$("#routeButtons").append('<button id="dl_r' + (index+1) + '" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButton" data-mapid="' + value.map.map_file_name + '">' + value["name_"+lang] + '</button>');
                 $("#selectRoutes").append("<option value='"+(index+1)+"' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
+
+                // Show routes on the map
+                L.marker(new L.LatLng(value.track.steps[0].latitude, value.track.steps[0].longitude)).addTo(map)
+                    .bindPopup("<b>" + value["name_"+lang] + "</b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
             });
+            routesData = data;
         },
         error: function(error) {
             //console.log(error);
@@ -89,6 +84,18 @@ function setUpButtons() {
 
     $("#selectRoutes").change(function() {
         if($("#selectRoutes :selected").text()!="") {
+            var mapID = $("#selectRoutes :selected").data('mapid');
+            var position = $("#selectRoutes").val()-1;
+            // Define message
+            $("#routeDescription").html(routesData[position]["description_"+lang]);
+
+            $("#popupRoute").popup();
+            $("#popupRoute").popup('open');
+        }
+    });
+
+    $("#routeSelect").click(function(e) {
+        if($("#selectRoutes :selected").text()!="") {
             if (navigator.onLine) {         // No internet, can't download
                 $.mobile.loading("show", {
                     text: "downloading files",
@@ -96,8 +103,6 @@ function setUpButtons() {
                     theme: "b",
                     html: ""
                 });
-               //getBundleFile("/vielha");
-               //var filename = $("#dl_r1").data('mapid');
                var filename = $("#selectRoutes :selected").data('mapid');
                //We'll use zip to avoid 5 mb quota limit of localStorage
                //filename = filename.replace('.mbtiles', '.mbtiles.zip');
@@ -110,6 +115,10 @@ function setUpButtons() {
            }
        }
     });
+
+    if(DEBUG) {
+        $('#routeButtons').append("<button id='dl_r0' class='ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButtons' data-mapid='58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles'>Test</button>");
+    }
 /*
     $(".routeButton").click(function(e) {
     //$("#dl_r1").click(function(e) {

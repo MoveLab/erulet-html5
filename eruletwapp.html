@@ -7,8 +7,8 @@
     <meta HTTP-EQUIV="description" Content="Erulet HTML5 web application.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css">
-    <link rel="stylesheet" href="css/eruletwapp.css">
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="css/eruletwapp.css">
     <link rel="apple-touch-icon-precomposed" href="images/ic_launcher.png">
     <link rel="apple-touch-startup-image" href="images/ic_launcher.png">
     <link rel="icon" type="image/jpg" href="images/ic_launcher.png">
@@ -118,7 +118,7 @@
         </div>
     </form>
     <div data-role="controlgroup" id="routeButtons">
-        <button id="dl_r0" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButtons" data-mapid="58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles">Test</button>
+
         <!--<button id="dl_r2" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r2" disabled></button>
         <button id="dl_r3" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r3" disabled></button>
         -->
@@ -127,7 +127,18 @@
 
     </div>
     <!-- Popups -->
-    <div data-role="popup" id="popupDialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+    <div data-role="popup" id="popupRoute" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+        <div data-role="header" data-theme="a">
+            <h1 class="localizable" data-lclstring="trip_description"></h1>
+        </div>
+        <div role="main" class="ui-content">
+            <h5 class="ui-title" id="routeDescription"></h5>
+            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="cancel" data-rel="back">Cancel</a>
+            <a href="#" id="routeSelect" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="yes" data-rel="back" data-transition="flow">Delete</a>
+        </div>
+    </div>
+
+    <div data-role="popup" id="popupDialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:500px;">
         <div data-role="header" data-theme="a">
             <h1 class="localizable" data-lclstring="app_name">Erulet</h1>
         </div>

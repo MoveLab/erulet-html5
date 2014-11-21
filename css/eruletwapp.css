@@ -45,3 +45,12 @@
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
 }
+.leaflet-popup-content p {
+	margin: 18px 0;
+	color: black;
+}
+.leaflet-popup-content b {
+	margin: 18px 0;
+	font-style: bold;
+	color: black;
+}
