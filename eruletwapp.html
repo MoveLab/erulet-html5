@@ -108,7 +108,15 @@
         <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
     </div><!-- /header --><div id="imgBox">
 </div>
-    <p class="localizable" data-lclstring="offline_advice"></p>
+    <!--<p class="localizable" data-lclstring="offline_advice"></p>-->
+    <form>
+        <div class="ui-field-container">
+            <label for="selectRoutes" class="localizable" data-lclstring="offline_advice"></label>
+            <select name="selectroutes" id="selectRoutes">
+                <option value=""></option>
+            </select>
+        </div>
+    </form>
     <div data-role="controlgroup" id="routeButtons">
         <button id="dl_r0" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButtons" data-mapid="58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles">Test</button>
         <!--<button id="dl_r2" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini localizable" data-lclstring="dl_r2" disabled></button>

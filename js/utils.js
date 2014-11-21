@@ -71,8 +71,8 @@ $(document).on("pageshow", "#trip_select", function() {
             $(data).each(function(index, value) {
                 /*console.log(index + ". " + value.server_id + " - " +value["name_"+lang]);
                 console.log(value.map.map_file_name);*/
-                $("#routeButtons").append('<button id="dl_r' + (index+1) + '" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButton" data-mapid="' + value.map.map_file_name + '">' + value["name_"+lang] + '</button>');
-
+                //$("#routeButtons").append('<button id="dl_r' + (index+1) + '" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButton" data-mapid="' + value.map.map_file_name + '">' + value["name_"+lang] + '</button>');
+                $("#selectRoutes").append("<option value='"+(index+1)+"' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
             });
         },
         error: function(error) {
@@ -87,6 +87,30 @@ $(document).on("pageshow", "#trip_select", function() {
 
 function setUpButtons() {
 
+    $("#selectRoutes").change(function() {
+        if($("#selectRoutes :selected").text()!="") {
+            if (navigator.onLine) {         // No internet, can't download
+                $.mobile.loading("show", {
+                    text: "downloading files",
+                    textVisible: true,
+                    theme: "b",
+                    html: ""
+                });
+               //getBundleFile("/vielha");
+               //var filename = $("#dl_r1").data('mapid');
+               var filename = $("#selectRoutes :selected").data('mapid');
+               //We'll use zip to avoid 5 mb quota limit of localStorage
+               //filename = filename.replace('.mbtiles', '.mbtiles.zip');
+               //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
+               getBundleFile(filename);
+           }
+           else {
+                $('#popupNoInternet').popup();
+                $('#popupNoInternet').popup('open');
+           }
+       }
+    });
+/*
     $(".routeButton").click(function(e) {
     //$("#dl_r1").click(function(e) {
         if (navigator.onLine) {         // No internet, can't download
@@ -109,6 +133,6 @@ function setUpButtons() {
             $('#popupNoInternet').popup('open');
        }
     });
-
+*/
 
 }
