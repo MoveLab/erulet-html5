@@ -1,4 +1,4 @@
-// offlinemaps.js for jQuery Mobile
+// OFFMAP_NAME + " for jQuery Mobile
 //
 // Copyright (c) 2014 Jordi López
 // MIT License - http://opensource.org/licenses/mit-license.php
@@ -6,7 +6,7 @@
 /* Leaflet map with an offline layer created from a MBTiles file
 */
 
-var OFFMAP_NAME = "offlinemaps_new.js";
+var OFFMAP_NAME = "offlinemaps.js";
 console.log(OFFMAP_NAME + ": Initializing");
 
 var dbname = "offmaps";
@@ -19,39 +19,28 @@ var maxZ = 18;
 var minZ = 0;
 var lat, lon, latt, lonn, compos, str;
 var imgType;
+var markers = new L.FeatureGroup();
 
 var map;
 var onlineLayer, offlineLayer;
 var baseMaps, baseOverlay;
 var control;
 
-$(document).on('pageshow', '#trip_select', function() {
-//function initMaps() {
+$(document).on('pagechange', function() {
+
+    // Make sure controls are visible
+    $("#routeControls").show("slow");
+
+
     // try to load cached map
     openDB();
+
     initMap();
 
-    $("#dl_r0").click(function(e) {
-        if (navigator.onLine) {         // No internet, can't download
-            $.mobile.loading("show", {
-                text: "downloading files",
-                textVisible: true,
-                theme: "b",
-                html: ""
-            });
-           //getBundleFile("/vielha");
-           //var filename = $("#dl_r1").data('mapid');
-           var filename = $(this).data('mapid');
-           //We'll use zip to avoid 5 mb quota limit of localStorage
-           //filename = filename.replace('.mbtiles', '.mbtiles.zip');
-           //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
-           getBundleFile(filename);
-       }
-       else {
-            $('#popupNoInternet').popup();
-            $('#popupNoInternet').popup('open');
-       }
-    });
+});
+
+$(document).on('pageinit', '#trip_select', function() {
+
 
     // Handle clear button
     $("#dl_clear").click(function(e) {
@@ -60,6 +49,19 @@ $(document).on('pageshow', '#trip_select', function() {
        $.mobile.navigate("#switchboard");
     });
 
+
+});
+
+$(document).on('pageshow', '#trip_select', function() {
+    // Workaround to show loading dialog (can't be used on document.ready()
+    if(Object.keys(markers["_layers"]).length==0) {
+        $.mobile.loading("show", {
+          text: "retrieving routes",
+          textVisible: true,
+          theme: "b",
+          html: ""
+        });
+   }
 });
 
 
@@ -92,7 +94,7 @@ function getBundleFile(path) {
     console.log(OFFMAP_NAME + ": opening + "+ path);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'route_maps/'+path, true);
+    xhr.open('GET', mapsURL+path, true);
     xhr.responseType = 'arraybuffer';
 
     xhr.onload = function(e) {
@@ -138,8 +140,8 @@ function initMap() {
         minZoom: minZ,
         zoom: maxZ,
         layers: [onlineLayer],
-        center: [0.802911, 42.707002]
-    }).setView(new L.LatLng(42.707002, 0.802911), maxZ-8);
+        center: [42.7019600 , 0.7955600]
+    }).setView(new L.LatLng(42.7019600 , 0.7955600), maxZ-8);
 
     baseMaps = {
         "Online": onlineLayer
@@ -150,10 +152,16 @@ function initMap() {
     };
     control = L.control.layers(baseMaps, baseOverlay);
     control.addTo(map);
+
+    // Make sure markers appear (in case we set them up before)
+    markers.addTo(map);
 }
 
 function addDBMap() {
     console.log(OFFMAP_NAME + ": addDBMap()");
+
+    markers.addTo(map);
+
     maxZ = sqlite.exec("SELECT max(zoom_level) FROM tiles")[0].values[0];
     minZ = sqlite.exec("SELECT min(zoom_level) FROM tiles")[0].values[0];
 
@@ -208,8 +216,21 @@ function addDBMap() {
     control.addTo(map);
 }
 
+function addMarkerWithPopup(latlng, popupElement) {
+    console.log(OFFMAP_NAME + ": addMarkerWithPopup()");
+    var marker = L.marker(latlng)
+        .bindPopup(popupElement);
+    markers.addLayer(marker);
+}
+
+function removeMarkers() {
+    console.log(OFFMAP_NAME + ": removeMarkers()");
+    //markers.clearLayers();
+    map.removeLayer(markers);
+}
+
 function deleteDB() {
-    console.log("offlinemaps.js: deleteDB()");
+    console.log(OFFMAP_NAME + ": deleteDB()");
     DB.destroy(function(err, info) {
        if(err) {
            alert("Could not delete DB: ", err);
