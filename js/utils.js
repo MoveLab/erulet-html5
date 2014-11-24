@@ -1,6 +1,28 @@
 var routesData = null;
 var lang = getLanguage();
 
+// Icon data
+var mapMarkerIcon = L.icon({
+    iconUrl: 'icons/ic_map_marker.png',
+    iconRetinaUrl: 'icons/ic_map_marker.png',
+    iconSize: [53, 53],
+    iconAnchor: [26, 52],
+    popupAnchor: [0, -54],
+   // shadowUrl: 'my-icon-shadow.png',
+   // shadowRetinaUrl: 'my-icon-shadow@2x.png',
+   // shadowSize: [68, 95],
+    //shadowAnchor: [22, 94]
+});
+
+var waypointIcon = L.icon({
+    iconUrl: 'icons/pin_chart.png',
+    iconRetinaUrl: 'icons/pin_chart.png',
+    iconSize: [53, 81],
+    iconAnchor: [26, 80],
+    popupAnchor: [0, -76],
+});
+
+// Methods
 $(document).ready( function() {
 
     // Load file

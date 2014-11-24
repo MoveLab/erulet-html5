@@ -20,6 +20,8 @@ var minZ = 0;
 var lat, lon, latt, lonn, compos, str;
 var imgType;
 var markers = new L.FeatureGroup();
+var markersHLT = new L.FeatureGroup();
+var polyline;
 
 var map;
 var onlineLayer, offlineLayer;
@@ -58,18 +60,45 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
        removeMarkers();
 
        if(routesData) {
-            var steps = routesData[localStorage.getItem("selectedRoute")].track.steps;
+            if(polyline) {map.removeLayer(polyline)};
+            console.log("Route selected: " + localStorage.getItem("selectedRoute"));
+            var step = routesData[localStorage.getItem("selectedRoute")].track.steps;
+            var highlights = [];
+            var steps = [];
             var latlngs = [];
-            console.log(steps);
-            $(steps).each(function(index, value) {
+            step.sort(function(a,b){return a.order-b.order});
+            $(step).each(function(index, value) {
                 if(value.order!=null) {
+                    steps[steps.length] = value;
                     latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
                 }
+                else {
+                    highlights[highlights.length] = value;
+                }
             });
+            localStorage.setItem("selectedRoute_steps", steps);
+            localStorage.setItem("selectedRoute_highlights", highlights);
             //console.log(latlngs);
-            latlngs.sort(function(a,b){return a.order-b.order});
-            var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+            //console.log(latlngs);
+            polyline = L.polyline(latlngs, {color: POLYLINE_DEFAULT_COLOR, opacity: POLYLINE_DEFAULT_OPACITY}).addTo(map);
             map.fitBounds(polyline.getBounds());
+
+            $(highlights).each(function(index, value) {
+                console.log(value.highlights[0].type);
+                var mIcon = waypointIcon;
+                switch(value.highlights[0].type) {
+                    case 0:
+                        icon = mapMarkerIcon;
+                        break;
+                    case 1:
+                        icon = waypointIcon;
+                        break;
+                }
+
+                var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+                markersHLT.addLayer(marker);
+            });
+            markersHLT.addTo(map);
        }
     });
 
@@ -205,12 +234,14 @@ function initMap() {
 
     // Make sure markers appear (in case we set them up before)
     markers.addTo(map);
+    markersHLT.addTo(map);
 }
 
 function addDBMap() {
     console.log(OFFMAP_NAME + ": addDBMap()");
 
     markers.addTo(map);
+    markersHLT.addTo(map);
 
     maxZ = sqlite.exec("SELECT max(zoom_level) FROM tiles")[0].values[0];
     minZ = sqlite.exec("SELECT min(zoom_level) FROM tiles")[0].values[0];
@@ -268,7 +299,7 @@ function addDBMap() {
 
 function addMarkerWithPopup(latlng, popupElement) {
     console.log(OFFMAP_NAME + ": addMarkerWithPopup()");
-    var marker = L.marker(latlng)
+    var marker = L.marker(latlng, {icon: mapMarkerIcon})
         .bindPopup(popupElement);
     markers.addLayer(marker);
 }
@@ -277,6 +308,7 @@ function removeMarkers() {
     console.log(OFFMAP_NAME + ": removeMarkers()");
     //markers.clearLayers();
     map.removeLayer(markers);
+    map.removeLayer(markersHLT);
 }
 
 function deleteDB() {
@@ -293,9 +325,14 @@ function deleteDB() {
     });
 }
 
-function openRouteDescription(mapID, arrayPosition) {
+function openRouteDescription(mapID, arrayPosition, serverid) {
+    console.log(OFFMAP_NAME + ": openRouteDescription()");
     // Define message
     $("#routeDescription").html(routesData[arrayPosition]["description_"+lang]);
+
+    // Store selected route ID on routesData array and server ID
+    localStorage.setItem("selectedRoute", arrayPosition);
+    localStorage.setItem("selectedRoute_serverid", serverid);
 
     // Define mapid
     $("#routeSelect").data('mapid', mapID);
@@ -306,11 +343,13 @@ function openRouteDescription(mapID, arrayPosition) {
 
 function setUpButtons() {
 
+    console.log(OFFMAP_NAME + ": setUpButtons()");
     $("#selectRoutes").change(function() {
         if($("#selectRoutes :selected").text()!="") {
             var mapID = $("#selectRoutes :selected").data('mapid');
             var position = $("#selectRoutes").val()-1;
-            openRouteDescription(mapID, position);
+            var serverid = $("#selectRoutes :selected").data('serverid');
+            openRouteDescription(mapID, position, serverid);
         }
     });
 }
@@ -334,7 +373,7 @@ function loadRoutes() {
             //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
             //console.table(data  );
             $(data).each(function(index, value) {
-                $("#selectRoutes").append("<option value='"+(index+1)+"' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
+                $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
 
                     // Create an element to hold all your text and markup
                     var container = $('<div />');
@@ -343,17 +382,28 @@ function loadRoutes() {
                     container.on('click', '.mapPopupLink', function() {
                         var mapID = $(this).data('mapid');
                         var position = $(this).data('arraypos');
-                        openRouteDescription(mapID, position);
+                        var serverid = $(this).data('serverid');
+                        openRouteDescription(mapID, position, serverid);
+
                     });
 
                     // Insert whatever you want into the container, using whichever approach you prefer
-                    container.html("<b><a class='mapPopupLink' href='#' data-arraypos='" + index + "' data-mapid='"  + value.map.map_file_name + "'>" + value["name_"+lang] + "</a></b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
-                    //container.append($('<span class="bold">').text(" :)"));
+                    container.html("<b><a class='mapPopupLink' href='#' data-serverid='" + value.server_id + "' data-arraypos='" + index + "' data-mapid='"  + value.map.map_file_name + "'>" + value["name_"+lang] + "</a></b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
 
+                    var latlngs = [];
+                    var steps = value.track.steps;
+                    steps.sort(function(a,b){return a.order-b.order});
+                    $(steps).each(function(index, value) {
+                        if(value.order!=null) {
+                            latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
+                        }
+                    });
+''
+                    //console.log(value["name_"+lang] + " -> " + latlngs[0]);
                     // Show routes on the map
-                    addMarkerWithPopup(new L.LatLng(value.track.steps[0].latitude, value.track.steps[0].longitude), container[0]);
+                    addMarkerWithPopup(latlngs[0], container[0]);
 
-                    localStorage.setItem("selectedRoute", index);
+
 
             });
             routesData = data;

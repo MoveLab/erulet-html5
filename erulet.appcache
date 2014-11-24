@@ -9,6 +9,8 @@ js/localizandroid.min.js
 js/offlinemaps.js
 js/utils.js
 js/pouchdb-3.1.0.min.js
+js/L.Grid.js
+js/sql.js
 strings/values-ca/strings.xml
 strings/values-oc/strings.xml
 strings/values-fr/strings.xml
@@ -38,6 +40,8 @@ icons/ic_credits.png
 icons/ic_info_icon.png
 icons/ic_reference.png
 icons/ic_route_select.png
+icons/ic_map_marker.png
+icons/pin_chart.png
 static/frontulet/icons/before_leaving/environment.png
 static/frontulet/icons/before_leaving/safety.png
 static/frontulet/icons/before_leaving/sat.png
