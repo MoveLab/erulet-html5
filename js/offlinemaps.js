@@ -104,30 +104,13 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
     $("#routeSelect").click(function(e) {
 
-        if (navigator.onLine) {         // No internet, can't download
-            $.mobile.loading("show", {
-                text: "downloading files",
-                textVisible: true,
-                theme: "b",
-                html: ""
-            });
-           var filename = $(this).data('mapid');
-           //We'll use zip to avoid 5 mb quota limit of localStorage
-           //filename = filename.replace('.mbtiles', '.mbtiles.zip');
-           //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
-           getBundleFile(filename);
-       }
-       else {
-            $('#popupNoInternet').popup();
-            $('#popupNoInternet').popup('open');
-       }
     });
-
 
 });
 
 $(document).ready(function() {
     loadRoutes();
+    //getBundleFile(10);
 });
 
 
@@ -168,42 +151,23 @@ function openDB() {
     });//.then(function(doc) { addDBMap(); } );
 }
 
-function getBundleFile(path) {
+function getBundleFile(serverid) {
     console.log(OFFMAP_NAME + ": getBundleFile()");
-    console.log(OFFMAP_NAME + ": opening + "+ path);
+    var path = bundleFilename + serverid + '.zip';
+    console.log(OFFMAP_NAME + ": opening "+ path);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', mapsURL+path, true);
-    xhr.responseType = 'arraybuffer';
-
-    xhr.onload = function(e) {
-      var uInt8Array = new Uint8Array(this.response);
-      sqlite = new SQL.Database(uInt8Array);
-      var contents = sqlite.exec("SELECT * FROM tiles");
-      console.log(contents);
-      // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
-
-      DB.put({_id: "bundle", mbtiles:path ,database: uInt8Array}, function(err, response) {
-          if(err) {
-              if(err.status==500) {
-                  $('#popupDataPresent').popup();
-                  $('#popupDataPresent').popup('open');
-              }
-              else {
-                  alert(err);
-              }
-              $.mobile.loading("hide");
-              throw err;
-          }
-          else {
-              //console.log("saved: ", response.id + " rev: " + response.rev);
-              //fillDB(zip);
-              $.mobile.loading("hide");
-          }
-      }).then(function(doc) { addDBMap(); });
-    };
-    xhr.send();
-
+   ajaxGetFile('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS+serverid+'/', HOLETSERVER_AUTHORIZATION,
+     function(data) {
+     console.log(data);
+        var zip = new JSZip();
+        zip.load(data);
+        console.log(zip);
+     },
+     function(error) {
+        console.log( error);
+        //alert("ERROR: Probably a network (offline/CORS) issue");
+        $.mobile.loading("hide");
+     } );
 
 }
 
@@ -327,18 +291,24 @@ function deleteDB() {
 
 function openRouteDescription(mapID, arrayPosition, serverid) {
     console.log(OFFMAP_NAME + ": openRouteDescription()");
-    // Define message
-    $("#routeDescription").html(routesData[arrayPosition]["description_"+lang]);
 
-    // Store selected route ID on routesData array and server ID
-    localStorage.setItem("selectedRoute", arrayPosition);
-    localStorage.setItem("selectedRoute_serverid", serverid);
-
-    // Define mapid
-    $("#routeSelect").data('mapid', mapID);
-
-    $("#popupRoute").popup();
-    $("#popupRoute").popup('open');
+    if (navigator.onLine) {         // No internet, can't download
+        $.mobile.loading("show", {
+            text: "downloading files",
+            textVisible: true,
+            theme: "b",
+            html: ""
+        });
+       //var filename = $(this).data('mapid');
+       //We'll use zip to avoid 5 mb quota limit of localStorage
+       //filename = filename.replace('.mbtiles', '.mbtiles.zip');
+       //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
+       getBundleFile(serverid);
+   }
+   else {
+        $('#popupNoInternet').popup();
+        $('#popupNoInternet').popup('open');
+   }
 }
 
 function setUpButtons() {
@@ -354,20 +324,54 @@ function setUpButtons() {
     });
 }
 
+function ajaxGetFile(type, url, token, successFunc, errorFunc, doneFunc) {
+    $.ajax({
+        type: type,
+        url: url,
+        //crossDomain: true,
+        //responseType: 'blob',
+        processData: false,
+        /*withCredentials: false,*/
+        /*xhrFields: {
+            withCredentials: false
+        },*/
+       /* headers: {
+            "Authorization": token
+        },*/
+        /*beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },*/
+        success: successFunc,
+        error: errorFunc
+    });
+}
+
+function ajaxGetCORS(type, url, token, successFunc, errorFunc, doneFunc) {
+    $.ajax({
+        type: type,
+        url: url,
+        //crossDomain: true,
+        /*withCredentials: false,*/
+        /*xhrFields: {
+            withCredentials: false
+        },*/
+        headers: {
+            "Authorization": token
+        },
+        /*beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },*/
+        success: successFunc,
+        error: errorFunc
+    }).done(doneFunc);
+}
 
 function loadRoutes() {
     console.log("Retrieving routes...");
     // $.mobile.loading moved to 'pageshow' (does not work here)
-    $.ajax({
-        type: "GET",
-        url: HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES,
-        crossDomain: true,
-        withCredentials: true,
-        //headers: { Authorization: HOLETSERVER_AUTHORIZATION },
-        beforeSend: function(request) {
-            request.setRequestHeader("Authorization", HOLETSERVER_AUTHORIZATION);
-        },
-        success: function(data) {
+    ajaxGetCORS('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES, HOLETSERVER_AUTHORIZATION,
+        function(data) {
+
             var count = data.length;
             //console.log("Fetched " + count + " elements: " );
             //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
@@ -408,17 +412,16 @@ function loadRoutes() {
             });
             routesData = data;
         },
-        error: function(error) {
+        function(error) {
             console.log(error);
             alert("ERROR: Probably a network (offline/CORS) issue");
             $.mobile.loading("hide");
-        }
+        },
+        function() {
+                $.mobile.loading("hide");
+                initMap();
+                setUpButtons();
 
-    }).done( function() {
-        $.mobile.loading("hide");
-        initMap();
-        setUpButtons();
-    }).done (function() {
-        openDB();
-    });
+                openDB();
+        });
 }
