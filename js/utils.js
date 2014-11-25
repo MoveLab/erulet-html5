@@ -34,18 +34,22 @@ $(document).ready( function() {
         var path;
         switch(id) {
             case 'beforeleaving':
-                path = 'html/before_leaving_' + lang + '.html';
+                //path = 'html/before_leaving_' + lang + '.html';
+                path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_BLEAVING : 'html/before_leaving_' + lang + '.html';
                 break;
             case 'manual':
-                path = 'html/manual_' + lang + '.html';
+                //path = 'html/manual_' + lang + '.html';
+                path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_MANUAL : 'html/manual_' + lang + '.html';
                 break;
             case 'about':
-                path = 'html/about_' + lang + '.html';
+                //path = 'html/about_' + lang + '.html';
+                path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_CREDITS : 'html/about_' + lang + '.html';
                 break;
         }
+                        console.log(path);
         $(this).load(path, function(response, status, xhr) {
             if(status=="error") {
-                var msg = "Sorry but there was an error: ";
+                var msg = "Sorry but there was an error with " + path + ": ";
                 $(this).html(msg+xhr.status+ " " + xhr.statusText);
             }
             /*else {
