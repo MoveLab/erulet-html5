@@ -141,11 +141,15 @@
     <string name="your_rating">La teva valoració</string>
 
 
+
     <!-- HTML5 strings -->
     <string name="home">Inici</string>
     <string name="dl_r1">Descarrega ruta</string>
     <string name="dl_clear">Neteja dades</string>
     <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
     <string name="data_present">Aquesta ruta ja és present al dispositiu, no cal descarregar-la</string>
-
+    <string name="refresh_web">(Caldrà refrescar la web)</string>
+    <string name="register">Registrar-se</string>
+    <string name="login">Iniciar sessió</string>
+    <string name="opcions">Opcions</string>
 </resources>

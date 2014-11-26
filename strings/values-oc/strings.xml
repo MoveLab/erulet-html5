@@ -9,6 +9,12 @@
  Exported at: Fri, 31 Oct 2014 19:01:05 +0000
 -->
 <resources>
+
+    <string name="take_survey">Take survey</string>
+
+<!--
+above not yet translated. below translated
+-->
     <string name="about_to_delete">S\'esfaçarà era rota</string>
     <string name="action_settings">Ajustaments</string>
     <string name="add_image_video">Híger imatge o capturar vidèo</string>

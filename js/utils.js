@@ -1,9 +1,10 @@
 var routesData = null;
-var lang = localStorage.getItem("language");
+var lang = null;
+/*var lang = localStorage.getItem("language");
 if(lang=="") {
     lang = navigator.language || navigator.userLanguage;
     lang = lang.substr(0,2);
-}
+}*/
 // Icon data
 var mapMarkerIcon = L.icon({
     iconUrl: 'icons/ic_map_marker.png',
@@ -27,6 +28,16 @@ var waypointIcon = L.icon({
 
 // Methods
 $(document).ready( function() {
+
+    lang = localStorage.getItem("language");
+
+    // Load translations
+    var options = {
+        langCodes: [ "oc", "ca", "en", "es", "fr" ],
+        defaultCode: "en",
+        forceLanguage: lang
+    };
+    $(this).localizandroid(options);
 
     // Load file
 

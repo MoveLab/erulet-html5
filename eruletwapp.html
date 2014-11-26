@@ -38,10 +38,12 @@
     <div data-role="header">
         <h1 class="localizable" data-lclstring="app_name"></h1>
 
+        <a href="#popupOptions" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-gear ui-btn-icon-left ui-corner-all localizable" data-lclstring="opcions"></a>
+
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
-            <a href="#popupRegister" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all">Register</a>
-            <a href="#popupLogin" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all">Login</a>
-            <a href="#popupOptions" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-gear ui-btn-icon-right ui-corner-all">Options</a>
+            <a href="#popupRegister" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all localizable" data-lclstring="register"></a>
+            <a href="#popupLogin" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all localizable" data-lclstring="login"></a>
+
         </div>
     </div><!-- /header -->
 
@@ -92,6 +94,7 @@
                 <form>
                         <fieldset data-role="controlgroup" id="langSelector" data-mini="true">
                             <legend class="localizable" data-lclstring="language"></legend>
+                            <legend class="localizable" data-lclstring="refresh_web"></legend>
                             <input name="langChoice" id="langChoice1" value="oc" type="radio">
                             <label for="langChoice1" class="localizable" data-lclstring="lang_gsc_es"></label>
                             <input name="langChoice" id="langChoice2" value="ca" type="radio">
@@ -106,7 +109,7 @@
                             <label for="langChoice6" class="localizable" data-lclstring="lang_device"></label>
                         </fieldset>
                 </form>
-
+                <a href="#" id="noInternetButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
             </div>
         </div>
     </div>
