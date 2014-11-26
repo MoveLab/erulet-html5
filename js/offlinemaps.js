@@ -377,7 +377,7 @@ function loadRoutes() {
             //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
             //console.table(data  );
             $(data).each(function(index, value) {
-                $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
+                    $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
 
                     // Create an element to hold all your text and markup
                     var container = $('<div />');

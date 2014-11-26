@@ -37,6 +37,12 @@
 
     <div data-role="header">
         <h1 class="localizable" data-lclstring="app_name"></h1>
+
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <a href="#popupRegister" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all">Register</a>
+            <a href="#popupLogin" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all">Login</a>
+            <a href="#popupOptions" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-gear ui-btn-icon-right ui-corner-all">Options</a>
+        </div>
     </div><!-- /header -->
 
     <div data-role="content" role="main" class="ui-content">
@@ -58,7 +64,53 @@
         <div data-role="footer">
             <h4>My Footer</h4>
         </div><!-- /footer -->
+    <!-- Popups -->
+    <div data-role="popup" id="popupRegister" data-overlay-theme="b" data-theme="b" data-dismissible="true" >
+        <div data-role="header" data-theme="a">
+            <h1 class="localizable" data-lclstring="register_user"></h1>
+        </div>
+        <div role="main" class="ui-content" >
+            <div id="registerHTML"></div>
+        </div>
+    </div>
 
+    <div data-role="popup" id="popupLogin" data-overlay-theme="b" data-theme="b" data-dismissible="true" >
+        <div data-role="header" data-theme="a">
+            <h1 class="localizable" data-lclstring="app_name"></h1>
+        </div>
+        <div role="main" class="ui-content" >
+            <div id="loginHTML">id="loginHTML"</div>
+        </div>
+    </div>
+    <div data-role="popup" id="popupOptions" data-overlay-theme="b" data-theme="b" data-dismissible="true">
+        <div data-role="header" data-theme="a">
+            <h1 class="localizable" data-lclstring="app_name"></h1>
+        </div>
+        <div role="main" class="ui-content" id="optionsHTML">
+            <div>
+
+                <form>
+                        <fieldset data-role="controlgroup" id="langSelector" data-mini="true">
+                            <legend class="localizable" data-lclstring="language"></legend>
+                            <input name="langChoice" id="langChoice1" value="oc" type="radio">
+                            <label for="langChoice1" class="localizable" data-lclstring="lang_gsc_es"></label>
+                            <input name="langChoice" id="langChoice2" value="ca" type="radio">
+                            <label for="langChoice2" class="localizable" data-lclstring="lang_ca"></label>
+                            <input name="langChoice" id="langChoice3" value="es" type="radio">
+                            <label for="langChoice3" class="localizable" data-lclstring="lang_es_es"></label>
+                            <input name="langChoice" id="langChoice4" value="en" type="radio">
+                            <label for="langChoice4" class="localizable" data-lclstring="lang_en"></label>
+                            <input name="langChoice" id="langChoice5" value="fr" type="radio">
+                            <label for="langChoice5" class="localizable" data-lclstring="lang_fr"></label>
+                            <input name="langChoice" id="langChoice6" value="" type="radio">
+                            <label for="langChoice6" class="localizable" data-lclstring="lang_device"></label>
+                        </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- /Popups -->
 </div><!-- /page -->
 
 <!-- Start of second page -->
@@ -131,6 +183,7 @@
 
 
     <!-- Popups -->
+
     <div data-role="popup" id="popupRoute" data-overlay-theme="b" data-theme="b" data-dismissible="false" >
         <div data-role="header" data-theme="a">
             <h1 class="localizable" data-lclstring="trip_description_comp"></h1>

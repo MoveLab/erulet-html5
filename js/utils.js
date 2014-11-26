@@ -1,6 +1,9 @@
 var routesData = null;
-var lang = getLanguage();
-
+var lang = localStorage.getItem("language");
+if(lang=="") {
+    lang = navigator.language || navigator.userLanguage;
+    lang = lang.substr(0,2);
+}
 // Icon data
 var mapMarkerIcon = L.icon({
     iconUrl: 'icons/ic_map_marker.png',
@@ -26,8 +29,6 @@ var waypointIcon = L.icon({
 $(document).ready( function() {
 
     // Load file
-    var lang = navigator.language || navigator.userLanguage;
-    lang = lang.substr(0,2);
 
     $.each($('.loadHTML'), function() {
         var id = $(this).attr('id');
@@ -63,6 +64,24 @@ $(document).ready( function() {
         });
     });
 
+    $('#registerHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER);
+    $('#loginHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN);
+
+    $('#langSelector input').each(function(index, value) {
+        if(localStorage.getItem("language")==value.value) {
+            console.log(value.id);
+            var selector = '#' + value.id;
+            console.log($(selector));
+            //$('input[name="langChoice"]').attr("checked", false).checkboxradio().checkboxradio('refresh', true);
+            $(selector).attr('checked', true).checkboxradio().checkboxradio('refresh', true);
+
+        }
+    });
+
+    $('#langSelector input').click(function() {
+        localStorage.setItem("language", $(this)[0].value);
+    });
+
     if(DEBUG) {
         $('#routeButtons').append("<button id='dl_r0' class='ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButtons' data-mapid='58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles'>Test</button>");
         $("#dl_r0").click(function(e) {
@@ -88,3 +107,4 @@ $(document).ready( function() {
         });
     }
 });
+
