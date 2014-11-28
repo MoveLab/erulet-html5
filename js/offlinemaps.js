@@ -31,7 +31,7 @@ var control;
 $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
     // Make sure controls are visible
-    $("#routeControls").show("slow");
+    $("#routeControls:hidden").show("slow");
 
 
     // Handle clear button
@@ -46,7 +46,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $("#routeView").click(function(e) {
 
        // Hide controls
-       $("#routeControls").hide("slow");
+       $("#routeControls:visible").hide("slow");
 
        // Let's make the map use the whole space
        var windowHeight = $(window).height();
@@ -62,47 +62,20 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
        if(routesData) {
             if(polyline) {map.removeLayer(polyline)};
             console.log("Route selected: " + localStorage.getItem("selectedRoute"));
-            var step = routesData[localStorage.getItem("selectedRoute")].track.steps;
             var highlights = [];
-            var steps = [];
-            var latlngs = [];
-            step.sort(function(a,b){return a.order-b.order});
-            $(step).each(function(index, value) {
-                if(value.order!=null) {
-                    steps[steps.length] = value;
-                    latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
-                }
-                else {
-                    highlights[highlights.length] = value;
-                }
-            });
-            localStorage.setItem("selectedRoute_steps", steps);
-            localStorage.setItem("selectedRoute_highlights", highlights);
-            //console.log(latlngs);
-            //console.log(latlngs);
-            polyline = L.polyline(latlngs, {color: POLYLINE_DEFAULT_COLOR, opacity: POLYLINE_DEFAULT_OPACITY}).addTo(map);
+            var results = drawRoute(routesData[localStorage.getItem("selectedRoute")].track.steps, false);
+            polyline = results[0];
+            highlights = results[1];
             map.fitBounds(polyline.getBounds());
 
-            $(highlights).each(function(index, value) {
-                console.log(value.highlights[0].type);
-                var mIcon = waypointIcon;
-                switch(value.highlights[0].type) {
-                    case 0:
-                        icon = mapMarkerIcon;
-                        break;
-                    case 1:
-                        icon = waypointIcon;
-                        break;
-                }
+            putHighlights(highlights, markersHLT);
 
-                var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<p>' + value.highlights[0]["long_text_"+lang] + '</p>');
-                markersHLT.addLayer(marker);
-            });
             markersHLT.addTo(map);
        }
     });
 
     $("#routeSelect").click(function(e) {
+        getBundleFile(localStorage.getItem("selectedRoute_serverid"));
 
     });
 
@@ -110,7 +83,6 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
 $(document).ready(function() {
     loadRoutes();
-    //getBundleFile(10);
 });
 
 
@@ -124,8 +96,51 @@ $(document).on('pageshow', '#trip_select', function() {
           html: ""
         });
    }
+
 });
 
+function putHighlights(highlights, layer) {
+    $(highlights).each(function(index, value) {
+        console.log(value.highlights[0].type);
+        var mIcon = waypointIcon;
+        switch(value.highlights[0].type) {
+            case 0:
+                icon = mapMarkerIcon;
+                break;
+            case 1:
+                icon = waypointIcon;
+                break;
+        }
+
+        var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+        layer.addLayer(marker);
+    });
+}
+
+function drawRoute(step, store) {
+    console.log(OFFMAP_NAME + ": drawRoute()");
+    var highlights = [];
+    var steps = [];
+    var latlngs = [];
+    step.sort(function(a,b){return a.order-b.order});
+    $(step).each(function(index, value) {
+        if(value.order!=null) {
+            steps[steps.length] = value;
+            latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
+        }
+        else {
+            highlights[highlights.length] = value;
+        }
+    });
+    if(store) {
+        localStorage.setItem("selectedRoute_steps", steps);
+        localStorage.setItem("selectedRoute_highlights", highlights);
+    }
+    //console.log(latlngs);
+    //console.log(latlngs);
+    var pLine = L.polyline(latlngs, {color: POLYLINE_DEFAULT_COLOR, opacity: POLYLINE_DEFAULT_OPACITY}).addTo(map);
+    return [pLine, highlights];
+}
 
 function openDB() {
     console.log(OFFMAP_NAME + ": openDB()");
@@ -156,18 +171,50 @@ function getBundleFile(serverid) {
     var path = bundleFilename + serverid + '.zip';
     console.log(OFFMAP_NAME + ": opening "+ path);
 
-   ajaxGetFile('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS+serverid+'/', HOLETSERVER_AUTHORIZATION,
-     function(data) {
-     console.log(data);
-        var zip = new JSZip();
-        zip.load(data);
-        console.log(zip);
-     },
-     function(error) {
-        console.log( error);
-        //alert("ERROR: Probably a network (offline/CORS) issue");
-        $.mobile.loading("hide");
-     } );
+    // Delete old file
+    DB.get('bundle', function(doc, err) {
+        DB.remove(doc);
+    }).then(function() {
+
+    var xhr = new XMLHttpRequest();
+
+    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES;
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
+
+    xhr.onload = function(e) {
+      var uInt8Array = new Uint8Array(this.response);
+
+      var zip = new JSZip();
+      zip.load(uInt8Array);
+      var mbtiles = zip.file(localStorage.getItem("selectedRoute_mapid")).asUint8Array();
+      console.log("Downloaded DB : " + mbtiles.name);
+      sqlite = new SQL.Database(mbtiles);
+      var contents = sqlite.exec("SELECT * FROM tiles");
+      console.log(contents);
+      // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
+
+      DB.put({_id: "bundle", mbtiles:path ,database: uInt8Array}, function(err, response) {
+          if(err) {
+              if(err.status==500) {
+                  $('#popupDataPresent').popup();
+                  $('#popupDataPresent').popup('open');
+              }
+              else {
+                  alert(err);
+              }
+              $.mobile.loading("hide");
+              throw err;
+          }
+          else {
+              //console.log("saved: ", response.id + " rev: " + response.rev);
+              //fillDB(zip);
+              $.mobile.loading("hide");
+          }
+      }).then(function(doc) { addDBMap(); });
+    };
+    xhr.send();
+    });
 
 }
 
@@ -292,23 +339,17 @@ function deleteDB() {
 function openRouteDescription(mapID, arrayPosition, serverid) {
     console.log(OFFMAP_NAME + ": openRouteDescription()");
 
-    if (navigator.onLine) {         // No internet, can't download
-        $.mobile.loading("show", {
-            text: "downloading files",
-            textVisible: true,
-            theme: "b",
-            html: ""
-        });
-       //var filename = $(this).data('mapid');
-       //We'll use zip to avoid 5 mb quota limit of localStorage
-       //filename = filename.replace('.mbtiles', '.mbtiles.zip');
-       //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
-       getBundleFile(serverid);
-   }
-   else {
-        $('#popupNoInternet').popup();
-        $('#popupNoInternet').popup('open');
-   }
+    // Define message
+    $("#routeDescription").html(routesData[arrayPosition]["description_"+lang]);
+    // Store selected route ID on routesData array and server ID
+    localStorage.setItem("selectedRoute", arrayPosition);
+    localStorage.setItem("selectedRoute_serverid", serverid);
+    localStorage.setItem("selectedRoute_mapid", mapID);
+    // Define mapid
+    $("#routeSelect").data('mapid', mapID);
+    $("#popupRoute").popup();
+    $("#popupRoute").popup('open');
+
 }
 
 function setUpButtons() {
@@ -324,27 +365,6 @@ function setUpButtons() {
     });
 }
 
-function ajaxGetFile(type, url, token, successFunc, errorFunc, doneFunc) {
-    $.ajax({
-        type: type,
-        url: url,
-        //crossDomain: true,
-        //responseType: 'blob',
-        processData: false,
-        /*withCredentials: false,*/
-        /*xhrFields: {
-            withCredentials: false
-        },*/
-       /* headers: {
-            "Authorization": token
-        },*/
-        /*beforeSend: function(request) {
-            request.setRequestHeader("Authorization", token);
-        },*/
-        success: successFunc,
-        error: errorFunc
-    });
-}
 
 function ajaxGetCORS(type, url, token, successFunc, errorFunc, doneFunc) {
     $.ajax({
@@ -371,7 +391,7 @@ function loadRoutes() {
     // $.mobile.loading moved to 'pageshow' (does not work here)
     ajaxGetCORS('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES, HOLETSERVER_AUTHORIZATION,
         function(data) {
-
+            //$("#selectRoutes").html("<option value=''></option>");
             var count = data.length;
             //console.log("Fetched " + count + " elements: " );
             //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
@@ -402,7 +422,7 @@ function loadRoutes() {
                             latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
                         }
                     });
-''
+                    //drawRoute(steps, false);
                     //console.log(value["name_"+lang] + " -> " + latlngs[0]);
                     // Show routes on the map
                     addMarkerWithPopup(latlngs[0], container[0]);
@@ -418,10 +438,11 @@ function loadRoutes() {
             $.mobile.loading("hide");
         },
         function() {
-                $.mobile.loading("hide");
-                initMap();
-                setUpButtons();
+            $.mobile.loading("hide");
 
-                openDB();
+            initMap();
+            setUpButtons();
+
+            openDB();
         });
 }

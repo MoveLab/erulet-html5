@@ -27,6 +27,19 @@ var waypointIcon = L.icon({
 });
 
 // Methods
+$(document).on('pageshow', '#credits', function() {
+    loadHTML($(this).attr('id'));
+});
+
+$(document).on('pageshow', '#security_recom', function() {
+    loadHTML($(this).attr('id'));
+});
+
+$(document).on('pageshow', '#user_manual', function() {
+    loadHTML($(this).attr('id'));
+});
+
+
 $(document).ready( function() {
 
     lang = localStorage.getItem("language");
@@ -34,55 +47,20 @@ $(document).ready( function() {
     // Load translations
     var options = {
         langCodes: [ "oc", "ca", "en", "es", "fr" ],
-        defaultCode: "en",
+        defaultCode: "ca",
         forceLanguage: lang
     };
     $(this).localizandroid(options);
 
+    if(lang=="" || lang==null) {
+        lang = navigator.language || navigator.userLanguage;
+        lang = lang.substr(0,2);
+    }
     // Load file
-
-    $.each($('.loadHTML'), function() {
-        var id = $(this).attr('id');
-        var path;
-        switch(id) {
-            case 'beforeleaving':
-                //path = 'html/before_leaving_' + lang + '.html';
-                path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_BLEAVING : 'html/before_leaving_' + lang + '.html';
-                break;
-            case 'manual':
-                //path = 'html/manual_' + lang + '.html';
-                path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_MANUAL : 'html/manual_' + lang + '.html';
-                break;
-            case 'about':
-                //path = 'html/about_' + lang + '.html';
-                path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_CREDITS : 'html/about_' + lang + '.html';
-                break;
-        }
-                        console.log(path);
-        $(this).load(path, function(response, status, xhr) {
-            if(status=="error") {
-                var msg = "Sorry but there was an error with " + path + ": ";
-                $(this).html(msg+xhr.status+ " " + xhr.statusText);
-            }
-            /*else {
-                // Replace wrong src
-                $.each($('img'), function() {
-                    var src = $(this).attr('src');
-                    console.log("SRC: " + src);
-                    $(this).attr('src', 'assets/' + src);
-                });
-            }*/
-        });
-    });
-
-    $('#registerHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER);
-    $('#loginHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN);
 
     $('#langSelector input').each(function(index, value) {
         if(localStorage.getItem("language")==value.value) {
-            console.log(value.id);
             var selector = '#' + value.id;
-            console.log($(selector));
             //$('input[name="langChoice"]').attr("checked", false).checkboxradio().checkboxradio('refresh', true);
             $(selector).attr('checked', true).checkboxradio().checkboxradio('refresh', true);
 
@@ -119,3 +97,32 @@ $(document).ready( function() {
     }
 });
 
+function loadHTML(pageID) {
+    var path;
+    var id = pageID;
+     switch(pageID) {
+        case 'security_recom':
+            id = 'before_leaving';
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_BLEAVING : 'html/' + id + '_' + lang + '.html';
+            break;
+        case 'user_manual':
+            id = 'manual'
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_MANUAL : 'html/' + id + '_' + lang + '.html';
+            break;
+        case 'credits':
+            id = 'about';
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_CREDITS : 'html/' + id + '_' + lang + '.html';
+            break;
+        /*case 'registerHTML':
+            path = HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER;
+            break;
+        case 'loginHTML':
+            path = HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN;
+            break;*/
+    }
+    console.log('Loaded ' + path);
+
+    $.get(path, function(data) {
+        $('#'+id).append(data);
+    });
+}
