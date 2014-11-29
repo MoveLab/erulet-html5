@@ -116,10 +116,10 @@ function putHighlights(highlights, layer) {
         var mIcon = waypointIcon;
         switch(value.highlights[0].type) {
             case 0:
-                icon = mapMarkerIcon;
+                mIcon = mapMarkerIcon;
                 break;
             case 1:
-                icon = waypointIcon;
+                mIcon = waypointIcon;
                 break;
         }
 
@@ -131,7 +131,6 @@ function putHighlights(highlights, layer) {
 
 function drawRoute(step, color, opacity, store) {
     console.log(OFFMAP_NAME + ": drawRoute()");
-    console.log(color);
     var highlights = [];
     var steps = [];
     var latlngs = [];

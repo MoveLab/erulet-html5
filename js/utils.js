@@ -5,6 +5,7 @@ if(lang=="") {
     lang = navigator.language || navigator.userLanguage;
     lang = lang.substr(0,2);
 }*/
+
 // Icon data
 var mapMarkerIcon = L.icon({
     iconUrl: 'icons/ic_map_marker.png',
@@ -21,9 +22,9 @@ var mapMarkerIcon = L.icon({
 var waypointIcon = L.icon({
     iconUrl: 'icons/pin_chart.png',
     iconRetinaUrl: 'icons/pin_chart.png',
-    iconSize: [53, 81],
-    iconAnchor: [26, 80],
-    popupAnchor: [0, -76],
+    iconSize: [34, 53],
+    iconAnchor: [16, 52],
+    popupAnchor: [0, -54],
 });
 
 // Methods
