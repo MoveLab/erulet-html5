@@ -21,6 +21,7 @@ var lat, lon, latt, lonn, compos, str;
 var imgType;
 var markers = new L.FeatureGroup();
 var markersHLT = new L.FeatureGroup();
+var polylines = new L.FeatureGroup();
 var polyline;
 
 var map;
@@ -60,10 +61,20 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
        removeMarkers();
 
        if(routesData) {
-            if(polyline) {map.removeLayer(polyline)};
+            if(polyline) {
+                map.removeLayer(polyline);
+                map.removeLayer(markersHLT);
+                markersHLT = new L.FeatureGroup();
+                markersHLT.addTo(map);
+            };
+            if(polylines) {
+                map.removeLayer(polylines);
+                polylines = new L.FeatureGroup();
+                polylines.addTo(map);
+            };
             console.log("Route selected: " + localStorage.getItem("selectedRoute"));
             var highlights = [];
-            var results = drawRoute(routesData[localStorage.getItem("selectedRoute")].track.steps, false);
+            var results = drawRoute(routesData[localStorage.getItem("selectedRoute")].track.steps, POLYLINE_DEFAULT_COLOR, POLYLINE_DEFAULT_OPACITY, false);
             polyline = results[0];
             highlights = results[1];
             map.fitBounds(polyline.getBounds());
@@ -113,12 +124,14 @@ function putHighlights(highlights, layer) {
         }
 
         var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<p>' + value.highlights[0]["long_text_"+lang] + '</p>');
-        layer.addLayer(marker);
+        //layer.addLayer(marker);
+        marker.addTo(markersHLT);
     });
 }
 
-function drawRoute(step, store) {
+function drawRoute(step, color, opacity, store) {
     console.log(OFFMAP_NAME + ": drawRoute()");
+    console.log(color);
     var highlights = [];
     var steps = [];
     var latlngs = [];
@@ -138,7 +151,9 @@ function drawRoute(step, store) {
     }
     //console.log(latlngs);
     //console.log(latlngs);
-    var pLine = L.polyline(latlngs, {color: POLYLINE_DEFAULT_COLOR, opacity: POLYLINE_DEFAULT_OPACITY}).addTo(map);
+    L.polyline(latlngs, {weight:5, color: 'black', opacity: opacity}).addTo(polylines);
+    var pLine = L.polyline(latlngs, {weight:2, color: color, opacity: opacity}).addTo(polylines);
+    //polylines.addTo(map);
     return [pLine, highlights];
 }
 
@@ -245,6 +260,7 @@ function initMap() {
 
     // Make sure markers appear (in case we set them up before)
     markers.addTo(map);
+    polylines.addTo(map);
     markersHLT.addTo(map);
 }
 
@@ -391,6 +407,7 @@ function loadRoutes() {
     // $.mobile.loading moved to 'pageshow' (does not work here)
     ajaxGetCORS('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES, HOLETSERVER_AUTHORIZATION,
         function(data) {
+            initMap();
             //$("#selectRoutes").html("<option value=''></option>");
             var count = data.length;
             //console.log("Fetched " + count + " elements: " );
@@ -422,10 +439,11 @@ function loadRoutes() {
                             latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
                         }
                     });
-                    //drawRoute(steps, false);
+
                     //console.log(value["name_"+lang] + " -> " + latlngs[0]);
                     // Show routes on the map
                     addMarkerWithPopup(latlngs[0], container[0]);
+                    drawRoute(steps, POLYLINE_COLORS[index], POLYLINE_DEFAULT_OPACITY, false);
 
 
 
@@ -440,7 +458,6 @@ function loadRoutes() {
         function() {
             $.mobile.loading("hide");
 
-            initMap();
             setUpButtons();
 
             openDB();
