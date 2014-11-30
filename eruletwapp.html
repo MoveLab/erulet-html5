@@ -141,23 +141,16 @@
     <div data-role="header">
         <h1 class="localizable" data-lclstring="trips"></h1>
         <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
-    </div><!-- /header -->
-    <!--<p class="localizable" data-lclstring="offline_advice"></p>-->
-    <div id="routeControls">
-        <form id="routeForm">
-            <div class="ui-field-container">
-                <label for="selectRoutes" class="localizable" data-lclstring="offline_advice"></label>
-                <select name="selectroutes" id="selectRoutes">
-                    <option value=""></option>
-                </select>
-            </div>
-        </form>
-        <div data-role="controlgroup" id="routeButtons">
 
-            <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-mini localizable" data-lclstring="dl_clear"></a>
+        <div data-role="controlgroup" id="routeButtons" data-type="horizontal" class="ui-mini ui-btn-right">
+
+            <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-icon-delete localizable" data-lclstring="dl_clear"></a>
+            <a href="#popupSync" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all localizable ui-icon-recycle" data-lclstring="sync"></a>
 
         </div>
-    </div>
+    </div><!-- /header -->
+    <!--<p class="localizable" data-lclstring="offline_advice"></p>-->
+
 
     <div id="map"></div>
 
@@ -165,13 +158,42 @@
 
     <!-- Popups -->
 
+    <div data-role="popup" id="popupSync" data-overlay-theme="b" data-theme="b" data-dismissible="false">
+        <div data-role="header" data-theme="a">
+            <h1 class="localizable" data-lclstring="sync"></h1>
+        </div>
+        <div role="main" class="ui-content">
+            <h5 class="ui-title localizable" id="syncDescription" data-lclstring="welcome_message"></h5>
+            <div id="routeControls">
+                <form id="routeForm">
+                    <div class="ui-field-container">
+                        <label for="selectRoutes" class="localizable" data-lclstring="offline_advice"></label>
+                        <select name="selectroutes" id="selectRoutes">
+                            <option value=""></option>
+                        </select>
+                    </div>
+
+                    <label>
+                        <input id="generalMapCheckbox" name="checkbox-0 " type="checkbox" data-default=false> <p class=" ui-mini localizable" data-lclstring="general_map"></p> </input>
+                    </label>
+                    <label>
+                        <input id="routeDataCheckbox" name="checkbox-0 " type="checkbox" data-default=true> <p class=" ui-mini localizable" data-lclstring="routes_data"></p> </input>
+                    </label>
+                </form>
+                <p id="#syncRouteDescription"></p>
+            </div>
+            <a id="syncPopupYes" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
+            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="cancel" data-rel="back">Cancel</a>
+        </div>
+    </div>
+
     <div data-role="popup" id="popupRoute" data-overlay-theme="b" data-theme="b" data-dismissible="false" >
         <div data-role="header" data-theme="a">
             <h1 class="localizable" data-lclstring="trip_description_comp"></h1>
         </div>
         <div role="main" class="ui-content">
             <h5 class="ui-title" id="routeDescription"></h5>
-            <a href="" id="routeView" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="trip_option_1" data-rel="back"></a>
+            <a href="#" id="routeView" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="trip_option_1" data-rel="back"></a>
             <a href="#" id="routeSelect" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="trip_option_2" data-rel="back" data-transition="flow"></a>
             <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="cancel" data-rel="back">Cancel</a>
         </div>

@@ -11,10 +11,58 @@
 <resources>
 
     <string name="take_survey">Take survey</string>
+    <string name="ok">OK</string>
+    <string name="fix_interval">Tracking interval (seconds)</string>
+    <string name="fix_interval_explanation">Set this to change the time between location fixes when tracking your route. Minimum value is 10.</string>
+    <string name="auto_center">Auto-center map on your position?</string>
+    <string name="auto_center_explanation">If on, the map will automatically center itself on your current position as you move.</string>
+    <string name="version">Holet version</string>
+    <string name="average_rating">Average Rating</string>
+    <string name="average_rating_of_followed_route">Average rating of the route you were following</string>
+    <string name="show_my_routes">Show my routes</string>
+    <string name="hide_my_routes">Hide my routes</string>
+    <string name="show_my_highlights">Show my highlights</string>
+    <string name="hide_my_highlights">Hide my highlights</string>
+    <string name="save_or_delete_route_message">Would you like to save the track you just created or discard it?</string>
+    <string name="multiple_highlights_title">"Multiples elements d'interès"</string>
+    <string name="multiple_highlights_message">Fes clic per veure la llista…</string>
+    <string name="existing_highlight_title">Tria per editar, o afegeix nou…</string>
+    <string name="existing_highlight_button_make_new">"Afegir nou punt d'interès"</string>
+    <string name="searching_title">Searching</string>
+    <string name="searching_message">Eth Holet is having trouble finding your location right now, so make sure to pay attention to your map and your surroundings rather than relying on your GPS.</string>
+    <string name="kilometer_abbreviation">km</string>
+    <string name="meter_abbreviation">m</string>
+    <string name="highlight_ratings_title">Highlight Ratings</string>
+    <string name="choose_interactive_image">Choose interactive image</string>
+    <string name="now_logged_in_as">You are now logged in as</string>
+    <string name="uploading">Uploading</string>
+    <string name="uploaded">Uploaded</string>
+    <string name="offline_try_again">You do not have an internet connection right now. Please try again later.</string>
+    <string name="error_try_again">Something went wrong - please try again later.</string>
+    <string name="survey_submitted">Survey submitted. Thank you!</string>
+    <string name="internet_needed_title">Internet needed</string>
+    <string name="internet_needed_message">"You need an internet connection to complete the survey. Please check your settings and return to this activity when you have a connection"</string>
+    <string name="login">Log in to existing account</string>
+    <string name="register">Register new account</string>
+    <string name="account">Account</string>
+    <string name="sync">Sync</string>
+    <string name="syncing">Syncing</string>
+    <string name="still_syncing_title">Holet is still syncing</string>
+    <string name="still_syncing_message">"Holet needs to complete an initial sync with the server in order to have all necessary contents for offline use in the mountains. Wouuld you like to try the sync now? (You can always do it later by choosing the 'sync' option from the menu on this screen."</string>
+    <string name="internet_needed_message_content">"Eth Holet needs an internet connection so he can get offline maps and route media from the server. Before starting a trip, please connect to the internet and choose 'Sync' from the options menu."</string>
+    <string name="welcome_message">"In order to function offline in the mountains, Eth Holet needs to perform an initial sync with the server, which will take several minutes. If you have an internet connection and would like to do this now, please click 'OK'. Otherwise, you can always do it later by choosing the 'sync' option from the menu on this screen."</string>
+    <string name="welcome_title">Welcome to Eth Holet!</string>
+    <string name="sync_now">Sync now</string>
+    <string name="sync_later">Sync later</string>
+    <string name="sync_success_title">Success!</string>
+    <string name="sync_success_message">Eth Holet has all the data he needs. You can go ahead and start hiking!</string>
+    <string name="sync_error_title">We had some trouble</string>
+    <string name="sync_error_message">Eth Holet was not able to get all of the data he needs from the server. Please check you internet connection and try again.</string>
 
-<!--
-above not yet translated. below translated
--->
+
+    <!--
+    above not yet translated. below translated
+    -->
     <string name="about_to_delete">S\'esfaçarà era rota</string>
     <string name="action_settings">Ajustaments</string>
     <string name="add_image_video">Híger imatge o capturar vidèo</string>
@@ -68,7 +116,6 @@ above not yet translated. below translated
     <string name="image">imatge</string>
     <string name="info">Informacion</string>
     <string name="interactive_pic">Fotografia interactiva</string>
-    <string name="internal_message_id">net.movelab.sudeau.internal_message</string>
     <string name="kilometers">Kilomètres</string>
     <string name="lang_ca">Catalan</string>
     <string name="lang_device">Usar er idiòma deth dispositiu</string>
@@ -145,4 +192,8 @@ above not yet translated. below translated
     <string name="yes">Òc</string>
     <string name="you_are_here_exp">Ès ací!</string>
     <string name="your_rating">Era tua avaloracion</string>
+
+
+    <string name="internal_message_id" translatable="false">net.movelab.sudeau.internal_message</string>
+
 </resources>

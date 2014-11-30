@@ -1,4 +1,4 @@
-var routesData = null;
+
 var lang = null;
 /*var lang = localStorage.getItem("language");
 if(lang=="") {
@@ -40,6 +40,13 @@ $(document).on('pageshow', '#user_manual', function() {
     loadHTML($(this).attr('id'));
 });
 
+$(document).on('pageshow', '#register', function() {
+    loadHTML($(this).attr('id'));
+});
+
+$(document).on('pageshow', '#login', function() {
+    loadHTML($(this).attr('id'));
+});
 
 $(document).ready( function() {
 
@@ -73,7 +80,7 @@ $(document).ready( function() {
     });
 
     if(DEBUG) {
-        $('#routeButtons').append("<button id='dl_r0' class='ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-itineraryicon ui-mini routeButtons' data-mapid='58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles'>Test</button>");
+        $('#routeButtons').append("<button id='dl_r0' class='ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all ui-icon-itineraryicon' data-mapid='58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles'>Test</button>");
         $("#dl_r0").click(function(e) {
             if (navigator.onLine) {         // No internet, can't download
                 $.mobile.loading("show", {
@@ -99,7 +106,8 @@ $(document).ready( function() {
 });
 
 function loadHTML(pageID) {
-    var path;
+    console.log("loadHTML()");
+    var path = null;
     var id = pageID;
      switch(pageID) {
         case 'security_recom':
@@ -114,16 +122,20 @@ function loadHTML(pageID) {
             id = 'about';
             path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_CREDITS : 'html/' + id + '_' + lang + '.html';
             break;
-        /*case 'registerHTML':
-            path = HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER;
+        case 'register':
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER : 'offline.html';
             break;
-        case 'loginHTML':
-            path = HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN;
-            break;*/
+        case 'login':
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN : 'offline.html';
+            break;
+        default:
+            console.log('skipping');
     }
-    console.log('Loaded ' + path);
+    if(path != null) {
+        console.log('Loaded ' + path);
 
-    $.get(path, function(data) {
-        $('#'+id).append(data);
-    });
+        $.get(path, function(data) {
+            $('#'+id).append(data);
+        });
+    }
 }

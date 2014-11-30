@@ -11,6 +11,7 @@ console.log(OFFMAP_NAME + ": Initializing");
 
 var dbname = "offmaps";
 var sqlite = null;
+var sqlite_general = null;
 var DB = null;
 var metadata = null;
 
@@ -28,11 +29,12 @@ var map;
 var onlineLayer, offlineLayer;
 var baseMaps, baseOverlay;
 var control;
+var routesData;
 
 $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
     // Make sure controls are visible
-    $("#routeControls:hidden").show("slow");
+    //$("#routeControls:hidden").show("slow");
 
 
     // Handle clear button
@@ -42,22 +44,22 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
        $.mobile.navigate("#switchboard");
     });
 
+    // Let's make the map use the whole space
+    var windowHeight = $(window).height();
+    var headerHeight = $("#mapHeader").height();
 
+    // Expected height is window - header
+    var realHeight = windowHeight - headerHeight;
+
+    $("#map").height(realHeight);
+    $("#map").css({ top: headerHeight }); // position under header
 
     $("#routeView").click(function(e) {
 
        // Hide controls
-       $("#routeControls:visible").hide("slow");
+       //$("#routeControls:visible").hide("slow");
 
-       // Let's make the map use the whole space
-       var windowHeight = $(window).height();
-       var headerHeight = $("#mapHeader").height();
 
-       // Expected height is window - header
-       var realHeight = windowHeight - headerHeight;
-
-       $("#map").height(realHeight);
-       $("#map").css({ top: headerHeight }); // position under header
        removeMarkers();
 
        if(routesData) {
@@ -90,25 +92,86 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
     });
 
+    $("#syncPopupYes").click(function(e) {
+        var dload_general = $('#generalMapCheckbox').prop('checked');
+        var dload_routedata = $('#routeDataCheckbox').prop('checked');
+        if(dload_general) {
+            loadGeneralMap();
+        }
+        if(dload_routedata) {
+            var selRoute = $(localStorage.getItem("selectedRoute_serverid"));
+            console.log(selRoute);
+            if(selRoute!=null) {
+
+            }
+        }
+    });
+
 });
 
 $(document).ready(function() {
-    loadRoutes();
+    routesData = JSON.parse(localStorage.getItem("routesData"));
+
 });
 
 
 $(document).on('pageshow', '#trip_select', function() {
     // Workaround to show loading dialog (can't be used on document.ready()
-    if(Object.keys(markers["_layers"]).length==0) {
+    if(routesData==null) {
         $.mobile.loading("show", {
-          text: "retrieving routes",
+          text: "initializing map",
           textVisible: true,
           theme: "b",
           html: ""
         });
-   }
+    }
 
+    if(navigator.onLine && routesData==null) {
+        loadRoutes();
+    }
+    else {
+        parseRoutesData(routesData);
+    }
+    //Geolocation
+    //map.locate({setView: true, maxZoom: 8});
 });
+
+function loadGeneralMap() {
+    console.log(OFFMAP_NAME + ": loadGeneralMap()");
+    DB.get('general', function(doc, err) {
+        if(doc) {
+            DB.remove(doc);
+        }
+    }).then(function() {
+
+    var xhr = new XMLHttpRequest();
+
+    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALMAP;
+    console.log(url);
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
+
+    xhr.onload = function(e) {
+      var uInt8Array = new Uint8Array(this.response);
+
+      var zip = new JSZip();
+      zip.load(uInt8Array);
+      var fName = zip.files[Object.keys(zip.files)[0]].name;
+      var mbtiles = zip.file(fName).asUint8Array();
+      console.log("Downloaded DB : " + fName);
+      sqlite_general = new SQL.Database(mbtiles);
+
+      DB.put({_id: "general", mbtiles:fName ,database: mbtiles}, function(err, response) {
+
+      }).then(function(doc) {
+        $.mobile.loading("hide");
+
+
+      });
+    };
+    xhr.send();
+    });
+}
 
 function putHighlights(highlights, layer) {
     $(highlights).each(function(index, value) {
@@ -123,7 +186,7 @@ function putHighlights(highlights, layer) {
                 break;
         }
 
-        var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+        var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><img src="icons/ic_itinerary_icon.png"></img></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
         //layer.addLayer(marker);
         marker.addTo(markersHLT);
     });
@@ -162,22 +225,35 @@ function openDB() {
     DB = new PouchDB(dbname);
 
 
-    DB.get("bundle", function(err,doc) {
+    DB.get("general", function(err,doc) {
         if(err) {
-            console.warn(OFFMAP_NAME + ": No DB present");
+            console.warn(OFFMAP_NAME + ": No general DB present");
             //console.warn("Manifest fetch error: ", err.error, " reason: ", err.reason, " status: ", err.status);
         }
         else {
-            console.log(OFFMAP_NAME + ": opened MBTiles...");
-            console.log(doc.mbtiles);
-
-            sqlite = new SQL.Database(doc.database);
-            console.log("Tables found on the DB: ");
-            var result=sqlite.exec("SELECT name FROM sqlite_master WHERE type = 'table'");
-            console.table(result[0].values);
+            createSQLiteObject(sqlite_general, doc);
             addDBMap();
         }
-    });//.then(function(doc) { addDBMap(); } );
+    }).then( function() {
+        DB.get("bundle", function(err, doc) {
+            if(err) {
+                console.log(OFFMAP_NAME + ": No DB present");
+            }
+            else {
+                createSQLiteObject(sqlite, doc);
+            }
+        });
+    });
+}
+
+function createSQLiteObject(sqlite, doc) {
+    console.log(OFFMAP_NAME + ": opened MBTiles...");
+    console.log(doc.mbtiles);
+
+    sqlite = new SQL.Database(doc.database);
+    console.log("Tables found on the DB: ");
+    var result=sqlite.exec("SELECT name FROM sqlite_master WHERE type = 'table'");
+    console.table(result[0].values);
 }
 
 function getBundleFile(serverid) {
@@ -208,9 +284,9 @@ function getBundleFile(serverid) {
       console.log(contents);
       // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-      DB.put({_id: "bundle", mbtiles:path ,database: uInt8Array}, function(err, response) {
+      DB.put({_id: "bundle", mbtiles:path ,database: mbtiles}, function(err, response) {
           if(err) {
-              if(err.status==500) {
+              if(err.status==409) {
                   $('#popupDataPresent').popup();
                   $('#popupDataPresent').popup('open');
               }
@@ -269,11 +345,11 @@ function addDBMap() {
     markers.addTo(map);
     markersHLT.addTo(map);
 
-    maxZ = sqlite.exec("SELECT max(zoom_level) FROM tiles")[0].values[0];
-    minZ = sqlite.exec("SELECT min(zoom_level) FROM tiles")[0].values[0];
+    maxZ = sqlite ? sqlite.exec("SELECT max(zoom_level) FROM tiles")[0].values[0] :  sqlite_general.exec("SELECT max(zoom_level) FROM tiles")[0].values[0];
+    minZ = sqlite ? sqlite.exec("SELECT min(zoom_level) FROM tiles")[0].values[0] :  sqlite_general.exec("SELECT min(zoom_level) FROM tiles")[0].values[0];
 
 
-    metadata = sqlite.exec("SELECT * FROM metadata");
+    metadata = sqlite ? sqlite.exec("SELECT * FROM metadata") : sqlite_general.exec("SELECT * FROM metadata");
     imgType = metadata[0].values[5][1];
     str = metadata[0].values[0][1];
     compos = str.indexOf(',');
@@ -291,9 +367,14 @@ function addDBMap() {
             var deferred = new jQuery.Deferred();
             var id = view.zoom + "/" + view.tile.column + "/" + view.tile.row + "." + imgType;
             //console.log(id);
-            var imgBlob = sqlite.exec("SELECT tile_data FROM tiles WHERE zoom_level="+view.zoom+" AND tile_column="+view.tile.column+" AND tile_row="+view.tile.row);
-            if(!imgBlob[0]) {
-                //console.warn("Couldn't find tile " + id);
+            var imgBlob = null;
+            if(!sqlite) {
+                // Retry, but look on the general map
+                imgBlob = sqlite_general.exec("SELECT tile_data FROM tiles WHERE zoom_level="+view.zoom+" AND tile_column="+view.tile.column+" AND tile_row="+view.tile.row);
+
+                if(!imgBlob[0]) {
+                    console.warn("Couldn't find tile " + id);
+                }
             }
             else {
                 //console.warn("Found tile " + id);
@@ -310,6 +391,7 @@ function addDBMap() {
                 reader.readAsDataURL(new Blob([imgBlob[0].values[0][0]], {type:"image/"+imgType}));
 
             }
+
             return deferred.promise();
     }, {tms: true});
 
@@ -349,6 +431,14 @@ function deleteDB() {
            manifest = null;
        }
     });
+
+    // Delete also local storage values
+    localStorage.removeItem("selectedRoute_steps");
+    localStorage.removeItem("selectedRoute_highlights");
+    localStorage.removeItem("selectedRoute_serverid");
+    localStorage.removeItem("selectedRoute_mapid");
+    localStorage.removeItem("selectedRoute");
+    localStorage.removeItem("routesData");
 }
 
 function openRouteDescription(mapID, arrayPosition, serverid) {
@@ -356,10 +446,7 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
 
     // Define message
     $("#routeDescription").html(routesData[arrayPosition]["description_"+lang]);
-    // Store selected route ID on routesData array and server ID
-    localStorage.setItem("selectedRoute", arrayPosition);
-    localStorage.setItem("selectedRoute_serverid", serverid);
-    localStorage.setItem("selectedRoute_mapid", mapID);
+
     // Define mapid
     $("#routeSelect").data('mapid', mapID);
     $("#popupRoute").popup();
@@ -371,17 +458,23 @@ function setUpButtons() {
 
     console.log(OFFMAP_NAME + ": setUpButtons()");
     $("#selectRoutes").change(function() {
+
         if($("#selectRoutes :selected").text()!="") {
             var mapID = $("#selectRoutes :selected").data('mapid');
             var position = $("#selectRoutes").val()-1;
             var serverid = $("#selectRoutes :selected").data('serverid');
-            openRouteDescription(mapID, position, serverid);
+            // Store selected route ID on routesData array and server ID
+            localStorage.setItem("selectedRoute", position);
+            localStorage.setItem("selectedRoute_serverid", serverid);
+            localStorage.setItem("selectedRoute_mapid", mapID);
+            //openRouteDescription(mapID, position, serverid);
+            $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
         }
     });
 }
 
 
-function ajaxGetCORS(type, url, token, successFunc, errorFunc, doneFunc) {
+function ajaxGet(type, url, token, successFunc, errorFunc, doneFunc) {
     $.ajax({
         type: type,
         url: url,
@@ -404,50 +497,20 @@ function ajaxGetCORS(type, url, token, successFunc, errorFunc, doneFunc) {
 function loadRoutes() {
     console.log("Retrieving routes...");
     // $.mobile.loading moved to 'pageshow' (does not work here)
-    ajaxGetCORS('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES, HOLETSERVER_AUTHORIZATION,
+    ajaxGet('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES, HOLETSERVER_AUTHORIZATION,
         function(data) {
-            initMap();
+
+            localStorage.setItem("routesData", JSON.stringify(data));
+            routesData = data;
+            parseRoutesData(data);
             //$("#selectRoutes").html("<option value=''></option>");
-            var count = data.length;
+            //var count = data.length;
             //console.log("Fetched " + count + " elements: " );
             //console.table(data, ["server_id", "name_ca", "name_es", "map.map_file_name"]);
             //console.table(data  );
-            $(data).each(function(index, value) {
-                    $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
-
-                    // Create an element to hold all your text and markup
-                    var container = $('<div />');
-
-                    // Delegate all event handling for the container itself and its contents to the container
-                    container.on('click', '.mapPopupLink', function() {
-                        var mapID = $(this).data('mapid');
-                        var position = $(this).data('arraypos');
-                        var serverid = $(this).data('serverid');
-                        openRouteDescription(mapID, position, serverid);
-
-                    });
-
-                    // Insert whatever you want into the container, using whichever approach you prefer
-                    container.html("<b><a class='mapPopupLink' href='#' data-serverid='" + value.server_id + "' data-arraypos='" + index + "' data-mapid='"  + value.map.map_file_name + "'>" + value["name_"+lang] + "</a></b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
-
-                    var latlngs = [];
-                    var steps = value.track.steps;
-                    steps.sort(function(a,b){return a.order-b.order});
-                    $(steps).each(function(index, value) {
-                        if(value.order!=null) {
-                            latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
-                        }
-                    });
-
-                    //console.log(value["name_"+lang] + " -> " + latlngs[0]);
-                    // Show routes on the map
-                    addMarkerWithPopup(latlngs[0], container[0]);
-                    drawRoute(steps, POLYLINE_COLORS[index], POLYLINE_DEFAULT_OPACITY, false);
 
 
 
-            });
-            routesData = data;
         },
         function(error) {
             console.log(error);
@@ -455,10 +518,48 @@ function loadRoutes() {
             $.mobile.loading("hide");
         },
         function() {
-            $.mobile.loading("hide");
-
             setUpButtons();
-
-            openDB();
+            $.mobile.loading("hide");
         });
+}
+
+function parseRoutesData(data) {
+    $(data).each(function(index, value) {
+        $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
+
+        // Create an element to hold all your text and markup
+        var container = $('<div />');
+
+        // Delegate all event handling for the container itself and its contents to the container
+        container.on('click', '.mapPopupLink', function() {
+            var mapID = $(this).data('mapid');
+            var position = $(this).data('arraypos');
+            var serverid = $(this).data('serverid');
+            openRouteDescription(mapID, position, serverid);
+
+        });
+
+        // Insert whatever you want into the container, using whichever approach you prefer
+        container.html("<b><a class='mapPopupLink' href='#' data-serverid='" + value.server_id + "' data-arraypos='" + index + "' data-mapid='"  + value.map.map_file_name + "'>" + value["name_"+lang] + "</a></b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
+
+        var latlngs = [];
+        var steps = value.track.steps;
+        steps.sort(function(a,b){return a.order-b.order});
+        $(steps).each(function(index, value) {
+            if(value.order!=null) {
+                latlngs[latlngs.length] = new L.LatLng(value.latitude, value.longitude);
+            }
+        });
+
+        //console.log(value["name_"+lang] + " -> " + latlngs[0]);
+        // Show routes on the map
+        addMarkerWithPopup(latlngs[0], container[0]);
+        drawRoute(steps, POLYLINE_COLORS[index], POLYLINE_DEFAULT_OPACITY, false);
+
+    });
+    if(!map) {
+        initMap();
+    }
+
+
 }

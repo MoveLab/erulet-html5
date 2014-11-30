@@ -139,6 +139,14 @@
     <string name="yes">Sí</string>
     <string name="you_are_here_exp">Ets aquí!</string>
     <string name="your_rating">La teva valoració</string>
+    <string name="welcome_message">"In order to function offline in the mountains, Eth Holet needs to perform an initial sync with the server, which will take several minutes. If you have an internet connection and would like to do this now, please click 'OK'. Otherwise, you can always do it later by choosing the 'sync' option from the menu on this screen."</string>
+    <string name="sync_now">Sync now</string>
+    <string name="sync_later">Sync later</string>
+    <string name="sync_success_title">Success!</string>
+    <string name="sync_success_message">Eth Holet has all the data he needs. You can go ahead and start hiking!</string>
+    <string name="sync_error_title">We had some trouble</string>
+    <string name="sync_error_message">Eth Holet was not able to get all of the data he needs from the server. Please check you internet connection and try again.</string>
+
 
 
 
@@ -147,9 +155,12 @@
     <string name="dl_r1">Descarrega ruta</string>
     <string name="dl_clear">Neteja dades</string>
     <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
-    <string name="data_present">Aquesta ruta ja és present al dispositiu, no cal descarregar-la</string>
+    <string name="data_present">Les dades ja s'han descarregat anteriorment.</string>
     <string name="refresh_web">(Caldrà refrescar la web)</string>
     <string name="register">Registrar-se</string>
     <string name="login">Iniciar sessió</string>
     <string name="opcions">Opcions</string>
+    <string name="sync">Sincronitza</string>
+    <string name="general_map">Descarrega també mapa general</string>
+    <string name="routes_data">Torna a descarregar les dades de les rutes</string>
 </resources>
