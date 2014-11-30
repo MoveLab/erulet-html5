@@ -54,6 +54,8 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $("#map").height(realHeight);
     $("#map").css({ top: headerHeight }); // position under header
 
+    $('#generalMapCheckbox').prop('checked', true).checkboxradio('refresh');
+
     $("#routeView").click(function(e) {
 
        // Hide controls
@@ -88,23 +90,29 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     });
 
     $("#routeSelect").click(function(e) {
-        getBundleFile(localStorage.getItem("selectedRoute_serverid"));
+//        getBundleFile(localStorage.getItem("selectedRoute_serverid"));
 
     });
 
     $("#syncPopupYes").click(function(e) {
         var dload_general = $('#generalMapCheckbox').prop('checked');
         var dload_routedata = $('#routeDataCheckbox').prop('checked');
+        console.log(dload_general + " - " + dload_routedata);
         if(dload_general) {
             loadGeneralMap();
         }
         if(dload_routedata) {
-            var selRoute = $(localStorage.getItem("selectedRoute_serverid"));
-            console.log(selRoute);
-            if(selRoute!=null) {
-
-            }
+            //var selRoute = $(localStorage.getItem("selectedRoute_serverid"));
+            //console.log(selRoute);
+            //if(selRoute!=null) {
+                //getBundleFile(selRoute);
+            //}
+            loadRoutes();
         }
+        if($("#selectRoutes :selected").text()!="") {
+            getBundleFile(localStorage.getItem("selectedRoute_serverid"));
+        }
+
     });
 
 });
@@ -421,6 +429,16 @@ function removeMarkers() {
 
 function deleteDB() {
     console.log(OFFMAP_NAME + ": deleteDB()");
+
+
+    // Delete also local storage values, removeItem() does not seem to work
+    localStorage.setItem("selectedRoute_steps", null);
+    localStorage.setItem("selectedRoute_highlights", null);
+    localStorage.setItem("selectedRoute_serverid", null);
+    localStorage.setItem("selectedRoute_mapid", null);
+    localStorage.setItem("selectedRoute", null);
+    localStorage.setItem("routesData", null);
+
     DB.destroy(function(err, info) {
        if(err) {
            alert("Could not delete DB: ", err);
@@ -432,13 +450,6 @@ function deleteDB() {
        }
     });
 
-    // Delete also local storage values
-    localStorage.removeItem("selectedRoute_steps");
-    localStorage.removeItem("selectedRoute_highlights");
-    localStorage.removeItem("selectedRoute_serverid");
-    localStorage.removeItem("selectedRoute_mapid");
-    localStorage.removeItem("selectedRoute");
-    localStorage.removeItem("routesData");
 }
 
 function openRouteDescription(mapID, arrayPosition, serverid) {
@@ -496,6 +507,12 @@ function ajaxGet(type, url, token, successFunc, errorFunc, doneFunc) {
 
 function loadRoutes() {
     console.log("Retrieving routes...");
+    $.mobile.loading("show", {
+              text: "initializing map",
+              textVisible: true,
+              theme: "b",
+              html: ""
+            });
     // $.mobile.loading moved to 'pageshow' (does not work here)
     ajaxGet('GET', HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES, HOLETSERVER_AUTHORIZATION,
         function(data) {
@@ -559,6 +576,7 @@ function parseRoutesData(data) {
     });
     if(!map) {
         initMap();
+        openDB();
     }
 
 
