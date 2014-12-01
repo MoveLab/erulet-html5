@@ -83,30 +83,6 @@ $(document).ready( function() {
         localStorage.setItem("language", $(this)[0].value);
     });
 
-    if(DEBUG) {
-        $('#routeButtons').append("<button id='dl_r0' class='ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all ui-icon-itineraryicon' data-mapid='58827839-f1df-475b-ae2f-7eb76c4d3284.mbtiles'>Test</button>");
-        $("#dl_r0").click(function(e) {
-            if (navigator.onLine) {         // No internet, can't download
-                $.mobile.loading("show", {
-                    text: "downloading files",
-                    textVisible: true,
-                    theme: "b",
-                    html: ""
-                });
-               //getBundleFile("/vielha");
-               //var filename = $("#dl_r1").data('mapid');
-               var filename = $(this).data('mapid');
-               //We'll use zip to avoid 5 mb quota limit of localStorage
-               //filename = filename.replace('.mbtiles', '.mbtiles.zip');
-               //console.log("Map file to load: " + $("#dl_r1").data('mapid'));
-               getBundleFile(filename);
-           }
-           else {
-                $('#popupNoInternet').popup();
-                $('#popupNoInternet').popup('open');
-           }
-        });
-    }
 });
 
 function loadHTML(pageID) {

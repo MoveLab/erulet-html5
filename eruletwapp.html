@@ -6,19 +6,21 @@
     <meta Name="description" Content="Erulet HTML5 web application.">
     <meta HTTP-EQUIV="description" Content="Erulet HTML5 web application.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
-    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link rel="stylesheet" href="css/eruletwapp.css">
     <link rel="apple-touch-icon-precomposed" href="images/ic_launcher.png">
     <link rel="apple-touch-startup-image" href="images/ic_launcher.png">
     <link rel="icon" type="image/jpg" href="images/ic_launcher.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
     <!--<script>L_PREFER_CANVAS = true;</script>-->
-    <script src="js/leaflet.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
     <script src="js/leaflet.functionaltilelayer.js"></script>
     <script src="js/L.Grid.js"></script>
 
@@ -38,11 +40,11 @@
     <div data-role="header">
         <h1 class="localizable" data-lclstring="app_name"></h1>
 
-        <a href="#popupOptions" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-gear ui-btn-icon-left ui-corner-all localizable" data-lclstring="opcions"></a>
+        <a href="#popupOptions" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-gear ui-btn-icon-left ui-corner-all ui-btn-icon-notext localizable" data-lclstring="opcions"></a>
 
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
-            <a id="registerAnchor" href="#" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all localizable" data-lclstring="register"></a>
-            <a id="loginAnchor" href="#" class="ui-btn ui-mini ui-icon-user ui-btn-icon-right ui-corner-all localizable" data-lclstring="login"></a>
+            <a id="registerAnchor" href="#" class="ui-btn ui-mini ui-icon-user ui-btn-icon-notext ui-btn-icon-right ui-corner-all localizable" data-lclstring="register"></a>
+            <a id="loginAnchor" href="#" class="ui-btn ui-mini ui-icon-action ui-btn-icon-notext ui-btn-icon-right ui-corner-all localizable" data-lclstring="login"></a>
 
         </div>
     </div><!-- /header -->
@@ -98,7 +100,7 @@
 <div data-role="page" id="user_manual" data-theme="b">
     <div data-role="header">
         <h1 class="localizable" data-lclstring="app_name"></h1>
-        <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+        <a href="#switchboard" class="ui-btn ui-mini ui-btn-left ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
     </div><!-- /header -->
 
     <div id="manual" class="loadHTML"><!-- placeholder for external file -->
@@ -111,7 +113,7 @@
 
     <div data-role="header">
         <h1 class="localizable" data-lclstring="app_name"></h1>
-        <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+        <a href="#switchboard" class="ui-btn ui-mini ui-btn-left ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
     </div><!-- /header -->
     <div id="before_leaving" class="loadHTML"><!-- placeholder for external file -->
 
@@ -126,7 +128,7 @@
 
     <div data-role="header">
         <h1 class="localizable" data-lclstring="app_name"></h1>
-        <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+        <a href="#switchboard" class="ui-btn ui-mini ui-btn-left ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
     </div><!-- /header -->
 
     <div id="about" class="loadHTML"><!-- placeholder for external file -->
@@ -140,12 +142,12 @@
 
     <div data-role="header">
         <h1 class="localizable" data-lclstring="trips"></h1>
-        <a href="/eruletwapp.html" class="ui-btn-left localizable" data-lclstring="home" data-icon="home" data-iconpos="left" data-direction="reverse"></a><!-- home button -->
+        <a href="#switchboard" class="ui-btn ui-mini ui-btn-left  ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
 
         <div data-role="controlgroup" id="routeButtons" data-type="horizontal" class="ui-mini ui-btn-right">
 
-            <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-icon-delete localizable" data-lclstring="dl_clear"></a>
-            <a href="#popupSync" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all localizable ui-icon-recycle" data-lclstring="sync"></a>
+            <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-btn-icon-notext ui-icon-delete localizable" data-lclstring="dl_clear"></a>
+            <a href="#popupSync" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-btn-icon-notext localizable ui-icon-recycle" data-lclstring="sync"></a>
 
         </div>
     </div><!-- /header -->
