@@ -38,6 +38,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     //$("#routeControls:hidden").show("slow");
 
     mapviewmode=0;
+    if(map) {map.stopLocate();}
     // Handle clear button
     $("#dl_clear").click(function(e) {
         //e.preventDefault(); // it's an anchor
@@ -61,37 +62,12 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
        // Hide controls
        //$("#routeControls:visible").hide("slow");
-
-        mapviewmode = 1;
-
-       if(routesData) {
-            if(polyline) {
-                map.removeLayer(polyline);
-                map.removeLayer(markersHLT);
-                markersHLT = new L.FeatureGroup();
-            };
-            if(polylines) {
-                map.removeLayer(polylines);
-                polylines = new L.FeatureGroup();
-                polylines.addTo(map);
-            };
-            console.log("Route selected: " + localStorage.getItem("selectedRoute"));
-            var highlights = [];
-            var results = drawRoute(routesData[$(this).data('arraypos')].track.steps, POLYLINE_DEFAULT_COLOR, POLYLINE_DEFAULT_OPACITY, false);
-            polyline = results[0];
-            highlights = results[1];
-            map.fitBounds(polyline.getBounds());
-
-            putHighlights(highlights, markersHLT);
-
-            markers.addTo(map);
-            markersHLT.addTo(map);
-       }
+       viewRoute($(this), false);
     });
 
     $("#routeSelect").click(function(e) {
-//        getBundleFile(localStorage.getItem("selectedRoute_serverid"));
-
+        //Geolocation
+        viewRoute($(this), true);
     });
 
     $("#syncPopupYes").click(function(e) {
@@ -149,9 +125,40 @@ $(document).on('pageshow', '#trip_select', function() {
     else {
         parseRoutesData(routesData);
     }
-    //Geolocation
-    //map.locate({setView: true, maxZoom: 8});
 });
+
+function viewRoute(elem, locate) {
+
+    mapviewmode = 1;
+
+   if(routesData) {
+        if(polyline) {
+            map.removeLayer(polyline);
+            map.removeLayer(markersHLT);
+            markersHLT = new L.FeatureGroup();
+        };
+        if(polylines) {
+            map.removeLayer(polylines);
+            polylines = new L.FeatureGroup();
+            polylines.addTo(map);
+        };
+        console.log("Route selected: " + localStorage.getItem("selectedRoute"));
+        var highlights = [];
+        var results = drawRoute(routesData[elem.data('arraypos')].track.steps, POLYLINE_DEFAULT_COLOR, POLYLINE_DEFAULT_OPACITY, false);
+        polyline = results[0];
+        highlights = results[1];
+        map.fitBounds(polyline.getBounds());
+
+        putHighlights(highlights, markersHLT);
+
+        markers.addTo(map);
+        markersHLT.addTo(map);
+
+        if(locate) {
+            map.locate({setView: true, maxZoom: 8, watch: true});
+        }
+   }
+}
 
 function loadGeneralMap() {
     console.log(OFFMAP_NAME + ": loadGeneralMap()");
@@ -193,18 +200,30 @@ function loadGeneralMap() {
 
 function putHighlights(highlights, layer) {
     $(highlights).each(function(index, value) {
-        console.log(value.highlights[0].type);
+        //console.log(value.highlights[0].type);
         var mIcon = waypointIcon;
+        var marker;
         switch(value.highlights[0].type) {
             case 0:
                 mIcon = mapMarkerIcon;
+                marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><img src="icons/ic_itinerary_icon.png"></img></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
                 break;
             case 1:
                 mIcon = waypointIcon;
+                marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><a href="#waypointInfoPopup" data-rel="popup" data-position-to="window" data-transition="pop"><img src="icons/ic_itinerary_icon.png"></img></a></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+                marker.on('click', function(e) {
+                    $("#waypointInfoImgHeader").src = 'icons/pin_chart.png';
+                    $("#waypointInfoNameField").html( value.highlights[0]["name_"+lang]);
+                    $("#waypointInfoDescField").html( value.highlights[0]["long_text_"+lang]);
+                    $("#waypointInfoLatField").html(value["latitude"]);
+                    $("#waypointInfoLongField").html(value["longitude"]);
+                    $("#waypointInfoAltField").html(value["altitude"]);
+                    $("#waypointInfoRatingField").html(value.highlights[0]["average_rating"]);
+                });
                 break;
         }
 
-        var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><img src="icons/ic_itinerary_icon.png"></img></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+        //var marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup(popup);
         //layer.addLayer(marker);
         marker.addTo(markersHLT);
     });

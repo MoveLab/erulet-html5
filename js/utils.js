@@ -48,6 +48,7 @@ $(document).on('pageshow', '#login', function() {
     loadHTML($(this).attr('id'));
 });
 
+
 $(document).ready( function() {
 
     lang = localStorage.getItem("language");
