@@ -1,8 +1,8 @@
 CACHE MANIFEST
-# v1 - 2014-11-12
+# v2 - 2014-12-01
 
 # Local
-/eruletwapp.html
+eruletwapp.html
 css/eruletwapp.css
 js/leaflet.functionaltilelayer.js
 js/localizandroid.min.js
