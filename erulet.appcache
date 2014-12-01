@@ -68,12 +68,12 @@ static/frontulet/logos/SUDEAU2blue.jpg
 static/frontulet/logos/sudeu.jpg
 
 # From CDN
-js/jquery-1.11.1.min.js
-js/jquery.mobile-1.4.5.min.js
-css/jquery.mobile-1.4.5.min.css
-js/leaflet.js
-css/leaflet.css
-#http://cdn.leafletjs.com/leaflet-0.7.3/layers.png
+http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css
+http://code.jquery.com/jquery-1.11.1.min.js
+http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js
+http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css
+http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js
+http://cdn.leafletjs.com/leaflet-0.7.3/layers.png
 
 
 FALLBACK:
