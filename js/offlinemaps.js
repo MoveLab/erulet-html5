@@ -167,14 +167,10 @@ function loadGeneralMap() {
         }
     });
 
-    var xhr = new XMLHttpRequest();
+    //var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALMAP;
+    var url = 'route_maps/general_map.zip';
+    getFileFromAPI(url, function(e) {
 
-    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALMAP;
-    console.log(url);
-    xhr.open('GET', url, true);
-    xhr.responseType = 'arraybuffer';
-
-    xhr.onload = function(e) {
       var uInt8Array = new Uint8Array(this.response);
 
       var zip = new JSZip();
@@ -191,8 +187,8 @@ function loadGeneralMap() {
 
 
       });
-    };
-    xhr.send();
+      addDBMap();
+    });
 }
 
 function putHighlights(highlights, layer) {
@@ -286,7 +282,7 @@ function getBundleFile(serverid) {
 
     // Delete old file
     DB.get('routeMap', function(doc, err) {
-        DB.remove(doc);
+        DB.remove(doc).catch(function(error) {});
     }).catch(function(error) {
         switch(error.status) {
         case 404:
@@ -295,26 +291,23 @@ function getBundleFile(serverid) {
         }
     });
 
-    var xhr = new XMLHttpRequest();
+    //var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES;
+    var url = 'route_maps/' + path;
 
-    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES;
-    xhr.open('GET', url, true);
-    xhr.responseType = 'arraybuffer';
+    getFileFromAPI(url, function(e) {
+        var uInt8Array = new Uint8Array(this.response);
 
-    xhr.onload = function(e) {
-      var uInt8Array = new Uint8Array(this.response);
+        var zip = new JSZip();
+        zip.load(uInt8Array);
+        var fName = localStorage.getItem("selectedRoute_mapid");
+        var mbtiles = zip.file(fName).asUint8Array();
+        console.log("Downloaded DB : " + fName);
+        sqlite = new SQL.Database(mbtiles);
+        //var contents = sqlite.exec("SELECT * FROM tiles");
+        //console.log(contents);
+        // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-      var zip = new JSZip();
-      zip.load(uInt8Array);
-      var fName = localStorage.getItem("selectedRoute_mapid");
-      var mbtiles = zip.file(fName).asUint8Array();
-      console.log("Downloaded DB : " + fName);
-      sqlite = new SQL.Database(mbtiles);
-      //var contents = sqlite.exec("SELECT * FROM tiles");
-      //console.log(contents);
-      // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
-
-      DB.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
+        DB.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
           if(err) {
               if(err.status==409) {
                   $('#popupDataPresent').popup();
@@ -331,9 +324,8 @@ function getBundleFile(serverid) {
               //fillDB(zip);
               $.mobile.loading("hide");
           }
-      });
-    };
-    xhr.send();
+        });
+    });
 }
 
 function initMap() {
@@ -483,6 +475,16 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
 
 }
 
+function getFileFromAPI(url, onload) {
+    var xhr = new XMLHttpRequest();
+
+    console.log(url);
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
+
+    xhr.onload = onload;
+    xhr.send();
+}
 
 function ajaxGet(type, url, token, successFunc, errorFunc, doneFunc) {
     $.ajax({
