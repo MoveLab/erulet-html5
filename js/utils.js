@@ -40,13 +40,14 @@ $(document).on('pageshow', '#user_manual', function() {
     loadHTML($(this).attr('id'));
 });
 
-$(document).on('pageshow', '#register', function() {
+/*$(document).on('pageshow', '#register', function() {
     loadHTML($(this).attr('id'));
+
 });
 
 $(document).on('pageshow', '#login', function() {
     loadHTML($(this).attr('id'));
-});
+});*/
 
 
 $(document).ready( function() {
@@ -66,6 +67,8 @@ $(document).ready( function() {
         lang = lang.substr(0,2);
     }
     // Load file
+    $('#registerAnchor').attr('href', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER);
+    $('#loginAnchor').attr('href', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN);
 
     $('#langSelector input').each(function(index, value) {
         if(localStorage.getItem("language")==value.value) {
@@ -123,12 +126,12 @@ function loadHTML(pageID) {
             id = 'about';
             path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_CREDITS : 'html/' + id + '_' + lang + '.html';
             break;
-        case 'register':
-            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER : 'offline.html';
+        /*case 'register':
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER + " #_id" : 'offline.html';
             break;
         case 'login':
-            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN : 'offline.html';
-            break;
+            path = navigator.onLine ? HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN + " #body_id" : 'offline.html';
+            break;*/
         default:
             console.log('skipping');
     }
