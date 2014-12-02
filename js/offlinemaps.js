@@ -314,7 +314,7 @@ function getBundleFile(serverid) {
         }
     });
 
-    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS + path;
+    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS + serverid;
 
     getFileFromAPI(url, function(e) {
         var uInt8Array = new Uint8Array(this.response);
