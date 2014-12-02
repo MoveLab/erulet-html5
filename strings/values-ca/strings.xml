@@ -156,6 +156,7 @@
     <string name="dl_clear">Neteja dades</string>
     <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
     <string name="data_present">Les dades ja s'han descarregat anteriorment.</string>
+    <string name="data_no_present">Les dades descarregades no es corresponen a la ruta seleccionada. El mapa no es mostrarà correctament fora de línia.</string>
     <string name="refresh_web">(Caldrà refrescar la web)</string>
     <string name="register">Registrar-se</string>
     <string name="login">Iniciar sessió</string>

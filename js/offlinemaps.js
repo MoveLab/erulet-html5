@@ -59,9 +59,6 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $('#generalMapCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
 
     $("#routeView").click(function(e) {
-
-       // Hide controls
-       //$("#routeControls:visible").hide("slow");
        viewRoute($(this), false);
     });
 
@@ -133,7 +130,11 @@ function showMobileLoading(message) {
 
 function viewRoute(elem, locate) {
 
-    mapviewmode = 1;
+   mapviewmode = 1;
+
+   if(localStorage.getItem("selectedRoute")!=elem.data('serverid')) {
+
+   }
 
    if(routesData) {
         if(polyline) {
@@ -490,8 +491,10 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
     // Define mapid
     $("#routeView").data('arraypos', arrayPosition);
     $("#routeView").data('mapid', mapID);
+    $("#routeView").data('serverid', serverid);
     $("#routeSelect").data('mapid', mapID);
     $("#routeSelect").data('arraypos', arrayPosition);
+    $("#routeSelect").data('serverid', serverid);
     $("#popupRoute").popup();
     $("#popupRoute").popup('open');
 
