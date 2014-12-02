@@ -111,12 +111,7 @@ $(document).ready(function() {
 $(document).on('pageshow', '#trip_select', function() {
     // Workaround to show loading dialog (can't be used on document.ready()
     if(routesData==null) {
-        $.mobile.loading("show", {
-          text: "initializing map",
-          textVisible: true,
-          theme: "b",
-          html: ""
-        });
+        showMobileLoading("initializing map...");
     }
 
     if(navigator.onLine && routesData==null) {
@@ -126,6 +121,15 @@ $(document).on('pageshow', '#trip_select', function() {
         parseRoutesData(routesData);
     }
 });
+
+function showMobileLoading(message) {
+    $.mobile.loading("show", {
+      text: message,
+      textVisible: true,
+      theme: "b",
+      html: ""
+    });
+}
 
 function viewRoute(elem, locate) {
 
@@ -298,6 +302,7 @@ function getBundleFile(serverid) {
     var path = bundleFilename + serverid + '.zip';
     console.log(OFFMAP_NAME + ": opening "+ path);
 
+    showMobileLoading("donwloading maps");
     // Delete old file
     DB.get('routeMap', function(doc, err) {
         DB.remove(doc).catch(function(error) {});
@@ -309,7 +314,7 @@ function getBundleFile(serverid) {
         }
     });
 
-    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES;
+    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS + path;
 
     getFileFromAPI(url, function(e) {
         var uInt8Array = new Uint8Array(this.response);
