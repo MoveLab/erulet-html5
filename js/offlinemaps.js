@@ -74,10 +74,10 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
         var dload_general = $('#generalMapCheckbox').prop('checked');
         var dload_routedata = $('#routeDataCheckbox').prop('checked');
         console.log(dload_general + " - " + dload_routedata);
-        if(dload_general) {
+        if(dload_general==true) {
             loadGeneralMap();
         }
-        if(dload_routedata) {
+        if(dload_routedata==true) {
             loadRoutes();
         }
         if($("#selectRoutes :selected").text()!="") {
