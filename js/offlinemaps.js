@@ -174,8 +174,7 @@ function loadGeneralMap() {
         }
     });
 
-    //var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALMAP;
-    var url = 'route_maps/general_map.zip';
+    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALMAP;
     getFileFromAPI(url, function(e) {
 
       var uInt8Array = new Uint8Array(this.response);
@@ -310,8 +309,7 @@ function getBundleFile(serverid) {
         }
     });
 
-    //var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES;
-    var url = 'route_maps/' + path;
+    var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTES;
 
     getFileFromAPI(url, function(e) {
         var uInt8Array = new Uint8Array(this.response);
