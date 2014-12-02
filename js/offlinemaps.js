@@ -25,6 +25,7 @@ var markersHLT = new L.FeatureGroup();
 var polylines = new L.FeatureGroup();
 var polyline;
 var mapviewmode = 0;
+var showsurvey = false;
 
 var map;
 var onlineLayer, offlineLayer;
@@ -38,6 +39,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     //$("#routeControls:hidden").show("slow");
 
     mapviewmode=0;
+    showsurvey=false;
     if(map) {map.stopLocate();}
     // Handle clear button
     $("#dl_clear").click(function(e) {
@@ -59,7 +61,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $('#generalMapCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
 
     $("#routeView").click(function(e) {
-       viewRoute($(this), false);
+        viewRoute($(this), false);
     });
 
     $("#routeSelect").click(function(e) {
@@ -119,6 +121,14 @@ $(document).on('pageshow', '#trip_select', function() {
     }
 });
 
+$(document).on('pagebeforehide', '#trip_select', function() {
+    if(showsurvey==true) {
+        console.log("Show survey");
+        showsurvey = false;
+        window.location = HOLETSERVER_URL + lang + HOLETSERVER_MOBILEPAGES_SURVEY;
+    }
+});
+
 function showMobileLoading(message) {
     $.mobile.loading("show", {
       text: message,
@@ -131,9 +141,11 @@ function showMobileLoading(message) {
 function viewRoute(elem, locate) {
 
    mapviewmode = 1;
+   showsurvey = true;
 
    if(localStorage.getItem("selectedRoute")!=elem.data('serverid')) {
-
+        $('#popupDataNoPresent').popup();
+        $('#popupDataNoPresent').popup('show');
    }
 
    if(routesData) {
