@@ -43,8 +43,8 @@
         <a href="#popupOptions" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-icon-gear ui-btn-icon-left ui-corner-all ui-btn-icon-notext localizable" data-lclstring="opcions"></a>
 
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
-            <a id="registerAnchor" href="#" class="ui-btn ui-mini ui-icon-user ui-btn-icon-notext ui-btn-icon-right ui-corner-all localizable" data-lclstring="register"></a>
-            <a id="loginAnchor" href="#" class="ui-btn ui-mini ui-icon-action ui-btn-icon-notext ui-btn-icon-right ui-corner-all localizable" data-lclstring="login"></a>
+            <a id="registerAnchor" href="#register" class="ui-btn ui-mini ui-icon-user ui-btn-icon-notext ui-btn-icon-right ui-corner-all localizable" data-lclstring="register"></a>
+            <a id="loginAnchor" href="#login" class="ui-btn ui-mini ui-icon-action ui-btn-icon-notext ui-btn-icon-right ui-corner-all localizable" data-lclstring="login"></a>
 
         </div>
     </div><!-- /header -->
@@ -258,6 +258,24 @@
         </div>
     </div>
 </div><!-- End of fifth page -->
+
+<div data-role="page" id="register" >
+    <div data-role="header" data-theme="b">
+        <h1 id="registerPageTitle"></h1>
+        <a href="#switchboard" class="ui-btn ui-mini ui-btn-left  ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
+
+    </div><!-- /header -->
+    <div id="registerHTML" role="main" class="ui-content"></div>
+</div>
+
+<div data-role="page" id="login" >
+    <div data-role="header" data-theme="b">
+        <h1 id="loginPageTitle"></h1>
+        <a href="#switchboard" class="ui-btn ui-mini ui-btn-left  ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
+
+    </div><!-- /header -->
+    <div id="loginHTML" role="main" class="ui-content"></div>
+</div>
 
 </body>
 </html>

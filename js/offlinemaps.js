@@ -125,7 +125,7 @@ $(document).on('pagebeforehide', '#trip_select', function() {
     if(showsurvey==true) {
         console.log("Show survey");
         showsurvey = false;
-        window.location = HOLETSERVER_URL + lang + HOLETSERVER_MOBILEPAGES_SURVEY;
+        window.location = HOLETSERVER_URL + lang + HOLETSERVER_MOBILEPAGES_SURVEY + localStorage.getItem("viewingRoute") + "/";
     }
 });
 
@@ -143,6 +143,8 @@ function viewRoute(elem, locate) {
    mapviewmode = 1;
    showsurvey = true;
 
+   // Save serverid for survey
+   localStorage.setItem("viewingRoute", elem.data('serverid'));
    if(localStorage.getItem("selectedRoute")!=elem.data('serverid')) {
         $('#popupDataNoPresent').popup();
         $('#popupDataNoPresent').popup('show');
@@ -159,7 +161,7 @@ function viewRoute(elem, locate) {
             polylines = new L.FeatureGroup();
             polylines.addTo(map);
         };
-        console.log("Route selected: " + localStorage.getItem("selectedRoute"));
+        //console.log("Route selected: " + localStorage.getItem("selectedRoute"));
         var highlights = [];
         var results = drawRoute(routesData[elem.data('arraypos')].track.steps, POLYLINE_DEFAULT_COLOR, POLYLINE_DEFAULT_OPACITY, false);
         polyline = results[0];

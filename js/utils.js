@@ -49,6 +49,11 @@ $(document).on('pageshow', '#login', function() {
     loadHTML($(this).attr('id'));
 });*/
 
+$(document).ajaxComplete(function(event, xhr, settings) {
+    console.log("AJAX completed");
+    console.log(event.target.URL);
+    console.log(xhr.responseText);
+});
 
 $(document).ready( function() {
 
@@ -67,8 +72,14 @@ $(document).ready( function() {
         lang = lang.substr(0,2);
     }
     // Load file
-    $('#registerAnchor').attr('href', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER);
-    $('#loginAnchor').attr('href', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN);
+
+    $('#registerHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER + " #main_id", function() {
+        $('#registerHTML').trigger('create'); // Without this it won't apply styling
+    });
+    $('#loginHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN + " #main_id", function() {
+        $('#loginHTML').trigger('create'); // Without this it won't apply styling
+    });
+
 
     $('#langSelector input').each(function(index, value) {
         if(localStorage.getItem("language")==value.value) {
