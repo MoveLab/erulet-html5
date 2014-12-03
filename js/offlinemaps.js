@@ -147,7 +147,7 @@ function viewRoute(elem, locate) {
    localStorage.setItem("viewingRoute", elem.data('serverid'));
    if(localStorage.getItem("selectedRoute")!=elem.data('serverid')) {
         $('#popupDataNoPresent').popup();
-        $('#popupDataNoPresent').popup('show');
+        $('#popupDataNoPresent').popup('open');
    }
 
    if(routesData) {
