@@ -95,7 +95,7 @@ $(document).ready( function() {
         var htmlResponse = $.parseHTML(xhr.responseText);
         $('#registerPageTitle').append($(htmlResponse).find('#header_id:first-child').text()); // Get title from external page
         $('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER); // Override url or it will fail miserably
-        $('form:first-of-type').submit(function() {
+        $('form:first-of-type').submit(function(e) {
              e.preventDefault();
              $.post(url, { csrfmiddlewaretoken: $(this).find("input[name='csrfmiddlewaretoken']").val(), username: $(this).find('#id_username').val(), password1 : $('#id_password1').val(), password2: $('#id_password2').val()},
                  function(data){
