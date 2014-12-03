@@ -40,7 +40,6 @@ $(document).on('pageshow', '#user_manual', function() {
     loadHTML($(this).attr('id'));
 });
 
-
 $(document).ready( function() {
 
     lang = localStorage.getItem("language");
@@ -78,18 +77,30 @@ $(document).ready( function() {
         $('#registerPageTitle').append($(htmlResponse).find('#header_id:first-child').text()); // Get title from external page
         $('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER); // Override url or it will fail miserably
         $('form:first-of-type').submit(function() {
-            console.log($('#credentials'));
+            $.ajax({
+                type: 'POST',
+                url: HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER,
+                data: { username: $('#id_username').value, password1: $('#id_password1').value, password2: $('#id_password2').value},
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+            return false;   // avoid redirection
         });
         $('#registerHTML').trigger('create'); // Without this it won't apply styling
 
     });
     $('#loginHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN + " #main_id", function(response, status, xhr) {
-
+        var url = HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN;
         var htmlResponse = $.parseHTML(xhr.responseText);
         $('#loginPageTitle').append($(htmlResponse).find('#header_id:first-child').text()); // Get title from external page
-        $('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN); // Override url or it will fail miserably
-        $('form:first-of-type').submit(function() {
-            console.log($('#credentials'));
+        $('form:first-of-type').attr('action', url); // Override url or it will fail miserably
+        $('form:first-of-type').submit(function(e) {
+            e.preventDefault();
+            $.post(url, { csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(), next: $("input[name='next']").val(), username: $('#id_username').val(), password : $('#id_password').val()},
+                function(returnedData){
+                     console.log(returnedData);
+            });
         });
         $('#loginHTML').trigger('create'); // Without this it won't apply styling
     });
