@@ -91,7 +91,7 @@ $(document).ready( function() {
 
     // Process Register and Login screens
     $('#registerHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER + " #main_id", function(response, status, xhr) {
-
+        var url = HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER;
         var htmlResponse = $.parseHTML(xhr.responseText);
         $('#registerPageTitle').append($(htmlResponse).find('#header_id:first-child').text()); // Get title from external page
         $('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER); // Override url or it will fail miserably
