@@ -40,20 +40,6 @@ $(document).on('pageshow', '#user_manual', function() {
     loadHTML($(this).attr('id'));
 });
 
-/*$(document).on('pageshow', '#register', function() {
-    loadHTML($(this).attr('id'));
-
-});
-
-$(document).on('pageshow', '#login', function() {
-    loadHTML($(this).attr('id'));
-});*/
-
-$(document).ajaxComplete(function(event, xhr, settings) {
-    console.log("AJAX completed");
-    console.log(event.target.URL);
-    console.log(xhr.responseText);
-});
 
 $(document).ready( function() {
 
@@ -71,15 +57,6 @@ $(document).ready( function() {
         lang = navigator.language || navigator.userLanguage;
         lang = lang.substr(0,2);
     }
-    // Load file
-
-    $('#registerHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER + " #main_id", function() {
-        $('#registerHTML').trigger('create'); // Without this it won't apply styling
-    });
-    $('#loginHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN + " #main_id", function() {
-        $('#loginHTML').trigger('create'); // Without this it won't apply styling
-    });
-
 
     $('#langSelector input').each(function(index, value) {
         if(localStorage.getItem("language")==value.value) {
@@ -94,7 +71,31 @@ $(document).ready( function() {
         localStorage.setItem("language", $(this)[0].value);
     });
 
+    // Process Register and Login screens
+    $('#registerHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER + " #main_id", function(response, status, xhr) {
+
+        var htmlResponse = $.parseHTML(xhr.responseText);
+        $('#registerPageTitle').append($(htmlResponse).find('#header_id:first-child').text()); // Get title from external page
+        $('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER); // Override url or it will fail miserably
+        $('form:first-of-type').submit(function() {
+            console.log($('#credentials'));
+        });
+        $('#registerHTML').trigger('create'); // Without this it won't apply styling
+
+    });
+    $('#loginHTML').load(HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN + " #main_id", function(response, status, xhr) {
+
+        var htmlResponse = $.parseHTML(xhr.responseText);
+        $('#loginPageTitle').append($(htmlResponse).find('#header_id:first-child').text()); // Get title from external page
+        $('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_LOGIN); // Override url or it will fail miserably
+        $('form:first-of-type').submit(function() {
+            console.log($('#credentials'));
+        });
+        $('#loginHTML').trigger('create'); // Without this it won't apply styling
+    });
+
 });
+
 
 function loadHTML(pageID) {
     console.log("loadHTML()");
