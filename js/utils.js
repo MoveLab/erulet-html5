@@ -83,7 +83,7 @@ $(document).ready( function() {
                      var htmlData = $.parseHTML(data);
                      var credentials = $(htmlData).find('#credentials');
                      console.log(credentials.text());
-                     var json = S.parseJSON(credentials.text());
+                     var json = $.parseJSON(credentials.text());
                      sessionStorage.setItem('username', json.username);
                      sessionStorage.setItem('token', json.token);
              });
@@ -103,7 +103,7 @@ $(document).ready( function() {
                     var htmlData = $.parseHTML(data);
                     var credentials = $(htmlData).find('#credentials');
                     console.log(credentials.text());
-                    var json = S.parseJSON(credentials.text());
+                    var json = $.parseJSON(credentials.text());
                     sessionStorage.setItem('username', json.username);
                     sessionStorage.setItem('token', json.token);
             });
