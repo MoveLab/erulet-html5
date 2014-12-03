@@ -160,6 +160,7 @@
     <string name="refresh_web">(Caldrà refrescar la web)</string>
     <string name="register">Registrar-se</string>
     <string name="login">Iniciar sessió</string>
+    <string name="logoff">Desconnecta</string>
     <string name="opcions">Opcions</string>
     <string name="sync">Sincronitza</string>
     <string name="general_map">Descarrega també mapa general</string>

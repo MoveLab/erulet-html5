@@ -40,6 +40,19 @@ $(document).on('pageshow', '#user_manual', function() {
     loadHTML($(this).attr('id'));
 });
 
+$(document).on('pagebeforeshow', '#switchboard', function() {
+    if(sessionStorage.getItem('username')!=undefined && sessionStorage.getItem('token')!=undefined) {
+        $('#registerAnchor').hide();
+        $('#loginAnchor').hide();
+        $('#logoffAnchor').show();
+    }
+    else {
+        $('#registerAnchor').show();
+        $('#loginAnchor').show();
+        $('#logoffAnchor').hide();
+    }
+});
+
 $(document).ready( function() {
 
     lang = localStorage.getItem("language");
@@ -56,6 +69,12 @@ $(document).ready( function() {
         lang = navigator.language || navigator.userLanguage;
         lang = lang.substr(0,2);
     }
+
+    $('#logoffAnchor').click(function() {
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('token');
+        location.reload();
+    });
 
     $('#langSelector input').each(function(index, value) {
         if(localStorage.getItem("language")==value.value) {
@@ -82,10 +101,11 @@ $(document).ready( function() {
                  function(data){
                      var htmlData = $.parseHTML(data);
                      var credentials = $(htmlData).find('#credentials');
-                     console.log(credentials.text());
+
                      var json = $.parseJSON(credentials.text());
                      sessionStorage.setItem('username', json.username);
                      sessionStorage.setItem('token', json.token);
+                     location.reload();
              });
          });
         $('#registerHTML').trigger('create'); // Without this it won't apply styling
@@ -102,10 +122,11 @@ $(document).ready( function() {
                 function(data){
                     var htmlData = $.parseHTML(data);
                     var credentials = $(htmlData).find('#credentials');
-                    console.log(credentials.text());
+                    
                     var json = $.parseJSON(credentials.text());
                     sessionStorage.setItem('username', json.username);
                     sessionStorage.setItem('token', json.token);
+                    location.reload();
             });
         });
         $('#loginHTML').trigger('create'); // Without this it won't apply styling
