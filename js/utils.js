@@ -105,7 +105,7 @@ $(document).ready( function() {
                      var json = $.parseJSON(credentials.text());
                      sessionStorage.setItem('username', json.username);
                      sessionStorage.setItem('token', json.token);
-                     location.reload();
+                     $.mobile.navigate("#switchboard");
              });
          });
         $('#registerHTML').trigger('create'); // Without this it won't apply styling
@@ -122,11 +122,11 @@ $(document).ready( function() {
                 function(data){
                     var htmlData = $.parseHTML(data);
                     var credentials = $(htmlData).find('#credentials');
-                    
+
                     var json = $.parseJSON(credentials.text());
                     sessionStorage.setItem('username', json.username);
                     sessionStorage.setItem('token', json.token);
-                    location.reload();
+                    $.mobile.navigate("#switchboard");
             });
         });
         $('#loginHTML').trigger('create'); // Without this it won't apply styling
