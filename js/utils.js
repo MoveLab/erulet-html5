@@ -102,9 +102,9 @@ $(document).ready( function() {
                  .done(function(data) {
                      var htmlData = $.parseHTML(data);
                      var credentials = $(htmlData).find('#credentials');
-                     var errors = $(htmlData).find('p');    // Check for error messages, stored in p tags (may we use ID or class?)
+                     var errors = $(htmlData).find('ul.errorlist');    // Check for error messages, stored in p tags (may we use ID or class?)
                      if(credentials.text()=="") { // No credentials means error
-                        $('#registerMessage').text(errors.text());
+                        $('#registerMessage').html(errors.html());
                         $('#popupRegister').popup('open');
                      }
                      else {
@@ -118,7 +118,7 @@ $(document).ready( function() {
                         var data = $.parseHTML(response.responseText);
                         var errors = $(data).find('p');
 
-                        $('#loginMessage').text(errors.text());
+                        $('#loginMessage').html(errors.html());
                         $('#popupLogin').popup('open');
                  });
          });
@@ -153,7 +153,7 @@ $(document).ready( function() {
                         var data = $.parseHTML(response.responseText);
                         var errors = $(data).find('p');
 
-                        $('#loginMessage').text(errors.text());
+                        $('#loginMessage').html(errors.html());
                         $('#popupLogin').popup('open');
                 });
 
