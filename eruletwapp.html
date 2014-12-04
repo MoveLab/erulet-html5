@@ -232,13 +232,13 @@
         </div>
     </div>
 
-    <div data-role="popup" id="popupDataNoPresent" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+    <div data-role="popup" id="popupDataNoPresent" data-overlay-theme="b" data-theme="b" data-dismissible="false">
         <div data-role="header" data-theme="a">
-            <h1 class="localizable" data-lclstring="app_name">Erulet</h1>
+            <h1 class="localizable" data-lclstring="app_name"></h1>
         </div>
         <div role="main" class="ui-content">
             <h3 class="ui-title localizable" data-lclstring="data_no_present"></h3>
-            <a href="#" id="dataNoPresentButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
+            <a id="dataNoPresentButton" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
         </div>
     </div>
 
@@ -265,7 +265,13 @@
         <a href="#switchboard" class="ui-btn ui-mini ui-btn-left  ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
 
     </div><!-- /header -->
+    <!-- Content -->
     <div id="registerHTML" role="main" class="ui-content"></div>
+
+    <!-- Popups -->
+    <div data-role="popup" id="popupRegister" data-arrow="b"  data-position-to="#id_username">
+        <p id="registerMessage"></p>
+    </div>
 </div>
 
 <div data-role="page" id="login" >
@@ -274,7 +280,13 @@
         <a href="#switchboard" class="ui-btn ui-mini ui-btn-left  ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
 
     </div><!-- /header -->
+    <!-- Content -->
     <div id="loginHTML" role="main" class="ui-content"></div>
+
+    <!-- Popups -->
+    <div data-role="popup" id="popupLogin" data-arrow="b"  data-position-to="#id_username">
+        <p id="loginMessage"></p>
+    </div>
 </div>
 
 </body>

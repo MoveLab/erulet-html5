@@ -146,7 +146,7 @@ function viewRoute(elem, locate) {
    // Save serverid for survey
    localStorage.setItem("viewingRoute", elem.data('serverid'));
    if(localStorage.getItem("selectedRoute")!=elem.data('serverid')) {
-        $('#popupDataNoPresent').popup();
+        console.log("no data");
         $('#popupDataNoPresent').popup('open');
    }
 
@@ -474,6 +474,7 @@ function removeMarkers() {
 function deleteDB() {
     console.log(OFFMAP_NAME + ": deleteDB()");
 
+    if(DB==null) { DB = new PouchDB(dbname);}
 
     // Delete also local storage values, removeItem() does not seem to work
     localStorage.setItem("selectedRoute_steps", null);
@@ -486,6 +487,7 @@ function deleteDB() {
     DB.destroy(function(err, info) {
        if(err) {
            alert("Could not delete DB: ", err);
+           $.mobile.navigate("#");
            throw err;
        }
        else {
@@ -493,6 +495,7 @@ function deleteDB() {
            manifest = null;
        }
     });
+   $.mobile.navigate("#");
 
 }
 

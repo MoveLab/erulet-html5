@@ -97,16 +97,30 @@ $(document).ready( function() {
         $(this).find('form:first-of-type').attr('action', HOLETSERVER_MOBILEPAGES + lang + HOLETSERVER_MOBILEPAGES_REGISTER); // Override url or it will fail miserably
         $(this).find('form:first-of-type').submit(function(e) {
              e.preventDefault();
-             $.post(url, { csrfmiddlewaretoken: $(this).find("input[name='csrfmiddlewaretoken']").val(), username: $(this).find('#id_username').val(), password1 : $('#id_password1').val(), password2: $('#id_password2').val()},
-                 function(data){
+             $.post(url, { csrfmiddlewaretoken: $(this).find("input[name='csrfmiddlewaretoken']").val(),
+                 username: $(this).find('#id_username').val(), password1 : $('#id_password1').val(), password2: $('#id_password2').val()})
+                 .done(function(data) {
                      var htmlData = $.parseHTML(data);
                      var credentials = $(htmlData).find('#credentials');
+                     var errors = $(htmlData).find('p');    // Check for error messages, stored in p tags (may we use ID or class?)
+                     if(credentials.text()=="") { // No credentials means error
+                        $('#registerMessage').text(errors.text());
+                        $('#popupRegister').popup('open');
+                     }
+                     else {
+                         var json = $.parseJSON(credentials.text());
+                         sessionStorage.setItem('username', json.username);
+                         sessionStorage.setItem('token', json.token);
+                         $.mobile.navigate("#switchboard");
+                     }
+                 })
+                 .fail(function(response) {
+                        var data = $.parseHTML(response.responseText);
+                        var errors = $(data).find('p');
 
-                     var json = $.parseJSON(credentials.text());
-                     sessionStorage.setItem('username', json.username);
-                     sessionStorage.setItem('token', json.token);
-                     $.mobile.navigate("#switchboard");
-             });
+                        $('#loginMessage').text(errors.text());
+                        $('#popupLogin').popup('open');
+                 });
          });
         $('#registerHTML').trigger('create'); // Without this it won't apply styling
 
@@ -118,16 +132,31 @@ $(document).ready( function() {
         $(this).find('form:first-of-type').attr('action', url); // Override url or it will fail miserably
         $(this).find('form:first-of-type').submit(function(e) {
             e.preventDefault();
-            $.post(url, { csrfmiddlewaretoken: $(this).find("input[name='csrfmiddlewaretoken']").val(), next: $("input[name='next']").val(), username: $(this).find('#id_username').val(), password : $('#id_password').val()},
-                function(data){
+            $.post(url, { csrfmiddlewaretoken: $(this).find("input[name='csrfmiddlewaretoken']").val(), next: $("input[name='next']").val(),
+                username: $(this).find('#id_username').val(), password : $('#id_password').val()})
+                .done(function(data) {
                     var htmlData = $.parseHTML(data);
                     var credentials = $(htmlData).find('#credentials');
+                    var errors = $(htmlData).find('p');    // Check for error messages, stored in p tags (may we use ID or class?)
+                    if(credentials.text()=="") { // No credentials means error
+                        $('#loginMessage').text(errors.text());
+                        $('#popupLogin').popup('open');
+                    }
+                    else {
+                        var json = $.parseJSON(credentials.text());
+                        sessionStorage.setItem('username', json.username);
+                        sessionStorage.setItem('token', json.token);
+                        $.mobile.navigate("#switchboard");
+                    }
+                })
+                .fail(function(response) {
+                        var data = $.parseHTML(response.responseText);
+                        var errors = $(data).find('p');
 
-                    var json = $.parseJSON(credentials.text());
-                    sessionStorage.setItem('username', json.username);
-                    sessionStorage.setItem('token', json.token);
-                    $.mobile.navigate("#switchboard");
-            });
+                        $('#loginMessage').text(errors.text());
+                        $('#popupLogin').popup('open');
+                });
+
         });
         $('#loginHTML').trigger('create'); // Without this it won't apply styling
     });
