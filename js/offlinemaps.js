@@ -69,22 +69,6 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
         viewRoute($(this), true);
     });
 
-    $("#syncPopupYes").click(function(e) {
-        var dload_general = $('#generalMapCheckbox').prop('checked');
-        var dload_routedata = $('#routeDataCheckbox').prop('checked');
-        console.log(dload_general + " - " + dload_routedata);
-        if(dload_general==true) {
-            loadGeneralMap();
-        }
-        if(dload_routedata==true) {
-            loadRoutes();
-        }
-        if($("#selectRoutes :selected").text()!="") {
-            getBundleFile(localStorage.getItem("selectedRoute_serverid"));
-        }
-
-    });
-
     $("#selectRoutes").change(function() {
 
             if($("#selectRoutes :selected").text()!="") {
@@ -106,6 +90,20 @@ $(document).ready(function() {
 
 });
 
+$(document).on('click', '#syncPopupYes', function() {       //avoid double-calling bug
+    var dload_general = $('#generalMapCheckbox').prop('checked');
+            var dload_routedata = $('#routeDataCheckbox').prop('checked');
+            console.log(dload_general + " - " + dload_routedata);
+            if(dload_general==true) {
+                loadGeneralMap();
+            }
+            if(dload_routedata==true) {
+                loadRoutes();
+            }
+            if($("#selectRoutes :selected").text()!="") {
+                getBundleFile(localStorage.getItem("selectedRoute_serverid"));
+            }
+});
 
 $(document).on('pageshow', '#trip_select', function() {
     // Workaround to show loading dialog (can't be used on document.ready()
@@ -168,7 +166,7 @@ function viewRoute(elem, locate) {
         highlights = results[1];
         map.fitBounds(polyline.getBounds());
 
-        putHighlights(highlights, markersHLT);
+        putHighlights(highlights, markersHLT, elem.data('serverid'));
 
         markers.addTo(map);
         markersHLT.addTo(map);
@@ -207,16 +205,29 @@ function loadGeneralMap() {
 
       DB.put({_id: "generalMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
 
-      }).then(function(doc) {
+      }).catch(function(error) {
+        });
+      addDBMap();
+    });
+
+    url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALCONTENT + $(window).width();
+    getFileFromAPI(url, function(e) {
+        var uInt8Array = new Uint8Array(this.response);
+
+        var zip = new JSZip();
+        zip.load(uInt8Array);
+        $.each(zip.files, function(index, value) {
+
+            DB.put({_id: value.name, file:value.asUint8Array()}, function(err, response) {
+            }).catch(function(error) {
+            });
+        });
         $.mobile.loading("hide");
 
-
-      });
-      addDBMap();
     });
 }
 
-function putHighlights(highlights, layer) {
+function putHighlights(highlights, layer, serverid) {
     $(highlights).each(function(index, value) {
         //console.log(value.highlights[0].type);
         var mIcon = waypointIcon;
@@ -224,7 +235,22 @@ function putHighlights(highlights, layer) {
         switch(value.highlights[0].type) {
             case 0:
                 mIcon = mapMarkerIcon;
-                marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><img src="icons/ic_itinerary_icon.png"></img></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+                marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><a href="#waypointHtmlPopup" data-rel="popup" data-position-to="window" data-transition="pop"><img src="icons/ic_itinerary_icon.png"></img></a></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
+                marker.on('click', function(e) {
+                    var url = 'route_' + serverid + '/highlight_' + value.highlights[0]["server_id"] + '/reference_' + value.highlights[0].references[0]["server_id"] + '/reference_' + lang + '.html';
+                    console.log(url);
+                    DB.get(url, function(doc, err) {
+                        if(!err) {
+                            $("#waypointHtmlPopup_content").append(doc);
+                        }
+                    }).catch(function(error) {
+                        switch(error.status) {
+                            case 404:
+                                console.warn(OFFMAP_NAME +  ": Not found on DB");
+                            break;
+                        }
+                    });
+                });
                 break;
             case 1:
                 mIcon = waypointIcon;
@@ -361,8 +387,27 @@ function getBundleFile(serverid) {
               //fillDB(zip);
               $.mobile.loading("hide");
           }
+        }).catch(function(error) {
+          });
+    });
+
+    url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTECONTENT + serverid + "/" + $(window).width();
+    console.log(url);
+    getFileFromAPI(url, function(e) {
+        var uInt8Array = new Uint8Array(this.response);
+
+        var zip = new JSZip();
+        zip.load(uInt8Array);
+        $.each(zip.files, function(index, value) {
+           console.log(value.name);
+           DB.put({_id: value.name, file: value.asUint8Array()}, function(err, response) {
+
+           }).catch(function(error) {
+           });
+
         });
     });
+
 }
 
 function initMap() {
@@ -492,9 +537,10 @@ function deleteDB() {
        }
        else {
            console.log("Database deleted");
-           manifest = null;
        }
-    });
+    }).catch(function(error) {
+      });
+
    $.mobile.navigate("#");
 
 }

@@ -212,16 +212,6 @@
         </div>
     </div>
 
-    <div data-role="popup" id="popupNoInternet" data-overlay-theme="b" data-theme="b" style="max-width:400px;">
-        <div data-role="header" data-theme="b">
-            <h1 class="localizable" data-lclstring="app_name">Erulet</h1>
-        </div>
-        <div role="main" class="ui-content">
-            <p class="localizable" data-lclstring="no_data_access"></p>
-            <a href="#" id="noInternetButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
-        </div>
-    </div>
-
     <div data-role="popup" id="popupDataPresent" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
         <div data-role="header" data-theme="a">
             <h1 class="localizable" data-lclstring="app_name">Erulet</h1>
@@ -232,13 +222,13 @@
         </div>
     </div>
 
-    <div data-role="popup" id="popupDataNoPresent" data-overlay-theme="b" data-theme="b" data-dismissible="false">
+    <div data-role="popup" id="waypointHtmlPopup" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
         <div data-role="header" data-theme="a">
-            <h1 class="localizable" data-lclstring="app_name"></h1>
+            <h1 class="localizable" data-lclstring="detail_highlight">Erulet</h1>
         </div>
         <div role="main" class="ui-content">
-            <h3 class="ui-title localizable" data-lclstring="data_no_present"></h3>
-            <a id="dataNoPresentButton" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
+            <div id="waypointHtmlPopup_content"></div>
+            <a href="#" id="waypointHtmlButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
         </div>
     </div>
 
@@ -247,7 +237,7 @@
             <h1 class="localizable" data-lclstring="detail_highlight">Erulet</h1>
         </div>
         <div role="main" class="ui-content">
-            <img id="waypointInfoImgHeader">
+            <img id="waypointInfoImgHeader" src="icons/pin_chart.png"></br>
             <b id="waypointInfoName" class="localizable" data-lclstring="point_name"></b><p id="waypointInfoNameField"></p>
             <b id="waypointInfoDesc" class="localizable" data-lclstring="description"></b><p id="waypointInfoDescField"></p>
             <b id="waypointInfoLat" class="localizable" data-lclstring="latitude"></b><p id="waypointInfoLatField"></p>
