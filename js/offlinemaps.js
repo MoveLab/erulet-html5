@@ -10,9 +10,11 @@ var OFFMAP_NAME = "offlinemaps.js";
 console.log(OFFMAP_NAME + ": Initializing");
 
 var dbname = "offmaps";
+var dbname_con = "offcont";
 var sqlite = null;
 var sqlite_general = null;
 var DB = null;
+var DB_cont = null;
 var metadata = null;
 
 //Map data
@@ -228,6 +230,7 @@ function loadGeneralMap() {
 }
 
 function putHighlights(highlights, layer, serverid) {
+if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
     $(highlights).each(function(index, value) {
         //console.log(value.highlights[0].type);
         var mIcon = waypointIcon;
@@ -237,12 +240,25 @@ function putHighlights(highlights, layer, serverid) {
                 mIcon = mapMarkerIcon;
                 marker = L.marker(new L.LatLng(value.latitude, value.longitude), {icon: mIcon}).bindPopup('<div style="float: left; width=50%"><a href="#waypointHtmlPopup" data-rel="popup" data-position-to="window" data-transition="pop"><img src="icons/ic_itinerary_icon.png"></img></a></div><p>' + value.highlights[0]["long_text_"+lang] + '</p>');
                 marker.on('click', function(e) {
-                    var url = 'route_' + serverid + '/highlight_' + value.highlights[0]["server_id"] + '/reference_' + value.highlights[0].references[0]["server_id"] + '/reference_' + lang + '.html';
-                    console.log(url);
-                    DB.get(url, function(doc, err) {
-                        if(!err) {
-                            $("#waypointHtmlPopup_content").append(doc);
-                        }
+                    var url = 'route_' + serverid + '/highlight_' + value.highlights[0]["server_id"] + '/reference_' + value.highlights[0].references[0]["server_id"];
+                    var urlHTML = url + '/reference_' + lang + '.html';
+                    console.log(urlHTML);
+                    DB_cont.get(urlHTML, function(err, response) {
+                        var content = $.parseHTML(response.file);
+
+                        $("#waypointHtmlPopup_content").append(content);
+                        $("#waypointHtmlPopup_content img").each(function(index, value) {
+                            console.log(url+value.src.substr(value.src.lastIndexOf('/'), value.src.length));
+                            DB_cont.get(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), function(err, response) {
+
+                                // Generate base64 data and put in the img element
+                                var imgURL = 'data:' + response.type + ';base64,' + JSZip.base64.encode(response.file);
+                                value.src = imgURL;
+                            });
+
+                        });
+                        $('#waypointHtmlPopup_content').css('max-height', $(window).height()-100 + 'px');
+                        $("#waypointHtmlPopup_content").css('overflow-y', 'scroll');
                     }).catch(function(error) {
                         switch(error.status) {
                             case 404:
@@ -292,8 +308,6 @@ function drawRoute(step, color, opacity, store) {
         localStorage.setItem("selectedRoute_steps", steps);
         localStorage.setItem("selectedRoute_highlights", highlights);
     }
-    //console.log(latlngs);
-    //console.log(latlngs);
     L.polyline(latlngs, {weight:5, color: 'black', opacity: opacity}).addTo(polylines);
     var pLine = L.polyline(latlngs, {weight:2, color: color, opacity: opacity}).addTo(polylines);
     //polylines.addTo(map);
@@ -304,6 +318,7 @@ function openDB() {
     console.log(OFFMAP_NAME + ": openDB()");
 
     DB = new PouchDB(dbname);
+    DB_cont = new PouchDB(dbname_con);
 
     DB.get("generalMap").then( function(doc) {
         sqlite_general = createSQLiteObject(sqlite_general, doc);
@@ -343,7 +358,7 @@ function getBundleFile(serverid) {
     var path = bundleFilename + serverid + '.zip';
     console.log(OFFMAP_NAME + ": opening "+ path);
 
-    showMobileLoading("donwloading maps");
+    showMobileLoading("downloading maps");
     // Delete old file
     DB.get('routeMap', function(doc, err) {
         DB.remove(doc).catch(function(error) {});
@@ -398,9 +413,27 @@ function getBundleFile(serverid) {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
+
         $.each(zip.files, function(index, value) {
-           console.log(value.name);
-           DB.put({_id: value.name, file: value.asUint8Array()}, function(err, response) {
+           var filedata; //= value.asUint8Array();
+           var filetype; //= 'text/html';
+           var extension = value.name.substr(value.name.indexOf('.')+1, value.name.length);
+           console.log(extension);
+           switch(extension) {
+                case 'html':
+                case 'css':
+                    filetype = 'text/' + extension;
+                    filedata = value.asBinary();
+                    break;
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                    filetype = 'image/' + extension;
+                    filedata = value.asBinary();
+                    break;
+           }
+           console.log(filetype);
+           DB_cont.put({_id: value.name, file: filedata, type: filetype}, function(err, response) {
 
            }).catch(function(error) {
            });
@@ -474,18 +507,9 @@ function addDBMap() {
                 console.warn("Couldn't find tile " + id);
             }
             else {
+                readDataFromBlob(new Blob([imgBlob[0].values[0][0]], {type:"image/"+imgType}), deferred);
                 //console.warn("Found tile " + id);
-                var reader = new FileReader();
-                reader.addEventListener("loadend", function() {
 
-                    //console.log(reader.result);
-                    var imgURL = reader.result;
-                    deferred.resolve(imgURL);
-
-                    //URL.revokeObjectURL(imgURL);
-                });
-                //console.log(imgBlob[0].values[0][0]);
-                reader.readAsDataURL(new Blob([imgBlob[0].values[0][0]], {type:"image/"+imgType}));
 
             }
 
@@ -500,6 +524,20 @@ function addDBMap() {
     };
     control = L.control.layers(baseMaps, baseOverlay);
     control.addTo(map);
+}
+
+function readDataFromBlob(blob, deferred) {
+    var reader = new FileReader();
+    reader.addEventListener("loadend", function() {
+
+        //console.log(reader.result);
+        var imgURL = reader.result;
+        deferred.resolve(imgURL);
+
+        //URL.revokeObjectURL(imgURL);
+    });
+    //console.log(imgBlob[0].values[0][0]);
+    reader.readAsDataURL(blob);
 }
 
 function addMarkerWithPopup(latlng, popupElement) {
@@ -536,7 +574,19 @@ function deleteDB() {
            throw err;
        }
        else {
-           console.log("Database deleted");
+           console.log("Database " + dbname + " deleted");
+       }
+    }).catch(function(error) {
+      });
+
+    DB_cont.destroy(function(err, info) {
+       if(err) {
+           alert("Could not delete DB: ", err);
+           $.mobile.navigate("#");
+           throw err;
+       }
+       else {
+           console.log("Database " + dbname_con+ " deleted");
        }
     }).catch(function(error) {
       });
