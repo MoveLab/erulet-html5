@@ -246,7 +246,7 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                     DB_cont.get(urlHTML, function(err, response) {
                         var content = $.parseHTML(response.file);
 
-                        $("#waypointHtmlPopup_content").append(content);
+                        $("#waypointHtmlPopup_content").html("").append(content);
                         $("#waypointHtmlPopup_content img").each(function(index, value) {
                             console.log(url+value.src.substr(value.src.lastIndexOf('/'), value.src.length));
                             DB_cont.get(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), function(err, response) {
@@ -263,6 +263,7 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                         switch(error.status) {
                             case 404:
                                 console.warn(OFFMAP_NAME +  ": Not found on DB");
+                                $("#waypointHtmlPopup_content").append("No data");
                             break;
                         }
                     });
