@@ -223,7 +223,7 @@ function loadGeneralMap() {
       }).catch(function(error) {
         });
       addDBMap();
-    });
+    }, 'gmap');
 
     url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALCONTENT + $(window).width();
     getFileFromAPI(url, function(e) {
@@ -239,7 +239,7 @@ function loadGeneralMap() {
         });
         $.mobile.loading("hide");
 
-    });
+    }, 'gcontent');
 }
 
 function putHighlights(highlights, layer, serverid) {
@@ -433,7 +433,7 @@ function getBundleFile(serverid) {
           }
         }).catch(function(error) {
           });
-    });
+    }, 'rmap');
 
     url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTECONTENT + serverid + "/" + $(window).width();
     console.log(url);
@@ -468,7 +468,7 @@ function getBundleFile(serverid) {
            });
 
         });
-    });
+    }, 'rcontent');
 
 }
 
@@ -673,7 +673,16 @@ function getFileFromAPI(url, onload, dloadType) {
             //console.log(percentComplete);
             switch(dloadType) {
                 case 'gmap':
-                    $("#dloadGMapStatus").html(status);
+                    $("#dloadGMapStatus").html('GMap: ' + status);
+                    break;
+                case 'gcontent':
+                    $("#dloadGContentStatus").html('GContent: ' + status);
+                    break;
+                case 'rmap':
+                    $("#dloadRMapStatus").html('RMap: ' + status);
+                    break;
+                case 'rcontent':
+                    $("#dloadRContentStatus").html('RContent: ' + status);
                     break;
             }
         }
