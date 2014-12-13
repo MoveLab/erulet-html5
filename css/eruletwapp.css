@@ -54,3 +54,6 @@
 	font-style: bold;
 	color: black;
 }
+.status-led {
+	max-width:16px;
+}

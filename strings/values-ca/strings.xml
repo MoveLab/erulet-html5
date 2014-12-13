@@ -155,7 +155,7 @@
     <string name="home">Inici</string>
     <string name="dl_r1">Descarrega ruta</string>
     <string name="dl_clear">Neteja dades</string>
-    <string name="offline_advice">Per tal de fer servir la capa offline, cal descarregar una d'aquestes rutes</string>
+    <string name="offline_advice">Per tal de fer servir l'aplicació a les muntanyes o quan no hi ha cobertura, cal descarregar les dades prèviament al dispositiu utilitzant una connexió a Internet. Si us plau, abans de sortir, comproveu que tots els indicadors estan en verd (OK) i que la ruta seleccionada a "Dades de ruta" és la desitjada.</string>
     <string name="data_present">Les dades ja s'han descarregat anteriorment.</string>
     <string name="data_no_present">Les dades descarregades no es corresponen a la ruta seleccionada. El mapa no es mostrarà correctament fora de línia.</string>
     <string name="refresh_web">(Caldrà refrescar la web)</string>
@@ -166,4 +166,8 @@
     <string name="sync">Sincronitza</string>
     <string name="general_map">Descarrega també mapa general</string>
     <string name="routes_data">Torna a descarregar les dades de les rutes</string>
+    <string name="general_map_status">Mapa general </string>
+    <string name="route_map_status">Mapa de ruta</string>
+    <string name="general_data_status">Dades generals</string>
+    <string name="route_data_status">Dades de ruta</string>
 </resources>

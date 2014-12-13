@@ -165,23 +165,49 @@
             <h1 class="localizable" data-lclstring="sync"></h1>
         </div>
         <div role="main" class="ui-content">
-            <h5 class="ui-title localizable" id="syncDescription" data-lclstring="welcome_message"></h5>
+            <h5 class="ui-title localizable" id="syncDescription" data-lclstring="offline_advice"></h5>
+
             <div id="routeControls">
-                <form id="routeForm">
+                <div data-role="collapsible" data-mini="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+                    <h4>
+                        <div class="ui-grid-d">
+                            <p id="routeDataStatusHeader" class="localizable ui-block-a" data-lclstring="route_data_status"></p>
+                            <img id="routeDataStatusIcon" class="status-led ui-block-b">
+                            <p id="routeDataStatusText" class="ui-block-c localizable"></p>
+                        </div>
+                    </h4>
                     <div class="ui-field-container">
-                        <label for="selectRoutes" class="localizable" data-lclstring="offline_advice"></label>
+<!--                        <label for="selectRoutes" class="localizable" data-lclstring="offline_advice"></label>-->
                         <select name="selectroutes" id="selectRoutes">
                             <option value=""></option>
                         </select>
                     </div>
+                </div>
 
+                <div data-role="collapsible" data-mini="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+                    <h4>
+                        <div class="ui-grid-d">
+                            <p id="generalMapStatusHeader" class="localizable ui-block-a" data-lclstring="general_map_status"></p>
+                            <img id="generalMapStatusIcon" class="status-led ui-block-b">
+                            <p id="generalMapStatusText" class="ui-block-c localizable"></p>
+                        </div>
+                    </h4>
                     <label>
                         <input id="generalMapCheckbox" name="checkbox-0 " type="checkbox"> <p class=" ui-mini localizable" data-lclstring="general_map"></p> </input>
                     </label>
+                </div>
+                <div data-role="collapsible" data-mini="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+                    <h4>
+                        <div class="ui-grid-d">
+                            <p id="generalDataStatusHeader" class="localizable ui-block-a" data-lclstring="general_data_status"></p>
+                            <img id="generalDataStatusIcon" class="status-led ui-block-b">
+                            <p id="generalDataStatusText" class="ui-block-c localizable"></p>
+                        </div>
+                    </h4>
                     <label>
                         <input id="routeDataCheckbox" name="checkbox-0 " type="checkbox"> <p class=" ui-mini localizable" data-lclstring="routes_data"></p> </input>
                     </label>
-                </form>
+                </div>
                 <p id="#syncRouteDescription"></p>
             </div>
             <a id="syncPopupYes" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>

@@ -85,6 +85,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
                 $("#syncPopupYes").data("selectedRoute_serverid", serverid);
                 $("#syncPopupYes").data("selectedRoute_mapid", mapID);
                 //openRouteDescription(mapID, position, serverid);
+
                 $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
             }
         });
@@ -92,7 +93,12 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
 $(document).ready(function() {
     routesData = JSON.parse(localStorage.getItem("routesData"));
-
+    if(!routesData) {
+        setLedIcon($("#generalDataStatusIcon"), $("#generalDataStatusText"), false);
+    }
+    else {
+        setLedIcon($("#generalDataStatusIcon"), $("#generalDataStatusText"), true);
+    }
 });
 
 $(document).on('click', '#syncPopupYes', function() {       //avoid double-calling bug
@@ -322,6 +328,17 @@ function drawRoute(step, color, opacity, store) {
     return [pLine, highlights];
 }
 
+function setLedIcon(icon, text, isOn) {
+    if(isOn) {
+        $(icon).attr('src','images/ok.png');
+        $(text).append('OK');
+    }
+    else {
+        $(icon).attr('src', 'images/error.png');
+        $(text).append('KO');
+    }
+}
+
 function openDB() {
     console.log(OFFMAP_NAME + ": openDB()");
 
@@ -330,21 +347,25 @@ function openDB() {
 
     DB.get("generalMap").then( function(doc) {
         sqlite_general = createSQLiteObject(sqlite_general, doc);
+        setLedIcon($("#generalMapStatusIcon"), $("#generalMapStatusText"), true);
         addDBMap();
     }).catch(function(error) {
         switch(error.status) {
         case 404:
             console.warn(OFFMAP_NAME +  ": No general DB present");
+            setLedIcon($("#generalMapStatusIcon"), $("#generalMapStatusText"), false);
         break;
         }
     });
 
     DB.get("routeMap").then( function(doc) {
         sqlite = createSQLiteObject(sqlite, doc);
+        setLedIcon($("#routeDataStatusIcon"), $("#routeDataStatusText"), true);
     }).catch(function(error) {
       switch(error.status) {
         case 404:
             console.warn(OFFMAP_NAME +  ": Not found on DB");
+            setLedIcon($("#routeDataStatusIcon"), $("#routeDataStatusText"), false);
         break;
       }
     });
@@ -621,6 +642,15 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
     }
 
     // Define mapid
+    /*$("#routeDownload").data('arraypos', arrayPosition);
+    $("#routeDownload").data('mapid', mapID);
+    $("#routeDownload").data('serverid', serverid);
+    $("#routeView").data('arraypos', arrayPosition);
+    $("#routeView").data('mapid', mapID);
+    $("#routeView").data('serverid', serverid);
+    $("#routeSelect").data('mapid', mapID);
+    $("#routeSelect").data('arraypos', arrayPosition);
+    $("#routeSelect").data('serverid', serverid);*/
     $(".route-desc-button").data('arraypos', arrayPosition);
     $(".route-desc-button").data('mapid', mapID);
     $(".route-desc-button").data('serverid', serverid);
