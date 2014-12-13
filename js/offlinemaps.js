@@ -667,8 +667,8 @@ function getFileFromAPI(url, onload) {
     xhr.open('GET', url, true);
     xhr.responseType = 'arraybuffer';
     xhr.addEventListener("progress", function(e) {
-        if (evt.lengthComputable) {
-            var percentComplete = evt.loaded / evt.total;
+        if (e.lengthComputable) {
+            var percentComplete = e.loaded / e.total;
             status = '<p>- ' + percentComplete + '%</p>';
             //Do something with upload progress
             //console.log(percentComplete);
