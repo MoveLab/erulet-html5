@@ -668,21 +668,21 @@ function getFileFromAPI(url, onload, dloadType) {
     xhr.addEventListener("progress", function(e) {
         if (e.lengthComputable) {
             var percentComplete = e.loaded / e.total * 100;
-            var status = percentComplete + '%';
+            var status = percentComplete.toFixed(2) + '%';
             //Do something with upload progress
             //console.log(percentComplete);
             switch(dloadType) {
                 case 'gmap':
-                    $("#dloadGMapStatus").html('GMap: ' + status);
+                    $("#dloadGMapStatus").html('General Map: ' + status);
                     break;
                 case 'gcontent':
-                    $("#dloadGContentStatus").html('GContent: ' + status);
+                    $("#dloadGContentStatus").html('General Content: ' + status);
                     break;
                 case 'rmap':
-                    $("#dloadRMapStatus").html('RMap: ' + status);
+                    $("#dloadRMapStatus").html('Route Map: ' + status);
                     break;
                 case 'rcontent':
-                    $("#dloadRContentStatus").html('RContent: ' + status);
+                    $("#dloadRContentStatus").html('Route Content: ' + status);
                     break;
             }
         }
