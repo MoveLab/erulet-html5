@@ -661,11 +661,20 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
 
 function getFileFromAPI(url, onload) {
     var xhr = new XMLHttpRequest();
+    var status;
 
     console.log(url);
     xhr.open('GET', url, true);
     xhr.responseType = 'arraybuffer';
-
+    xhr.addEventListener("progress", function(e) {
+        if (evt.lengthComputable) {
+            var percentComplete = evt.loaded / evt.total;
+            status = '<p>- ' + percentComplete + '%</p>';
+            //Do something with upload progress
+            //console.log(percentComplete);
+            $("#dloadStatus").append(status);
+        }
+    }, false);
     xhr.onload = onload;
     xhr.send();
 }

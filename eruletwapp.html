@@ -145,21 +145,22 @@
         <a href="#switchboard" class="ui-btn ui-mini ui-btn-left  ui-btn-icon-left ui-btn-icon-notext ui-icon-home ui-corner-all localizable" data-lclstring="home"   data-direction="reverse"></a><!-- home button -->
 
         <div data-role="controlgroup" id="routeButtons" data-type="horizontal" class="ui-mini ui-btn-right">
-
+            <a href="#popupDloads" data-rel="popup" data-position-to="origin" data-transition="flow" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-btn-icon-notext ui-icon-arrow-d localizable" data-lclstring="download"></a>
             <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-btn-icon-notext ui-icon-delete localizable" data-lclstring="dl_clear"></a>
             <a href="#popupSync" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-btn-icon-notext localizable ui-icon-recycle" data-lclstring="sync"></a>
 
         </div>
+
     </div><!-- /header -->
     <!--<p class="localizable" data-lclstring="offline_advice"></p>-->
 
-
     <div id="map"></div>
 
-
-
     <!-- Popups -->
-
+    <div data-role="popup" id="popupDloads">
+        <p>Downloads</p>
+        <div id="dloadStatus"></div>
+    </div>
     <div data-role="popup" id="popupSync" data-overlay-theme="b" data-theme="b" data-dismissible="false">
         <div data-role="header" data-theme="a">
             <h1 class="localizable" data-lclstring="sync"></h1>
@@ -275,6 +276,7 @@
             <a href="#" id="waypointInfoButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
         </div>
     </div>
+
 </div><!-- End of fifth page -->
 
 <div data-role="page" id="register" >
