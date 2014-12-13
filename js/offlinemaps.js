@@ -659,9 +659,8 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
 
 }
 
-function getFileFromAPI(url, onload) {
+function getFileFromAPI(url, onload, dloadType) {
     var xhr = new XMLHttpRequest();
-    var status;
 
     console.log(url);
     xhr.open('GET', url, true);
@@ -669,10 +668,14 @@ function getFileFromAPI(url, onload) {
     xhr.addEventListener("progress", function(e) {
         if (e.lengthComputable) {
             var percentComplete = e.loaded / e.total;
-            status = '<p>- ' + percentComplete + '%</p>';
+            var status = '- ' + percentComplete + '%';
             //Do something with upload progress
             //console.log(percentComplete);
-            $("#dloadStatus").append(status);
+            switch(dloadType) {
+                case 'gmap':
+                    $("#dloadGMapStatus").html(status);
+                    break;
+            }
         }
     }, false);
     xhr.onload = onload;
