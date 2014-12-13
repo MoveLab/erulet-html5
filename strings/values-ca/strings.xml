@@ -151,6 +151,7 @@
 
 
     <!-- HTML5 strings -->
+    <string name="download">descarregar</string>
     <string name="home">Inici</string>
     <string name="dl_r1">Descarrega ruta</string>
     <string name="dl_clear">Neteja dades</string>

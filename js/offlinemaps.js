@@ -62,6 +62,10 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
     $('#generalMapCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
 
+    $("#routeDownload").click(function(e) {
+        getBundleFile($(this).data("serverid"));
+    });
+
     $("#routeView").click(function(e) {
         viewRoute($(this), false);
     });
@@ -77,10 +81,9 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
                 var mapID = $("#selectRoutes :selected").data('mapid');
                 var position = $("#selectRoutes").val()-1;
                 var serverid = $("#selectRoutes :selected").data('serverid');
-                // Store selected route ID on routesData array and server ID
-                localStorage.setItem("selectedRoute", position);
-                localStorage.setItem("selectedRoute_serverid", serverid);
-                localStorage.setItem("selectedRoute_mapid", mapID);
+                $("#syncPopupYes").data("selectedRoute", position);
+                $("#syncPopupYes").data("selectedRoute_serverid", serverid);
+                $("#syncPopupYes").data("selectedRoute_mapid", mapID);
                 //openRouteDescription(mapID, position, serverid);
                 $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
             }
@@ -94,17 +97,21 @@ $(document).ready(function() {
 
 $(document).on('click', '#syncPopupYes', function() {       //avoid double-calling bug
     var dload_general = $('#generalMapCheckbox').prop('checked');
-            var dload_routedata = $('#routeDataCheckbox').prop('checked');
-            console.log(dload_general + " - " + dload_routedata);
-            if(dload_general==true) {
-                loadGeneralMap();
-            }
-            if(dload_routedata==true) {
-                loadRoutes();
-            }
-            if($("#selectRoutes :selected").text()!="") {
-                getBundleFile(localStorage.getItem("selectedRoute_serverid"));
-            }
+    var dload_routedata = $('#routeDataCheckbox').prop('checked');
+    console.log(dload_general + " - " + dload_routedata);
+    if(dload_general==true) {
+        loadGeneralMap();
+    }
+    if(dload_routedata==true) {
+        loadRoutes();
+    }
+    if($("#selectRoutes :selected").text()!="") {
+        // Store selected route ID on routesData array and server ID
+        localStorage.setItem("selectedRoute", $("#syncPopupYes").data("selectedRoute"));
+        localStorage.setItem("selectedRoute_serverid", $("#syncPopupYes").data("selectedRoute_serverid"));
+        localStorage.setItem("selectedRoute_mapid", $("#syncPopupYes").data("selectedRoute_mapid"));
+        getBundleFile(localStorage.getItem("selectedRoute_serverid"));
+    }
 });
 
 $(document).on('pageshow', '#trip_select', function() {
@@ -602,13 +609,21 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
     // Define message
     $("#routeDescription").html(routesData[arrayPosition]["description_"+lang]);
 
+    if(localStorage.getItem("selectedRoute_serverid")==serverid) {
+        $(".route-desc-button-dload").hide();
+        $(".route-desc-button-dloaded").show();
+        //$("#routeSelect").show();
+    }
+    else {
+        $(".route-desc-button-dload").show();
+        $(".route-desc-button-dloaded").hide();
+        //$("#routeSelect").hide();
+    }
+
     // Define mapid
-    $("#routeView").data('arraypos', arrayPosition);
-    $("#routeView").data('mapid', mapID);
-    $("#routeView").data('serverid', serverid);
-    $("#routeSelect").data('mapid', mapID);
-    $("#routeSelect").data('arraypos', arrayPosition);
-    $("#routeSelect").data('serverid', serverid);
+    $(".route-desc-button").data('arraypos', arrayPosition);
+    $(".route-desc-button").data('mapid', mapID);
+    $(".route-desc-button").data('serverid', serverid);
     $("#popupRoute").popup();
     $("#popupRoute").popup('open');
 
