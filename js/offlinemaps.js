@@ -367,7 +367,7 @@ function openDB() {
         }
     });
 
-    DB.get("routeMap").then( function(doc) {
+    DB_con.get("routeMap").then( function(doc) {
         sqlite = createSQLiteObject(sqlite, doc);
         setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), true);
     }).catch(function(error) {
@@ -399,7 +399,7 @@ function getBundleFile(serverid) {
 
     showMobileLoading($(document).localizandroid('getString', 'downloading'));
     // Delete old file
-    DB.get('routeMap', function(doc, err) {
+    DB_con.get('routeMap', function(doc, err) {
         DB.remove(doc).catch(function(error) {});
     }).catch(function(error) {
         switch(error.status) {
@@ -424,7 +424,7 @@ function getBundleFile(serverid) {
         //console.log(contents);
         // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-        DB.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
+        DB_con.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
               $.mobile.loading("hide");
 
         }).catch(function(error) {
@@ -501,6 +501,7 @@ function initMap() {
     };
     control = L.control.layers(baseMaps, baseOverlay);
     control.addTo(map);
+    L.control.scale().addTo(map);
 
     // Make sure markers appear (in case we set them up before)
     markers.addTo(map);
@@ -531,7 +532,7 @@ function addDBMap() {
     lonn = parseFloat(str.substring(0, compos));
     str = str.substring(compos+1, str.length);
     latt = parseFloat(str.substring(0, str.length));
-    console.log(OFFMAP_NAME + ": maxZoom is " + maxZ + " and minZoom is " + minZ);
+   // console.log(OFFMAP_NAME + ": maxZoom is " + maxZ + " and minZoom is " + minZ);
     offlineLayer = new L.TileLayer.Functional(function(view) {
             var deferred = new jQuery.Deferred();
             var id = view.zoom + "/" + view.tile.column + "/" + view.tile.row + "." + imgType;
@@ -612,7 +613,7 @@ function deleteDB() {
         DB.destroy(function(err, info) {
            if(err) {
                alert("Could not delete DB: ", err);
-               $.mobile.navigate("#");
+               //$.mobile.navigate("#");
                throw err;
            }
            else {
@@ -626,7 +627,7 @@ function deleteDB() {
         DB_cont.destroy(function(err, info) {
            if(err) {
                alert("Could not delete DB: ", err);
-               $.mobile.navigate("#");
+              // $.mobile.navigate("#");
                throw err;
            }
            else {
@@ -635,8 +636,9 @@ function deleteDB() {
                setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
                $(".status-text-rname").html("");
            }
-        }).catch(function(error) {
-          });
+           }).catch(function(error) {
+           });
+
     }
    $.mobile.navigate("#");
 
@@ -691,7 +693,9 @@ function getFileFromAPI(url, onload, dloadType) {
     xhr.onload = onload;
     xhr.send();
 
-    $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+    if(localStorage.getItem("selectedRoute_name")!=null || localStorage.getItem("selectedRoute_name")!=undefined) {
+        $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+    }
 }
 
 function ajaxGet(type, url, token, successFunc, errorFunc, doneFunc) {
