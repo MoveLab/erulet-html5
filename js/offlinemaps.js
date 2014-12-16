@@ -367,7 +367,7 @@ function openDB() {
         }
     });
 
-    DB_con.get("routeMap").then( function(doc) {
+    DB_cont.get("routeMap").then( function(doc) {
         sqlite = createSQLiteObject(sqlite, doc);
         setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), true);
     }).catch(function(error) {
