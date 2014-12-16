@@ -679,7 +679,7 @@ function getFileFromAPI(url, onload, dloadType) {
             //Do something with upload progress
             //console.log(percentComplete);
 
-            if(status.toFixed(0) == 100) {
+            if(percentComplete.toFixed(0) == 100) {
                 setLedIcon($(".status-led-"+dloadType), $(".status-text-"+dloadType), true );
             }
             else {
