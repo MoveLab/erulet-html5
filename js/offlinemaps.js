@@ -435,6 +435,8 @@ function getBundleFile(serverid) {
               $.mobile.loading("hide");
           }
         }).catch(function(error) {
+              alert(error);
+              $.mobile.loading("hide");
           });
     }, 'rmap');
 
@@ -450,7 +452,7 @@ function getBundleFile(serverid) {
            var filedata; //= value.asUint8Array();
            var filetype; //= 'text/html';
            var extension = value.name.substr(value.name.indexOf('.')+1, value.name.length);
-           console.log(extension);
+          // console.log(extension);
            switch(extension) {
                 case 'html':
                 case 'css':
@@ -667,20 +669,12 @@ function getFileFromAPI(url, onload, dloadType) {
             var status = percentComplete.toFixed(2) + '%';
             //Do something with upload progress
             //console.log(percentComplete);
-            var elem, icon;
-            switch(dloadType) {
-                case 'gmap':
-                    elem = $("#dloadGMapStatusText");
-                    break;
-                case 'gcontent':
-                    elem = $("#dloadGContentStatusText");
-                    break;
-                case 'rmap':
-                    elem = $("#dloadRMapStatusText");
-                    break;
-                case 'rcontent':
-                    elem = $("#dloadRContentStatusText");
-                    break;
+
+            if(status==100) {
+                setLedIcon($(".status-led-"+dloadType), $(".status-text-"+dloadType), true );
+            }
+            else {
+                $(".status-text-"+dloadType).html(status + "%");
             }
         }
     }, false);
