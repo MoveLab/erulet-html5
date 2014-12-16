@@ -130,7 +130,7 @@ $(document).on('pageshow', '#trip_select', function() {
     if(navigator.onLine && routesData==null) {
         loadRoutes();
     }
-    else {
+    else if(markers.getLayers().length==0) {
         parseRoutesData(routesData);
     }
 });
