@@ -8,11 +8,11 @@ if(lang=="") {
 
 // Icon data
 var mapMarkerIcon = L.icon({
-    iconUrl: 'icons/ic_map_marker.png',
-    iconRetinaUrl: 'icons/ic_map_marker.png',
-    iconSize: [53, 53],
-    iconAnchor: [26, 52],
-    popupAnchor: [0, -54],
+    iconUrl: 'icons/itinerary_marker.png',
+    iconRetinaUrl: 'icons/itinerary_marker.png',
+    iconSize: [20, 23],
+    iconAnchor: [6, 22],
+    popupAnchor: [0, -24],
    // shadowUrl: 'my-icon-shadow.png',
    // shadowRetinaUrl: 'my-icon-shadow@2x.png',
    // shadowSize: [68, 95],
@@ -27,6 +27,11 @@ var waypointIcon = L.icon({
     popupAnchor: [0, -54],
 });
 
+var geolocatedIcon = L.icon({
+    iconUrl: 'icons/green.png',
+    iconRetinaUrl: 'icons/green.png',
+    iconSize: [32, 32],
+});
 // Methods
 $(document).on('pageshow', '#credits', function() {
     loadHTML($(this).attr('id'));

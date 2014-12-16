@@ -24,6 +24,7 @@ var lat, lon, latt, lonn, compos, str;
 var imgType;
 var markers = new L.FeatureGroup();
 var markersHLT = new L.FeatureGroup();
+var geolocationControl;
 var polylines = new L.FeatureGroup();
 var polyline;
 var mapviewmode = 0;
@@ -197,6 +198,30 @@ function viewRoute(elem, locate) {
         if(locate) {
             map.locate({setView: true, maxZoom: 8, watch: true});
         }
+
+
+        L.Control.Geolocation = L.Control.extend({
+            options: {
+                position: 'bottomleft',
+            },
+
+            onAdd: function (map) {
+                var controlDiv = L.DomUtil.create('div', 'leaflet-control-geolocation');
+                L.DomEvent
+                    .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                    .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                .addListener(controlDiv, 'click', function () { geolocate(); });
+
+                controlDiv.innerHTML = '<a id="geolocationAnchor" href="#popupMessage" data-rel="popup" data-position-to="origin" data-transition="flow"><img id="geolocationIcon" src="icons/whereami_btn_alt.png"></a>';
+                var controlUI = L.DomUtil.create('div', 'leaflet-control-command-interior', controlDiv);
+                controlUI.title = 'Map Commands';
+                return controlDiv;
+            }
+        });
+
+
+        geolocationControl = new L.Control.Geolocation({});
+        map.addControl(geolocationControl);
    }
 }
 
@@ -339,11 +364,11 @@ function drawRoute(step, color, opacity, store) {
 
 function setLedIcon(icon, text, isOn) {
     if(isOn) {
-        $(icon).attr('src','images/ok.png');
+        $(icon).attr('src','images/green.png');
         $(text).html('OK');
     }
     else {
-        $(icon).attr('src', 'images/error.png');
+        $(icon).attr('src', 'images/red.png');
         $(text).html('KO');
     }
 }
@@ -424,7 +449,7 @@ function getBundleFile(serverid) {
         //console.log(contents);
         // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-        DB_con.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
+        DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
               $.mobile.loading("hide");
 
         }).catch(function(error) {
@@ -501,12 +526,25 @@ function initMap() {
     };
     control = L.control.layers(baseMaps, baseOverlay);
     control.addTo(map);
-    L.control.scale().addTo(map);
+    L.control.scale({position: 'bottomright'}).addTo(map);
 
     // Make sure markers appear (in case we set them up before)
     markers.addTo(map);
     polylines.addTo(map);
     markersHLT.addTo(map);
+}
+
+function geolocate() {
+    map.locate({setView: true, maxZoom: 12});
+    map.on('locationfound', function(e) {
+        var marker = L.marker(e.latlng, {icon: geolocatedIcon});
+        marker.addTo(markersHLT);
+    });
+    map.on('locationerror', function(e) {
+        console.log(e);
+        $("#popupMessage-text").text($(document).localizandroid('getString', 'still_lost'));
+        $("#geolocationAnchor").click();
+    });
 }
 
 function addDBMap() {
