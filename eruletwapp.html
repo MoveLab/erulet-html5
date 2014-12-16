@@ -170,7 +170,9 @@
                 <img id="dloadGContentStatusIcon" class="ui-block-a status-led status-led-gcontent">
                 <p id="dloadGContentStatus" class="ui-block-b localizable" data-lclstring="general_data_status"></p>
                 <p id="dloadGContentStatusText" class="ui-block-c status-text status-text-gcontent">?</p>
-
+            </div>
+            <b id="dloadRName" class="status-text status-text-rname">-</b>
+            <div class="ui-grid-b">
                 <img id="dloadRMapStatusIcon" class="ui-block-a status-led status-led-rmap">
                 <p id="dloadRMapStatus" class="ui-block-b localizable" data-lclstring="route_map_status"></p>
                 <p id="dloadRMapStatusText" class="ui-block-c status-text status-text-rmap">?</p>
@@ -178,6 +180,7 @@
                 <img id="dloadRContentStatusIcon" class="ui-block-a status-led status-led-rcontent">
                 <p id="dloadRContentStatus" class="ui-block-b localizable" data-lclstring="route_data_status"></p>
                 <p id="dloadRContentStatusText" class="ui-block-c status-text status-text-rcontent">?</p>
+
             </div>
         </div>
     </div>
@@ -256,6 +259,15 @@
         </div>
         <div role="main" class="ui-content">
             <h3 class="ui-title localizable" data-lclstring="confirm_delete"></h3>
+
+            <label>
+                <input id="deleteDBCheckbox" name="checkbox-0 " type="checkbox"> <p class=" ui-mini localizable" data-lclstring="deleteDB"></p> </input>
+            </label>
+
+            <label>
+                <input id="deleteLocalCheckbox" name="checkbox-0 " type="checkbox"> <p class=" ui-mini localizable" data-lclstring="deleteLocal"></p> </input>
+            </label>
+
             <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="cancel" data-rel="back">Cancel</a>
             <a href="#" id="dl_clear" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b localizable" data-lclstring="yes" data-rel="back" data-transition="flow">Delete</a>
         </div>

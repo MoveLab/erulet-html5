@@ -177,4 +177,6 @@
     <string name="map_online">Internet</string>
     <string name="map_offline">Local</string>
     <string name="map_grid">Malla</string>
+    <string name="deleteDB">Esborra els mapes locals</string>
+    <string name="deleteLocal">Esborra dades del navegador</string>
 </resources>

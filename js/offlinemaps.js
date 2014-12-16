@@ -61,6 +61,8 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $("#map").css({ top: headerHeight }); // position under header
 
     $('#generalMapCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
+    $('#deleteDBCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
+    $('#deleteLocalCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
 
     $("#routeDownload").click(function(e) {
         getBundleFile($(this).data("serverid"));
@@ -80,10 +82,12 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
             if($("#selectRoutes :selected").text()!="") {
                 var mapID = $("#selectRoutes :selected").data('mapid');
                 var position = $("#selectRoutes").val()-1;
+                var name = $("#selectRoutes :selected").text();
                 var serverid = $("#selectRoutes :selected").data('serverid');
                 $("#syncPopupYes").data("selectedRoute", position);
                 $("#syncPopupYes").data("selectedRoute_serverid", serverid);
                 $("#syncPopupYes").data("selectedRoute_mapid", mapID);
+                $("#syncPopupYes").data("selectedRoute_name", name);
                 //openRouteDescription(mapID, position, serverid);
 
                 $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
@@ -100,6 +104,7 @@ $(document).ready(function() {
     else {
         setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), true);
     }
+    $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
 });
 
 $(document).on('click', '#syncPopupYes', function() {       //avoid double-calling bug
@@ -117,6 +122,7 @@ $(document).on('click', '#syncPopupYes', function() {       //avoid double-calli
         localStorage.setItem("selectedRoute", $("#syncPopupYes").data("selectedRoute"));
         localStorage.setItem("selectedRoute_serverid", $("#syncPopupYes").data("selectedRoute_serverid"));
         localStorage.setItem("selectedRoute_mapid", $("#syncPopupYes").data("selectedRoute_mapid"));
+        localStorage.setItem("selectedRoute_name", $("#syncPopupYes").data("selectedRoute_name"));
         getBundleFile(localStorage.getItem("selectedRoute_serverid"));
     }
 });
@@ -418,24 +424,17 @@ function getBundleFile(serverid) {
         // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
         DB.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
-          if(err) {
-              if(err.status==409) {
+              $.mobile.loading("hide");
+
+        }).catch(function(error) {
+            localStorage.setItem("selectedRoute_name", null);
+              if(error.status==409) {
                   $('#popupDataPresent').popup();
                   $('#popupDataPresent').popup('open');
               }
               else {
-                  alert(err);
+                alert(error);
               }
-              $.mobile.loading("hide");
-              throw err;
-          }
-          else {
-              //console.log("saved: ", response.id + " rev: " + response.rev);
-              //fillDB(zip);
-              $.mobile.loading("hide");
-          }
-        }).catch(function(error) {
-              alert(error);
               $.mobile.loading("hide");
           });
     }, 'rmap');
@@ -466,7 +465,7 @@ function getBundleFile(serverid) {
                     filedata = value.asBinary();
                     break;
            }
-           console.log(filetype);
+           //console.log(filetype);
            DB_cont.put({_id: value.name, file: filedata, type: filetype}, function(err, response) {
 
            }).catch(function(error) {
@@ -590,44 +589,54 @@ function removeMarkers() {
 
 function deleteDB() {
     console.log(OFFMAP_NAME + ": deleteDB()");
+    var deleteDB = $('#deleteDBCheckbox').prop('checked');
+    var deleteLocal = $('#deleteLocalCheckbox').prop('checked');
 
     if(DB==null) { DB = new PouchDB(dbname);}
 
-    // Delete also local storage values, removeItem() does not seem to work
-    localStorage.setItem("selectedRoute_steps", null);
-    localStorage.setItem("selectedRoute_highlights", null);
-    localStorage.setItem("selectedRoute_serverid", null);
-    localStorage.setItem("selectedRoute_mapid", null);
-    localStorage.setItem("selectedRoute", null);
-    localStorage.setItem("routesData", null);
+    if(deleteLocal == true ) {
+        // Delete also local storage values, removeItem() does not seem to work
+        localStorage.setItem("selectedRoute_steps", null);
+        localStorage.setItem("selectedRoute_highlights", null);
+        localStorage.setItem("selectedRoute_serverid", null);
+        localStorage.setItem("selectedRoute_mapid", null);
+        localStorage.setItem("selectedRoute_name", null);
+        localStorage.setItem("selectedRoute", null);
+        localStorage.setItem("routesData", null);
 
-    setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), false);
+        setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), false);
+    }
 
+    if(deleteDB == true) {
+        DB.destroy(function(err, info) {
+           if(err) {
+               alert("Could not delete DB: ", err);
+               $.mobile.navigate("#");
+               throw err;
+           }
+           else {
+               console.log("Database " + dbname + " deleted");
+               setLedIcon($(".status-led-gmap"), $(".status-text-gmap"), false);
+               setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), false);
+           }
+        }).catch(function(error) {
+          });
 
-    DB.destroy(function(err, info) {
-       if(err) {
-           alert("Could not delete DB: ", err);
-           $.mobile.navigate("#");
-           throw err;
-       }
-       else {
-           console.log("Database " + dbname + " deleted");
-       }
-    }).catch(function(error) {
-      });
-
-    DB_cont.destroy(function(err, info) {
-       if(err) {
-           alert("Could not delete DB: ", err);
-           $.mobile.navigate("#");
-           throw err;
-       }
-       else {
-           console.log("Database " + dbname_con+ " deleted");
-       }
-    }).catch(function(error) {
-      });
-
+        DB_cont.destroy(function(err, info) {
+           if(err) {
+               alert("Could not delete DB: ", err);
+               $.mobile.navigate("#");
+               throw err;
+           }
+           else {
+               console.log("Database " + dbname_con+ " deleted");
+               setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), false);
+               setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
+               $(".status-text-rname").html("");
+           }
+        }).catch(function(error) {
+          });
+    }
    $.mobile.navigate("#");
 
 }
@@ -670,16 +679,18 @@ function getFileFromAPI(url, onload, dloadType) {
             //Do something with upload progress
             //console.log(percentComplete);
 
-            if(status==100) {
+            if(status.toFixed(0) == 100) {
                 setLedIcon($(".status-led-"+dloadType), $(".status-text-"+dloadType), true );
             }
             else {
-                $(".status-text-"+dloadType).html(status + "%");
+                $(".status-text-"+dloadType).html(status);
             }
         }
     }, false);
     xhr.onload = onload;
     xhr.send();
+
+    $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
 }
 
 function ajaxGet(type, url, token, successFunc, errorFunc, doneFunc) {
