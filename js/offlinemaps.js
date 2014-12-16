@@ -399,7 +399,7 @@ function getBundleFile(serverid) {
 
     showMobileLoading($(document).localizandroid('getString', 'downloading'));
     // Delete old file
-    DB_con.get('routeMap', function(doc, err) {
+    DB_cont.get('routeMap', function(doc, err) {
         DB.remove(doc).catch(function(error) {});
     }).catch(function(error) {
         switch(error.status) {
