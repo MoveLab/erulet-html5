@@ -79,21 +79,23 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 
     $("#selectRoutes").change(function() {
 
-            if($("#selectRoutes :selected").text()!="") {
-                var mapID = $("#selectRoutes :selected").data('mapid');
-                var position = $("#selectRoutes").val()-1;
-                var name = $("#selectRoutes :selected").text();
-                var serverid = $("#selectRoutes :selected").data('serverid');
-                $("#syncPopupYes").data("selectedRoute", position);
-                $("#syncPopupYes").data("selectedRoute_serverid", serverid);
-                $("#syncPopupYes").data("selectedRoute_mapid", mapID);
-                $("#syncPopupYes").data("selectedRoute_name", name);
-                //openRouteDescription(mapID, position, serverid);
+        if($("#selectRoutes :selected").text()!="") {
+            var mapID = $("#selectRoutes :selected").data('mapid');
+            var position = $("#selectRoutes").val()-1;
+            var name = $("#selectRoutes :selected").text();
+            var serverid = $("#selectRoutes :selected").data('serverid');
+            $("#syncPopupYes").data("selectedRoute", position);
+            $("#syncPopupYes").data("selectedRoute_serverid", serverid);
+            $("#syncPopupYes").data("selectedRoute_mapid", mapID);
+            $("#syncPopupYes").data("selectedRoute_name", name);
+            //openRouteDescription(mapID, position, serverid);
 
-                $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
-            }
-        });
+            $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
+        }
     });
+
+    $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+});
 
 $(document).ready(function() {
     //$(this).localizandroid();
@@ -104,7 +106,6 @@ $(document).ready(function() {
     else {
         setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), true);
     }
-    $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
 });
 
 $(document).on('click', '#syncPopupYes', function() {       //avoid double-calling bug
