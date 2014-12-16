@@ -46,8 +46,8 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     // Handle clear button
     $("#dl_clear").click(function(e) {
         //e.preventDefault(); // it's an anchor
+       window.location.href = window.location.href.substr(window.location.href, window.location.href.lastIndexOf('#'));
        deleteDB();
-       $.mobile.navigate("#switchboard");
     });
 
     // Let's make the map use the whole space
@@ -594,7 +594,6 @@ function deleteDB() {
     var deleteDB = $('#deleteDBCheckbox').prop('checked');
     var deleteLocal = $('#deleteLocalCheckbox').prop('checked');
 
-    if(DB==null) { DB = new PouchDB(dbname);}
 
     if(deleteLocal == true ) {
         // Delete also local storage values, removeItem() does not seem to work
@@ -610,38 +609,30 @@ function deleteDB() {
     }
 
     if(deleteDB == true) {
-        DB.destroy(function(err, info) {
-           if(err) {
-               alert("Could not delete DB: ", err);
-               //$.mobile.navigate("#");
-               throw err;
-           }
-           else {
-               console.log("Database " + dbname + " deleted");
-               setLedIcon($(".status-led-gmap"), $(".status-text-gmap"), false);
-               setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), false);
-           }
-        }).catch(function(error) {
-          });
-
-        DB_cont.destroy(function(err, info) {
-           if(err) {
-               alert("Could not delete DB: ", err);
-              // $.mobile.navigate("#");
-               throw err;
-           }
-           else {
-               console.log("Database " + dbname_con+ " deleted");
-               setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), false);
-               setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
-               $(".status-text-rname").html("");
-           }
-           }).catch(function(error) {
-           });
-
+        if(DB!=null) {
+            DB.destroy(function(err, info) {
+                if(!err) {
+                   console.log("Database " + dbname + " deleted");
+                   setLedIcon($(".status-led-gmap"), $(".status-text-gmap"), false);
+                   setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), false);
+               }
+               }).catch(function(error) {
+                    //alert("Could not delete DB: ", error);
+              });
+        }
+        if(DB_cont!=null) {
+            DB_cont.destroy(function(err, info) {
+               if(!err) {
+                   console.log("Database " + dbname_con+ " deleted");
+                   setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), false);
+                   setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
+                   $(".status-text-rname").html("");
+               }
+               }).catch(function(error) {
+                    //alert("Could not delete DB: ", error);
+               });
+        }
     }
-   $.mobile.navigate("#");
-
 }
 
 function openRouteDescription(mapID, arrayPosition, serverid) {
