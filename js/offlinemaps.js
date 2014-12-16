@@ -333,11 +333,11 @@ function drawRoute(step, color, opacity, store) {
 function setLedIcon(icon, text, isOn) {
     if(isOn) {
         $(icon).attr('src','images/ok.png');
-        $(text).append('OK');
+        $(text).html('OK');
     }
     else {
         $(icon).attr('src', 'images/error.png');
-        $(text).append('KO');
+        $(text).html('KO');
     }
 }
 
@@ -357,7 +357,7 @@ function openDB() {
         case 404:
             console.warn(OFFMAP_NAME +  ": No general DB present");
             setLedIcon($("#generalMapStatusIcon"), $("#generalMapStatusText"), false);
-            setLedIcon($("#dloadGMapStatusIcon"), $("#dloadGMapStatusText"), true);
+            setLedIcon($("#dloadGMapStatusIcon"), $("#dloadGMapStatusText"), false);
         break;
         }
     });
@@ -375,6 +375,7 @@ function openDB() {
         break;
       }
     });
+
 }
 
 function createSQLiteObject(sql, doc) {
@@ -602,6 +603,9 @@ function deleteDB() {
     localStorage.setItem("selectedRoute", null);
     localStorage.setItem("routesData", null);
 
+    setLedIcon($("#generalDataStatusIcon"), $("#generalDataStatusText"), false);
+
+
     DB.destroy(function(err, info) {
        if(err) {
            alert("Could not delete DB: ", err);
@@ -670,20 +674,20 @@ function getFileFromAPI(url, onload, dloadType) {
             //console.log(percentComplete);
             switch(dloadType) {
                 case 'gmap':
-                    text = $(document).localizandroid('getString', $("#dloadGMapStatus").data('lclstring'));
-                    $("#dloadGMapStatus").html(text + status);
+                   // text = $(document).localizandroid('getString', $("#dloadGMapStatus").data('lclstring'));
+                    $("#dloadGMapStatusText").html(text + status);
                     break;
                 case 'gcontent':
-                    text = $(document).localizandroid('getString', $("#dloadGContentStatus").data('lclstring'));
-                    $("#dloadGContentStatus").html(text + ' ' + status);
+                   // text = $(document).localizandroid('getString', $("#dloadGContentStatus").data('lclstring'));
+                    $("#dloadGContentStatusText").html(text + ' ' + status);
                     break;
                 case 'rmap':
-                    text = $(document).localizandroid('getString', $("#dloadRMapStatus").data('lclstring'));
-                    $("#dloadRMapStatus").html(text + ' ' + status);
+                   // text = $(document).localizandroid('getString', $("#dloadRMapStatus").data('lclstring'));
+                    $("#dloadRMapStatusText").html(text + ' ' + status);
                     break;
                 case 'rcontent':
-                    text = $(document).localizandroid('getString', $("#dloadRContentStatus").data('lclstring'));
-                    $("#dloadRContentStatus").html(text + ' ' + status);
+                    //text = $(document).localizandroid('getString', $("#dloadRContentStatus").data('lclstring'));
+                    $("#dloadRContentStatusText").html(text + ' ' + status);
                     break;
             }
         }
@@ -720,13 +724,13 @@ function loadRoutes() {
 
             localStorage.setItem("routesData", JSON.stringify(data));
             routesData = data;
+            setLedIcon($("#generalDataStatusIcon"), $("#generalDataStatusText"), true);
             parseRoutesData(data);
-
-
 
         },
         function(error) {
             console.log(error);
+            setLedIcon($("#generalDataStatusIcon"), $("#generalDataStatusText"), false);
             alert("ERROR: Probably a network (offline/CORS) issue");
             $.mobile.loading("hide");
         },
