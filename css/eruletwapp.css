@@ -57,3 +57,21 @@
 .status-led {
 	max-width:16px;
 }
+
+/* Downloads popup styling */
+.dloadPopup .ui-body {
+	font-size: 12px;
+}
+.dloadPopup .ui-block-b {
+	float: left;
+	width: 50%;
+}
+.dloadPopup .ui-block-a,
+.dloadPopup .ui-block-c {
+	float: left;
+	width:25%;
+}
+.dloadPopup .ui-block-b,
+.dloadPopup .ui-block-c {
+	max-height: 20px;
+}

@@ -92,6 +92,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     });
 
 $(document).ready(function() {
+    //$(this).localizandroid();
     routesData = JSON.parse(localStorage.getItem("routesData"));
     if(!routesData) {
         setLedIcon($("#generalDataStatusIcon"), $("#generalDataStatusText"), false);
@@ -328,6 +329,7 @@ function drawRoute(step, color, opacity, store) {
     return [pLine, highlights];
 }
 
+
 function setLedIcon(icon, text, isOn) {
     if(isOn) {
         $(icon).attr('src','images/ok.png');
@@ -348,12 +350,14 @@ function openDB() {
     DB.get("generalMap").then( function(doc) {
         sqlite_general = createSQLiteObject(sqlite_general, doc);
         setLedIcon($("#generalMapStatusIcon"), $("#generalMapStatusText"), true);
+        setLedIcon($("#dloadGMapStatusIcon"), $("#dloadGMapStatusText"), true);
         addDBMap();
     }).catch(function(error) {
         switch(error.status) {
         case 404:
             console.warn(OFFMAP_NAME +  ": No general DB present");
             setLedIcon($("#generalMapStatusIcon"), $("#generalMapStatusText"), false);
+            setLedIcon($("#dloadGMapStatusIcon"), $("#dloadGMapStatusText"), true);
         break;
         }
     });
@@ -361,11 +365,13 @@ function openDB() {
     DB.get("routeMap").then( function(doc) {
         sqlite = createSQLiteObject(sqlite, doc);
         setLedIcon($("#routeDataStatusIcon"), $("#routeDataStatusText"), true);
+        setLedIcon($("#dloadRMapStatusIcon"), $("#dloadRMapStatusText"), true);
     }).catch(function(error) {
       switch(error.status) {
         case 404:
             console.warn(OFFMAP_NAME +  ": Not found on DB");
             setLedIcon($("#routeDataStatusIcon"), $("#routeDataStatusText"), false);
+            setLedIcon($("#dloadRMapStatusIcon"), $("#dloadRMapStatusText"), false);
         break;
       }
     });
@@ -641,16 +647,6 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
         //$("#routeSelect").hide();
     }
 
-    // Define mapid
-    /*$("#routeDownload").data('arraypos', arrayPosition);
-    $("#routeDownload").data('mapid', mapID);
-    $("#routeDownload").data('serverid', serverid);
-    $("#routeView").data('arraypos', arrayPosition);
-    $("#routeView").data('mapid', mapID);
-    $("#routeView").data('serverid', serverid);
-    $("#routeSelect").data('mapid', mapID);
-    $("#routeSelect").data('arraypos', arrayPosition);
-    $("#routeSelect").data('serverid', serverid);*/
     $(".route-desc-button").data('arraypos', arrayPosition);
     $(".route-desc-button").data('mapid', mapID);
     $(".route-desc-button").data('serverid', serverid);
@@ -669,20 +665,25 @@ function getFileFromAPI(url, onload, dloadType) {
         if (e.lengthComputable) {
             var percentComplete = e.loaded / e.total * 100;
             var status = percentComplete.toFixed(2) + '%';
+            var text="";
             //Do something with upload progress
             //console.log(percentComplete);
             switch(dloadType) {
                 case 'gmap':
-                    $("#dloadGMapStatus").html('General Map: ' + status);
+                    text = $(document).localizandroid('getString', $("#dloadGMapStatus").data('lclstring'));
+                    $("#dloadGMapStatus").html(text + status);
                     break;
                 case 'gcontent':
-                    $("#dloadGContentStatus").html('General Content: ' + status);
+                    text = $(document).localizandroid('getString', $("#dloadGContentStatus").data('lclstring'));
+                    $("#dloadGContentStatus").html(text + ' ' + status);
                     break;
                 case 'rmap':
-                    $("#dloadRMapStatus").html('Route Map: ' + status);
+                    text = $(document).localizandroid('getString', $("#dloadRMapStatus").data('lclstring'));
+                    $("#dloadRMapStatus").html(text + ' ' + status);
                     break;
                 case 'rcontent':
-                    $("#dloadRContentStatus").html('Route Content: ' + status);
+                    text = $(document).localizandroid('getString', $("#dloadRContentStatus").data('lclstring'));
+                    $("#dloadRContentStatus").html(text + ' ' + status);
                     break;
             }
         }

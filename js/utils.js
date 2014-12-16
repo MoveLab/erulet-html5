@@ -63,7 +63,7 @@ $(document).ready( function() {
         defaultCode: "ca",
         forceLanguage: lang
     };
-    $(this).localizandroid(options);
+    $(document).localizandroid(options);
 
     if(lang=="" || lang==null) {
         lang = navigator.language || navigator.userLanguage;

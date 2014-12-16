@@ -158,11 +158,17 @@
 
     <!-- Popups -->
     <div data-role="popup" id="popupDloads">
-        <p>Downloads</p>
-        <p id="dloadGMapStatus" class="localizable" data-lclstring=""></p>
-        <p id="dloadGContentStatus" class="localizable" data-lclstring=""></p>
-        <p id="dloadRMapStatus" class="localizable" data-lclstring=""></p>
-        <p id="dloadRContentStatus" class="localizable" data-lclstring=""></p>
+        <div data-role="header">
+            <h3 class="localizable" data-lclstring="downloads">Downloads</h3>
+        </div>
+        <div data-role="main" class="ui-content dloadPopup">
+            <div class="ui-grid-b">
+                <img id="dloadGMapStatusIcon" src="images/error.png" class="ui-block-a status-led"><p id="dloadGMapStatus" class="ui-block-b localizable" data-lclstring="general_map_status"></p><p id="dloadGMapStatusText" class="ui-block-c"></p>
+                <img id="dloadGContentStatusIcon" src="images/error.png" class="ui-block-a status-led"><p id="dloadGContentStatus" class="ui-block-b localizable" data-lclstring="general_data_status"></p><p id="dloadGContentStatusText" class="ui-block-c"></p>
+                <img id="dloadRMapStatusIcon" src="images/error.png" class="ui-block-a status-led"><p id="dloadRMapStatus" class="ui-block-b localizable" data-lclstring="route_map_status"></p><p id="dloadRMapStatusText" class="ui-block-c"></p>
+                <img id="dloadRContetStatusIcon" src="images/error.png" class="ui-block-a status-led"><p id="dloadRContentStatus" class="ui-block-b localizable" data-lclstring="route_data_status"></p><p id="dloadRContentStatusText" class="ui-block-c"></p>
+            </div>
+        </div>
     </div>
     <div data-role="popup" id="popupSync" data-overlay-theme="b" data-theme="b" data-dismissible="false">
         <div data-role="header" data-theme="a">

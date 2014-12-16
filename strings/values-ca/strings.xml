@@ -170,4 +170,5 @@
     <string name="route_map_status">Mapa de ruta</string>
     <string name="general_data_status">Dades generals</string>
     <string name="route_data_status">Dades de ruta</string>
+    <string name="downloads">Descàrregues</string>
 </resources>
