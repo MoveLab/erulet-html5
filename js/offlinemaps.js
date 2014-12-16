@@ -124,7 +124,7 @@ $(document).on('click', '#syncPopupYes', function() {       //avoid double-calli
 $(document).on('pageshow', '#trip_select', function() {
     // Workaround to show loading dialog (can't be used on document.ready()
     if(routesData==null) {
-        showMobileLoading("initializing map...");
+        showMobileLoading($(document).localizandroid('getString', 'initializing_map'));
     }
 
     if(navigator.onLine && routesData==null) {
@@ -390,7 +390,7 @@ function getBundleFile(serverid) {
     var path = bundleFilename + serverid + '.zip';
     console.log(OFFMAP_NAME + ": opening "+ path);
 
-    showMobileLoading("downloading maps");
+    showMobileLoading($(document).localizandroid('getString', 'downloading'));
     // Delete old file
     DB.get('routeMap', function(doc, err) {
         DB.remove(doc).catch(function(error) {});

@@ -163,7 +163,6 @@ $(document).ready( function() {
 
 });
 
-
 function loadHTML(pageID) {
     console.log("loadHTML()");
     var path = null;

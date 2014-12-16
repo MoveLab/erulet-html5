@@ -171,4 +171,10 @@
     <string name="general_data_status">Dades generals</string>
     <string name="route_data_status">Dades de ruta</string>
     <string name="downloads">Descàrregues</string>
+
+    <string name="downloading">Descarregant dades...</string>
+    <string name="initializing_map">Configurant mapa</string>
+    <string name="map_online">Internet</string>
+    <string name="map_offline">Local</string>
+    <string name="map_grid">Malla</string>
 </resources>
