@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v3 - 2014-12-01
+# v4 - 2014-12-17
 
 # Local
 eruletwapp.html
@@ -36,15 +36,21 @@ html/manual_fr.html
 html/manual_en.html
 images/ajax-loader.gif
 images/erulet_stone.png
+images/green.png
 images/ic_erulet_new.png
 images/launcher200.png
 images/layers.png
+images/red.png
+icons/green.png
 icons/ic_credits.png
 icons/ic_info_icon.png
+icons/ic_itinerary_icon.png
 icons/ic_reference.png
 icons/ic_route_select.png
 icons/ic_map_marker.png
+icons/itinerary_marker.png
 icons/pin_chart.png
+icons/whereami_btn_alt.png
 static/frontulet/icons/before_leaving/environment.png
 static/frontulet/icons/before_leaving/safety.png
 static/frontulet/icons/before_leaving/sat.png
