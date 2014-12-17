@@ -404,6 +404,32 @@ function openDB() {
       }
     });
 
+    // TODO: Think of a better way to check general/route content is present.
+    DB.info(function(err, info) {
+        console.log(info.doc_count);
+        switch(info.doc_count) {
+            case 0:
+            case 1:
+                setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), false);
+                break;
+            default:
+                setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), true);
+                break;
+        }
+    });
+
+    DB_cont.info(function(err, info) {
+        console.log(info.doc_count);
+        switch(info.doc_count) {
+            case 0:
+            case 1:
+                setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
+                break;
+            default:
+                setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
+                break;
+        }
+    });
 }
 
 function createSQLiteObject(sql, doc) {
