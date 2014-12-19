@@ -101,7 +101,8 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
 $(document).ready(function() {
     //$(this).localizandroid();
     routesData = JSON.parse(localStorage.getItem("routesData"));
-    if(!routesData) {
+    //console.log(routesData);
+    if(!routesData || routesData==null) {
         setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), false);
     }
     else {
@@ -130,12 +131,9 @@ $(document).on('click', '#syncPopupYes', function() {       //avoid double-calli
 });
 
 $(document).on('pageshow', '#trip_select', function() {
-    // Workaround to show loading dialog (can't be used on document.ready()
-    if(routesData==null) {
-        showMobileLoading($(document).localizandroid('getString', 'initializing_map'));
-    }
 
     if(navigator.onLine && routesData==null) {
+        showMobileLoading($(document).localizandroid('getString', 'initializing_map'));
         loadRoutes();
     }
     else if(markers.getLayers().length==0) {
@@ -227,6 +225,7 @@ function viewRoute(elem, locate) {
 
 function loadGeneralMap() {
     console.log(OFFMAP_NAME + ": loadGeneralMap()");
+    if(!DB) { DB = new PouchDB(dbname);}
     DB.get('generalMap', function(doc, err) {
         if(!err) {
             DB.remove(doc);
@@ -253,8 +252,7 @@ function loadGeneralMap() {
 
       DB.put({_id: "generalMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
 
-      }).catch(function(error) {
-        });
+      }).catch(function(error) { });
       addDBMap();
     }, 'gmap');
 
@@ -267,8 +265,7 @@ function loadGeneralMap() {
         $.each(zip.files, function(index, value) {
 
             DB.put({_id: value.name, file:value.asUint8Array()}, function(err, response) {
-            }).catch(function(error) {
-            });
+            }).catch(function(error) { });
         });
         $.mobile.loading("hide");
 
@@ -406,20 +403,20 @@ function openDB() {
 
     // TODO: Think of a better way to check general/route content is present.
     DB.info(function(err, info) {
-        console.log(info.doc_count);
+       // console.log(info.doc_count);
         switch(info.doc_count) {
             case 0:
             case 1:
                 setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), false);
                 break;
             default:
-                setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), true);
+                setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), true);
                 break;
         }
     });
 
     DB_cont.info(function(err, info) {
-        console.log(info.doc_count);
+        //console.log(info.doc_count);
         switch(info.doc_count) {
             case 0:
             case 1:
@@ -467,6 +464,9 @@ function getBundleFile(serverid) {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
+        if(!zip) {
+            console.log("NO ZIP!");
+        }
         var fName = localStorage.getItem("selectedRoute_mapid");
         var mbtiles = zip.file(fName).asUint8Array();
         console.log("Downloaded DB : " + fName);
@@ -828,6 +828,7 @@ function parseRoutesData(data) {
 
         //console.log(value["name_"+lang] + " -> " + latlngs[0]);
         // Show routes on the map
+        //addMarkerWithPopup(latlngs[Math.round(latlngs.length/2)], container[0]);
         addMarkerWithPopup(latlngs[0], container[0]);
         drawRoute(steps, POLYLINE_COLORS[index], POLYLINE_DEFAULT_OPACITY, false);
 
