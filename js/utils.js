@@ -8,6 +8,13 @@ if(lang=="") {
 
 // Icon data
 var mapMarkerIcon = L.icon({
+    iconUrl: 'icons/ic_map_marker.png',
+    iconRetinaUrl: 'icons/ic_map_marker.png',
+    iconSize: [53, 53],
+    iconAnchor: [26, 52],
+    popupAnchor: [0, -54],
+});
+var routeMarkerIcon = L.icon({
     iconUrl: 'icons/itinerary_marker.png',
     iconRetinaUrl: 'icons/itinerary_marker.png',
     iconSize: [20, 23],

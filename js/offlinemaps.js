@@ -459,37 +459,44 @@ function getBundleFile(serverid) {
 
     var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS + serverid;
 
-    getFileFromAPI(url, function(e) {
-        var uInt8Array = new Uint8Array(this.response);
+    try {
+        getFileFromAPI(url, function(e) {
+            var uInt8Array = new Uint8Array(this.response);
 
-        var zip = new JSZip();
-        zip.load(uInt8Array);
-        if(!zip) {
-            console.log("NO ZIP!");
-        }
-        var fName = localStorage.getItem("selectedRoute_mapid");
-        var mbtiles = zip.file(fName).asUint8Array();
-        console.log("Downloaded DB : " + fName);
-        sqlite = new SQL.Database(mbtiles);
-        //var contents = sqlite.exec("SELECT * FROM tiles");
-        //console.log(contents);
-        // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
+            var zip = new JSZip();
+            zip.load(uInt8Array).catch(function(e) {console.log(e);});
+            if(!zip) {
+                console.log("NO ZIP!");
+            }
+            var fName = localStorage.getItem("selectedRoute_mapid");
+            var mbtiles = zip.file(fName).asUint8Array();
+            console.log("Downloaded DB : " + fName);
+            sqlite = new SQL.Database(mbtiles);
+            //var contents = sqlite.exec("SELECT * FROM tiles");
+            //console.log(contents);
+            // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-        DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
-              $.mobile.loading("hide");
+            DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
+                  $.mobile.loading("hide");
 
-        }).catch(function(error) {
-            localStorage.setItem("selectedRoute_name", null);
-              if(error.status==409) {
-                  $('#popupDataPresent').popup();
-                  $('#popupDataPresent').popup('open');
-              }
-              else {
-                alert(error);
-              }
-              $.mobile.loading("hide");
-          });
-    }, 'rmap');
+            }).catch(function(error) {
+                localStorage.setItem("selectedRoute_name", null);
+                  if(error.status==409) {
+                      $('#popupDataPresent').popup();
+                      $('#popupDataPresent').popup('open');
+                  }
+                  else {
+                    alert(error);
+                  }
+                  $.mobile.loading("hide");
+              });
+        }, 'rmap');
+    }
+    catch(error) {
+                      $('#popupDataPresent').popup();
+                      $('#popupDataPresent').popup('open');
+
+    }
 
     url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTECONTENT + serverid + "/" + $(window).width();
     console.log(url);
@@ -641,7 +648,7 @@ function readDataFromBlob(blob, deferred) {
 
 function addMarkerWithPopup(latlng, popupElement) {
     console.log(OFFMAP_NAME + ": addMarkerWithPopup()");
-    var marker = L.marker(latlng, {icon: mapMarkerIcon})
+    var marker = L.marker(latlng, {icon: routeMarkerIcon})
         .bindPopup(popupElement);
     markers.addLayer(marker);
 }
