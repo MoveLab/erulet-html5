@@ -44,14 +44,7 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     mapviewmode=0;
     showsurvey=false;
     if(map) {map.stopLocate();}
-    // Handle clear button
-    $("#dl_clear").click(function(e) {
-       e.preventDefault(); // avoid calling things twice
-       //e.stopImmediatePropagation();
-       $("#popupDelete").popup('close');
-       0deleteDB();
-       window.location.href = window.location.href.substr(window.location.href, window.location.href.lastIndexOf('#'));
-    });
+
 
     // Let's make the map use the whole space
     var windowHeight = $(window).height();
@@ -67,35 +60,6 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $('#deleteDBCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
     $('#deleteLocalCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
 
-    $("#routeDownload").click(function(e) {
-        getBundleFile($(this).data("serverid"));
-    });
-
-    $("#routeView").click(function(e) {
-        viewRoute($(this), false);
-    });
-
-    $("#routeSelect").click(function(e) {
-        //Geolocation
-        viewRoute($(this), true);
-    });
-
-    $("#selectRoutes").change(function() {
-
-        if($("#selectRoutes :selected").text()!="") {
-            var mapID = $("#selectRoutes :selected").data('mapid');
-            var position = $("#selectRoutes").val()-1;
-            var name = $("#selectRoutes :selected").text();
-            var serverid = $("#selectRoutes :selected").data('serverid');
-            $("#syncPopupYes").data("selectedRoute", position);
-            $("#syncPopupYes").data("selectedRoute_serverid", serverid);
-            $("#syncPopupYes").data("selectedRoute_mapid", mapID);
-            $("#syncPopupYes").data("selectedRoute_name", name);
-            //openRouteDescription(mapID, position, serverid);
-
-            $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
-        }
-    });
 
     $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
 });
@@ -111,6 +75,52 @@ $(document).ready(function() {
         setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), true);
     }
 });
+
+// Handle clear button
+$(document).on('click', '#dl_clear', function(e) {
+   e.preventDefault(); // avoid calling things twice
+   e.stopImmediatePropagation();
+   $("#popupDelete").popup('close');
+   deleteDB();
+   //window.location.href = window.location.href.substr(window.location.href, window.location.href.lastIndexOf('#'));
+});
+
+$(document).on('change', '#selectRoutes', function() {
+
+    if($("#selectRoutes :selected").text()!="") {
+        var mapID = $("#selectRoutes :selected").data('mapid');
+        var position = $("#selectRoutes").val()-1;
+        var name = $("#selectRoutes :selected").text();
+        var serverid = $("#selectRoutes :selected").data('serverid');
+        $("#syncPopupYes").data("selectedRoute", position);
+        $("#syncPopupYes").data("selectedRoute_serverid", serverid);
+        $("#syncPopupYes").data("selectedRoute_mapid", mapID);
+        $("#syncPopupYes").data("selectedRoute_name", name);
+        //openRouteDescription(mapID, position, serverid);
+
+        $("#syncRouteDescription").html(routesData[position]["description_"+lang]);
+    }
+});
+
+$(document).on('click', '#routeDownload', function() {
+
+        // Store selected route ID on routesData array and server ID
+        localStorage.setItem("selectedRoute", $("#routeDownload").data("selectedRoute"));
+        localStorage.setItem("selectedRoute_serverid", $("#routeDownload").data("selectedRoute_serverid"));
+        localStorage.setItem("selectedRoute_mapid", $("#routeDownload").data("selectedRoute_mapid"));
+        localStorage.setItem("selectedRoute_name", $("#routeDownload").data("selectedRoute_name"));
+
+        getBundleFile($(this).data("serverid"));
+});
+
+$(document).on('click', '#routeView', function() {
+    viewRoute($(this), false);
+});
+
+$(document).on('click', '#routeSelect', function() {
+    viewRoute($(this), true);
+});
+
 
 $(document).on('click', '#syncPopupYes', function() {       //avoid double-calling bug
     var dload_general = $('#generalMapCheckbox').prop('checked');
@@ -264,12 +274,16 @@ function loadGeneralMap() {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
+        var count = zip.files.length;
+        var i=0;
         $.each(zip.files, function(index, value) {
 
             DB.put({_id: value.name, file:value.asUint8Array()}, function(err, response) {
+                i=i+1;
+                if(i=> count) { $.mobile.loading("hide"); }
             }).catch(function(error) { });
         });
-        $.mobile.loading("hide");
+        //$.mobile.loading("hide");
 
     }, 'gcontent');
 }
@@ -299,6 +313,8 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                                 // Generate base64 data and put in the img element
                                 var imgURL = 'data:' + response.type + ';base64,' + JSZip.base64.encode(response.file);
                                 value.src = imgURL;
+                            }).catch(function(error) {
+
                             });
 
                         });
@@ -501,8 +517,8 @@ function getBundleFile(serverid) {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
-
         $.each(zip.files, function(index, value) {
+
            var filedata; //= value.asUint8Array();
            var filetype; //= 'text/html';
            var extension = value.name.substr(value.name.indexOf('.')+1, value.name.length);
@@ -725,9 +741,11 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
         //$("#routeSelect").hide();
     }
 
-    $(".route-desc-button").data('arraypos', arrayPosition);
-    $(".route-desc-button").data('mapid', mapID);
-    $(".route-desc-button").data('serverid', serverid);
+
+    $(".route-desc-button").data('selectedRoute', arrayPosition);
+    $(".route-desc-button").data('selectedRoute_mapid', mapID);
+    $(".route-desc-button").data('selectedRoute_serverid', serverid);
+    $(".route-desc-button").data('selectedRoute_name', routesData[arrayPosition]["name_"+lang]);
     $("#popupRoute").popup();
     $("#popupRoute").popup('open');
 
