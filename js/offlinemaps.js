@@ -465,9 +465,7 @@ function getBundleFile(serverid) {
 
             var zip = new JSZip();
             zip.load(uInt8Array).catch(function(e) {console.log(e);});
-            if(!zip) {
-                console.log("NO ZIP!");
-            }
+
             var fName = localStorage.getItem("selectedRoute_mapid");
             var mbtiles = zip.file(fName).asUint8Array();
             console.log("Downloaded DB : " + fName);
@@ -486,15 +484,18 @@ function getBundleFile(serverid) {
                       $('#popupDataPresent').popup('open');
                   }
                   else {
-                    alert(error);
+                    //alert(error);
+                    $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+                    $("#dialogMessage-text").text(error);
+                    $("#dialogMessage").popup('open');
                   }
                   $.mobile.loading("hide");
               });
         }, 'rmap');
     }
     catch(error) {
-                      $('#popupDataPresent').popup();
-                      $('#popupDataPresent').popup('open');
+                      $('#popupMessage').popup();
+                      $('#popupMessage').popup('open');
 
     }
 
@@ -689,6 +690,9 @@ function deleteDB() {
                }
                }).catch(function(error) {
                     //alert("Could not delete DB: ", error);
+                    $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+                    $("#dialogMessage-text").text($(document).localizandroid('getString', 'db_error'));
+                    $("#dialogMessage").popup('open');
               });
         }
         if(DB_cont!=null) {
@@ -701,6 +705,9 @@ function deleteDB() {
                }
                }).catch(function(error) {
                     //alert("Could not delete DB: ", error);
+                    $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+                    $("#dialogMessage-text").text($(document).localizandroid('getString', 'db_error'));
+                    $("#dialogMessage").popup('open');
                });
         }
     }
@@ -795,7 +802,10 @@ function loadRoutes() {
         function(error) {
             console.log(error);
             setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), false);
-            alert("ERROR: Probably a network (offline/CORS) issue");
+            //alert("ERROR: Probably a network (offline/CORS) issue");
+            $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+            $("#dialogMessage-text").text($(document).localizandroid('getString', 'sync_error_message'));
+            $("#dialogMessage").popup('open');
             $.mobile.loading("hide");
         },
         function() {

@@ -180,4 +180,6 @@
     <string name="deleteDB">Esborra els mapes locals</string>
     <string name="deleteLocal">Esborra dades del navegador</string>
     <string name="general">General</string>
+
+    <string name="db_error">No s'ha pogut completar la operació.</string>
 </resources>
