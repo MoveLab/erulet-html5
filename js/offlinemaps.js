@@ -46,9 +46,11 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     if(map) {map.stopLocate();}
     // Handle clear button
     $("#dl_clear").click(function(e) {
-        //e.preventDefault(); // it's an anchor
+       e.preventDefault(); // avoid calling things twice
+       //e.stopImmediatePropagation();
+       $("#popupDelete").popup('close');
+       0deleteDB();
        window.location.href = window.location.href.substr(window.location.href, window.location.href.lastIndexOf('#'));
-       deleteDB();
     });
 
     // Let's make the map use the whole space
@@ -459,45 +461,38 @@ function getBundleFile(serverid) {
 
     var url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTEMAPS + serverid;
 
-    try {
-        getFileFromAPI(url, function(e) {
-            var uInt8Array = new Uint8Array(this.response);
+    getFileFromAPI(url, function(e) {
+        var uInt8Array = new Uint8Array(this.response);
 
-            var zip = new JSZip();
-            zip.load(uInt8Array).catch(function(e) {console.log(e);});
+        var zip = new JSZip();
+        zip.load(uInt8Array);
 
-            var fName = localStorage.getItem("selectedRoute_mapid");
-            var mbtiles = zip.file(fName).asUint8Array();
-            console.log("Downloaded DB : " + fName);
-            sqlite = new SQL.Database(mbtiles);
-            //var contents = sqlite.exec("SELECT * FROM tiles");
-            //console.log(contents);
-            // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
+        var fName = localStorage.getItem("selectedRoute_mapid");
+        var mbtiles = zip.file(fName).asUint8Array();
+        console.log("Downloaded DB : " + fName);
+        sqlite = new SQL.Database(mbtiles);
+        //var contents = sqlite.exec("SELECT * FROM tiles");
+        //console.log(contents);
+        // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-            DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
-                  $.mobile.loading("hide");
+        DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
+              $.mobile.loading("hide");
 
-            }).catch(function(error) {
-                localStorage.setItem("selectedRoute_name", null);
-                  if(error.status==409) {
-                      $('#popupDataPresent').popup();
-                      $('#popupDataPresent').popup('open');
-                  }
-                  else {
-                    //alert(error);
-                    $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
-                    $("#dialogMessage-text").text(error);
-                    $("#dialogMessage").popup('open');
-                  }
-                  $.mobile.loading("hide");
-              });
-        }, 'rmap');
-    }
-    catch(error) {
-                      $('#popupMessage').popup();
-                      $('#popupMessage').popup('open');
-
-    }
+        }).catch(function(error) {
+            localStorage.setItem("selectedRoute_name", null);
+              if(error.status==409) {
+                  $('#popupDataPresent').popup();
+                  $('#popupDataPresent').popup('open');
+              }
+              else {
+                //alert(error);
+                $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+                $("#dialogMessage-text").text(error);
+                $("#dialogMessage").popup('open');
+              }
+              $.mobile.loading("hide");
+          });
+    }, 'rmap');
 
     url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTECONTENT + serverid + "/" + $(window).width();
     console.log(url);
@@ -739,31 +734,38 @@ function openRouteDescription(mapID, arrayPosition, serverid) {
 }
 
 function getFileFromAPI(url, onload, dloadType) {
-    var xhr = new XMLHttpRequest();
+    try {
+        var xhr = new XMLHttpRequest();
 
-    console.log(url);
-    xhr.open('GET', url, true);
-    xhr.responseType = 'arraybuffer';
-    xhr.addEventListener("progress", function(e) {
-        if (e.lengthComputable) {
-            var percentComplete = e.loaded / e.total * 100;
-            var status = percentComplete.toFixed(2) + '%';
-            //Do something with upload progress
-            //console.log(percentComplete);
+        console.log(url);
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.addEventListener("progress", function(e) {
+            if (e.lengthComputable) {
+                var percentComplete = e.loaded / e.total * 100;
+                var status = percentComplete.toFixed(2) + '%';
+                //Do something with upload progress
+                //console.log(percentComplete);
 
-            if(percentComplete.toFixed(0) == 100) {
-                setLedIcon($(".status-led-"+dloadType), $(".status-text-"+dloadType), true );
+                if(percentComplete.toFixed(0) == 100) {
+                    setLedIcon($(".status-led-"+dloadType), $(".status-text-"+dloadType), true );
+                }
+                else {
+                    $(".status-text-"+dloadType).html(status);
+                }
             }
-            else {
-                $(".status-text-"+dloadType).html(status);
-            }
+        }, false);
+        xhr.onload = onload;
+        xhr.send();
+
+        if(localStorage.getItem("selectedRoute_name")!=null || localStorage.getItem("selectedRoute_name")!=undefined) {
+            $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
         }
-    }, false);
-    xhr.onload = onload;
-    xhr.send();
-
-    if(localStorage.getItem("selectedRoute_name")!=null || localStorage.getItem("selectedRoute_name")!=undefined) {
-        $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+    }
+    catch(error) {
+        $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+        $("#dialogMessage-text").text($(document).localizandroid('getString', 'sync_error_message'));
+        $("#dialogMessage").popup('open');
     }
 }
 
