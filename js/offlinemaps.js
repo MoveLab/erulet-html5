@@ -110,6 +110,10 @@ $(document).on('click', '#routeDownload', function() {
         localStorage.setItem("selectedRoute_mapid", $("#routeDownload").data("selectedRoute_mapid"));
         localStorage.setItem("selectedRoute_name", $("#routeDownload").data("selectedRoute_name"));
 
+        $(".route-desc-button").data("selectedRoute", $("#routeDownload").data("selectedRoute"));
+        $(".route-desc-button").data("selectedRoute_serverid", $("#routeDownload").data("selectedRoute_serverid"));
+        $(".route-desc-button").data("selectedRoute_mapid", $("#routeDownload").data("selectedRoute_mapid"));
+        $(".route-desc-button").data("selectedRoute_name", $("#routeDownload").data("selectedRoute_name"));
         getBundleFile(localStorage.getItem("selectedRoute_serverid"));
 });
 
@@ -541,10 +545,9 @@ function getBundleFile(serverid) {
 
            }).catch(function(error) {
            });
-
+           $.mobile.loading("hide");
         });
     }, 'rcontent');
-    $.mobile.loading("hide");
 }
 
 function initMap() {
