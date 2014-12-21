@@ -61,7 +61,12 @@ $(document).on('pagebeforeshow', function() {   // Handle UI changes
     $('#deleteLocalCheckbox').prop('checked', true).checkboxradio().checkboxradio('refresh');
 
 
-    $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+    if(localStorage.getItem("selectedRoute_name")!=null || localStorage.getItem("selectedRoute_name")!=undefined) {
+        $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+    }
+    else {
+        $(".status-text-rname").html($(document).localizandroid('getString', 'nothing'));
+    }
 });
 
 $(document).ready(function() {
@@ -728,7 +733,7 @@ function deleteDB() {
                    console.log("Database " + dbname_con+ " deleted");
                    setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), false);
                    setLedIcon($(".status-led-rcontent"), $(".status-text-rcontent"), false);
-                   $(".status-text-rname").html("");
+                   $(".status-text-rname").html($(document).localizandroid('getString', 'nothing'));
                }
                }).catch(function(error) {
                     //alert("Could not delete DB: ", error);
@@ -798,6 +803,9 @@ function getFileFromAPI(url, onload, dloadType) {
 
         if(localStorage.getItem("selectedRoute_name")!=null || localStorage.getItem("selectedRoute_name")!=undefined) {
             $(".status-text-rname").html(localStorage.getItem("selectedRoute_name"));
+        }
+        else {
+            $(".status-text-rname").html($(document).localizandroid('getString', 'nothing'));
         }
     }
     catch(error) {
