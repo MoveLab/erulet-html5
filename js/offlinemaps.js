@@ -180,8 +180,8 @@ function viewRoute(elem, locate) {
    showsurvey = true;
 
    // Save serverid for survey
-   localStorage.setItem("viewingRoute", elem.data('serverid'));
-   if(localStorage.getItem("selectedRoute")!=elem.data('serverid')) {
+   localStorage.setItem("viewingRoute", elem.data('selectedRoute_serverid'));
+   if(localStorage.getItem("selectedRoute")!=elem.data('selectedRoute_erverid')) {
         console.log("no data");
         $('#popupDataNoPresent').popup('open');
    }
@@ -199,12 +199,12 @@ function viewRoute(elem, locate) {
         };
         //console.log("Route selected: " + localStorage.getItem("selectedRoute"));
         var highlights = [];
-        var results = drawRoute(routesData[elem.data('arraypos')].track.steps, POLYLINE_DEFAULT_COLOR, POLYLINE_DEFAULT_OPACITY, false);
+        var results = drawRoute(routesData[elem.data('selectedRoute')].track.steps, POLYLINE_DEFAULT_COLOR, POLYLINE_DEFAULT_OPACITY, false);
         polyline = results[0];
         highlights = results[1];
         map.fitBounds(polyline.getBounds());
 
-        putHighlights(highlights, markersHLT, elem.data('serverid'));
+        putHighlights(highlights, markersHLT, elem.data('selectedRoute_serverid'));
 
         markers.addTo(map);
         markersHLT.addTo(map);
