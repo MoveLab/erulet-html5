@@ -74,6 +74,11 @@ $(document).ready(function() {
     else {
         setLedIcon($(".status-led-gdata"), $(".status-text-gdata"), true);
     }
+
+    $(".route-desc-button").data("selectedRoute", localStorage.getItem("selectedRoute"));
+    $(".route-desc-button").data("selectedRoute_serverid", localStorage.getItem("selectedRoute_serverid"));
+    $(".route-desc-button").data("selectedRoute_mapid", localStorage.getItem("selectedRoute_mapid"));
+    $(".route-desc-button").data("selectedRoute_name", localStorage.getItem("selectedRoute_name"));
 });
 
 // Handle clear button
@@ -245,9 +250,10 @@ function viewRoute(elem, locate) {
             }
         });
 
-
-        geolocationControl = new L.Control.Geolocation({});
-        map.addControl(geolocationControl);
+        if(!geolocationControl) {
+            geolocationControl = new L.Control.Geolocation({});
+            map.addControl(geolocationControl);
+        }
    }
 }
 
@@ -770,6 +776,7 @@ function getFileFromAPI(url, onload, dloadType) {
         xhr.responseType = 'arraybuffer';
         xhr.addEventListener("progress", function(e) {
             if (e.lengthComputable) {
+                showMobileLoading($(document).localizandroid('getString', 'downloading'));
                 var percentComplete = e.loaded / e.total * 100;
                 var status = percentComplete.toFixed(2) + '%';
                 //Do something with upload progress
