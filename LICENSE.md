@@ -1,12 +1,13 @@
 Code uses [Leaflet.functionaltilelayer][link_leafunc] from Ishmael Smyrnow for
 handling the offline layer, [sql.js][link_sqljs] from Alon Zakai for reading
 .mbtiles files, [L.Grid][link_lgrid] from Jan Pieter Waagmeester for showing a
- reference grid on Leaflet, and [PouchDB][link_pouch] for storing tiles offline.
+ reference grid on Leaflet, [RateIt][link_rateit] from Gideon Junge and [PouchDB][link_pouch] for storing tiles offline.
 
 [link_lgrid]: https://github.com/jieter/Leaflet.Grid
 [link_sqljs]: https://github.com/kripken/sql.js
 [link_leafunc]: https://github.com/ismyrnow/Leaflet.functionaltilelayer
 [link_pouch]: http://pouchdb.com
+[link_rateit]: http://rateit.codeplex.com
 
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

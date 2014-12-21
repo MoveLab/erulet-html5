@@ -519,7 +519,7 @@ function getBundleFile(serverid) {
               $.mobile.loading("hide");
 
         }).catch(function(error) {
-            localStorage.setItem("selectedRoute_name", null);
+            //localStorage.setItem("selectedRoute_name", null);
               if(error.status==409) {
                   $('#popupDataPresent').popup();
                   $('#popupDataPresent').popup('open');

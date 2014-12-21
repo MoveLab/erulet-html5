@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="css/rateit.css">
     <link rel="stylesheet" href="css/eruletwapp.css">
     <link rel="apple-touch-icon-precomposed" href="images/ic_launcher.png">
     <link rel="apple-touch-startup-image" href="images/ic_launcher.png">
@@ -20,7 +21,7 @@
 
     <!--<script>L_PREFER_CANVAS = true;</script>-->
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-
+    <script src="js/jquery.rateit.min.js"></script>
     <script src="js/leaflet.functionaltilelayer.js"></script>
     <script src="js/L.Grid.js"></script>
 
@@ -321,7 +322,7 @@
             <b id="waypointInfoLat" class="localizable" data-lclstring="latitude"></b><p id="waypointInfoLatField"></p>
             <b id="waypointInfoLong" class="localizable" data-lclstring="longitude"></b><p id="waypointInfoLongField"></p>
             <b id="waypointInfoAlt" class="localizable" data-lclstring="altitude"></b><p id="waypointInfoAltField"></p>
-            <b id="waypointInfoRating" class="localizable" data-lclstring="global_rating"></b><p id="waypointInfoRatingField"></p>
+            <b id="waypointInfoRating" class="localizable" data-lclstring="global_rating"></b><div class="rateit"></div>
             <a href="#" id="waypointInfoButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
         </div>
     </div>

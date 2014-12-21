@@ -3,6 +3,7 @@ CACHE MANIFEST
 
 # Local
 eruletwapp.html
+css/rateit.css
 css/eruletwapp.css
 js/leaflet.functionaltilelayer.js
 js/localizandroid.min.js
@@ -13,6 +14,7 @@ js/L.Grid.js
 js/sql.js
 js/jszip.min.js
 js/global.js
+js/jquery.rateit.min.js
 strings/values-ca/strings.xml
 strings/values-oc/strings.xml
 strings/values-fr/strings.xml
