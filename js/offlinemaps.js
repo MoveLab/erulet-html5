@@ -510,7 +510,6 @@ function getBundleFile(serverid) {
                 $("#dialogMessage-text").text(error);
                 $("#dialogMessage").popup('open');
               }
-              $.mobile.loading("hide");
           });
     }, 'rmap');
 
@@ -545,7 +544,6 @@ function getBundleFile(serverid) {
 
            }).catch(function(error) {
            });
-           $.mobile.loading("hide");
         });
     }, 'rcontent');
 }
@@ -775,6 +773,9 @@ function getFileFromAPI(url, onload, dloadType) {
                     $(".status-text-"+dloadType).html(status);
                 }
             }
+        }, false);
+        xhr.addEventListener("load", function(e) {
+            $.mobile.loading("hide");
         }, false);
         xhr.onload = onload;
         xhr.send();
