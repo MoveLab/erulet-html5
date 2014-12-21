@@ -110,7 +110,7 @@ $(document).on('click', '#routeDownload', function() {
         localStorage.setItem("selectedRoute_mapid", $("#routeDownload").data("selectedRoute_mapid"));
         localStorage.setItem("selectedRoute_name", $("#routeDownload").data("selectedRoute_name"));
 
-        getBundleFile($(this).data("serverid"));
+        getBundleFile(localStorage.getItem("selectedRoute_serverid"));
 });
 
 $(document).on('click', '#routeView', function() {
@@ -544,7 +544,7 @@ function getBundleFile(serverid) {
 
         });
     }, 'rcontent');
-
+    $.mobile.loading("hide");
 }
 
 function initMap() {
