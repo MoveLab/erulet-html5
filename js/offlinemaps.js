@@ -165,6 +165,18 @@ $(document).on('pagebeforehide', '#trip_select', function() {
     }
 });
 
+$(window).resize(function() {
+    // Let's make the map use the whole space
+    var windowHeight = $(window).height();
+    var headerHeight = $("#mapHeader").height();
+
+    // Expected height is window - header
+    var realHeight = windowHeight - headerHeight;
+
+    $("#map").height(realHeight);
+    $("#map").css({ top: headerHeight }); // position under header
+});
+
 function showMobileLoading(message) {
     $.mobile.loading("show", {
       text: message,
@@ -278,13 +290,10 @@ function loadGeneralMap() {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
-        var count = zip.files.length;
-        var i=0;
         $.each(zip.files, function(index, value) {
 
             DB.put({_id: value.name, file:value.asUint8Array()}, function(err, response) {
-                i=i+1;
-                if(i=> count) { $.mobile.loading("hide"); }
+
             }).catch(function(error) { });
         });
         //$.mobile.loading("hide");
