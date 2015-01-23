@@ -342,7 +342,17 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                             });
 
                         });
-                        $('#waypointHtmlPopup_content').css('max-height', $(window).height()-100 + 'px');
+                        $("#waypointHtmlPopup_content link").each(function(index, value) {
+                            if(value.rel=="stylesheet") {
+                                var urlCSS = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
+                                console.log(urlCSS);  // Check for CSS file links
+                                DB_cont.get(url + urlCSS), function(err, response) {
+                                    console.log(response.file);
+                                    $("head").append("<style type=\"text/css\">" + response.file + "</style>"); // Append CSS style
+                                });
+                            }
+                        });
+                       // $('#waypointHtmlPopup_content').css('max-height', $(window).height()-100 + 'px');
                         $("#waypointHtmlPopup_content").css('overflow-y', 'scroll');
                     }).catch(function(error) {
                         switch(error.status) {
