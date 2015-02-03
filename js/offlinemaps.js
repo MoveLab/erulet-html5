@@ -353,7 +353,7 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                             }
                         });
                        // $('#waypointHtmlPopup_content').css('max-height', $(window).height()-100 + 'px');
-                        $("#waypointHtmlPopup_content").css('overflow-y', 'scroll');
+                       // $("#waypointHtmlPopup_content").css('overflow-y', 'scroll');
                     }).catch(function(error) {
                         switch(error.status) {
                             case 404:
