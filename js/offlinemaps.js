@@ -346,9 +346,9 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                             if(value.rel=="stylesheet") {
                                 var urlCSS = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
                                 console.log(urlCSS);  // Check for CSS file links
-                                DB_cont.get(url + urlCSS), function(err, response) {
+                                DB_cont.get(url + urlCSS, function(err, response) {
                                     console.log(response.file);
-                                    $("head").append("<style type=\"text/css\">" + response.file + "</style>"); // Append CSS style
+                                    $("head").append("<style type='text/css'>" + response.file + "</style>"); // Append CSS style
                                 });
                             }
                         });
