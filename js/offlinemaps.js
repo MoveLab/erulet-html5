@@ -568,6 +568,10 @@ function getBundleFile(serverid) {
                     filetype = 'image/' + extension;
                     filedata = value.asBinary();
                     break;
+                case 'mp4':
+					filetype = 'video/' + extension;
+					filedata = value.asBinary();
+					break;
            }
            //console.log(filetype);
            DB_cont.put({_id: value.name, file: filedata, type: filetype}, function(err, response) {
