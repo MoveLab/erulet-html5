@@ -2,14 +2,15 @@ CACHE MANIFEST
 # v4 - 2014-12-17
 
 # Local
-eruletwapp.html
+index.html
 css/rateit.css
 css/eruletwapp.css
 js/leaflet.functionaltilelayer.js
 js/localizandroid.min.js
 js/offlinemaps.js
 js/utils.js
-js/pouchdb-3.1.0.min.js
+js/pouchdb-3.3.1.min.js
+js/blob-util.min.js
 js/L.Grid.js
 js/sql.js
 js/jszip.min.js
