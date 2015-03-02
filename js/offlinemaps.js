@@ -265,12 +265,10 @@ function viewRoute(elem, locate) {
 function loadGeneralMap() {
     console.log(OFFMAP_NAME + ": loadGeneralMap()");
     if(!DB) { DB = new PouchDB(dbname);}
-    DB.get('generalMap', function(doc, err) {
-        if(!err) {
-            DB.remove(doc);
-        }
-    }).catch(function(error) {
-        switch(error.status) {
+    DB.get('generalMap').then(function(doc) {
+        DB.remove(doc);
+    }).catch(function(err) {
+        switch(err.status) {
             case 404:
                 console.warn(OFFMAP_NAME +  ": Not found on DB");
             break;
@@ -289,9 +287,7 @@ function loadGeneralMap() {
       console.log("Downloaded DB : " + fName);
       sqlite_general = new SQL.Database(mbtiles);
 
-      DB.put({_id: "generalMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
-
-      }).catch(function(error) { });
+      DB.put({_id: "generalMap", mbtiles:fName ,database: mbtiles}).catch(function(err){ });
       addDBMap();
     }, 'gmap');
 
@@ -325,31 +321,46 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                 marker.on('click', function(e) {
                     var url = 'route_' + serverid + '/highlight_' + value.highlights[0]["server_id"] + '/reference_' + value.highlights[0].references[0]["server_id"];
                     var urlHTML = url + '/reference_' + lang + '.html';
-                    console.log(urlHTML);
-                    DB_cont.get(urlHTML, function(err, response) {
+                    //console.log(urlHTML);
+                    DB_cont.get(urlHTML).then(function(response) {
                         var content = $.parseHTML(response.file);
 
                         $("#waypointHtmlPopup_content").html("").append(content);
                         $("#waypointHtmlPopup_content img").each(function(index, value) {
-                            console.log(url+value.src.substr(value.src.lastIndexOf('/'), value.src.length));
-                            DB_cont.get(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), function(err, response) {
+                            //console.log(url+value.src.substr(value.src.lastIndexOf('/'), value.src.length));
+                            /*DB_cont.get(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), function(err, response) {
 
                                 // Generate base64 data and put in the img element
                                 var imgURL = 'data:' + response.type + ';base64,' + JSZip.base64.encode(response.file);
                                 value.src = imgURL;
                             }).catch(function(error) {
 
+                            });*/
+                            DB_cont.getAttachment(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), 'file').then(function(blob) {
+                                var imgURL = blobUtil.createObjectURL(blob);
+                                value.src = imgURL;
                             });
 
                         });
                         $("#waypointHtmlPopup_content link").each(function(index, value) {
                             if(value.rel=="stylesheet") {
                                 var urlCSS = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
-                                console.log(urlCSS);  // Check for CSS file links
-                                DB_cont.get(url + urlCSS, function(err, response) {
-                                    console.log(response.file);
+                                //console.log(urlCSS);  // Check for CSS file links
+                                DB_cont.get(url + urlCSS).then(function(response) {
+                                    //console.log(response.file);
                                     $("head").append("<style type='text/css'>" + response.file + "</style>"); // Append CSS style
                                 });
+                            }
+                        });
+
+                        $("#waypointHtmlPopup_content a").each(function(index, value) {
+                            if(value.href.indexOf('.mp4') > -1) { // if file extension is .mp4, we have a video
+                                var urlVID = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
+                                $("#waypointHtmlPopup_content").append('<video type="video/webm" width="320" height="240" id="' + urlVID + '" controls>Your browser does not support the video tag.</video>');
+                                DB_cont.getAttachment(url + urlVID, 'file').then(function(blob) {
+                                    var videoURL = blobUtil.createObjectURL(blob);
+                                    $("#"+urlVID).attr('src', videoURL);
+                                })
                             }
                         });
                        // $('#waypointHtmlPopup_content').css('max-height', $(window).height()-100 + 'px');
@@ -499,8 +510,8 @@ function getBundleFile(serverid) {
 
     showMobileLoading($(document).localizandroid('getString', 'downloading'));
     // Delete old file
-    DB_cont.get('routeMap', function(doc, err) {
-        DB.remove(doc).catch(function(error) {});
+    DB_cont.get('routeMap').then(function(doc) {
+        DB.remove(doc);
     }).catch(function(error) {
         switch(error.status) {
         case 404:
@@ -525,9 +536,8 @@ function getBundleFile(serverid) {
         //console.log(contents);
         // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-        DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}, function(err, response) {
+        DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}).then( function(response) {
               $.mobile.loading("hide");
-
         }).catch(function(error) {
             //localStorage.setItem("selectedRoute_name", null);
               if(error.status==409) {
@@ -561,25 +571,42 @@ function getBundleFile(serverid) {
                 case 'css':
                     filetype = 'text/' + extension;
                     filedata = value.asBinary();
+                    DB_cont.put({
+                        file: filedata,
+                        type: filetype
+                    }, value.name).catch(function(err) {});
+
                     break;
                 case 'jpg':
                 case 'jpeg':
                 case 'png':
                     filetype = 'image/' + extension;
-                    filedata = value.asBinary();
+                    //filedata = value.asBinary();
+                    putBlobInDB(DB_cont, value.name, filetype, value.asArrayBuffer());
                     break;
                 case 'mp4':
 					filetype = 'video/' + extension;
-					filedata = value.asBinary();
+					//filedata = value.asBinary();
+					putBlobInDB(DB_contvalue.name, filetype, blob);
 					break;
            }
-           //console.log(filetype);
-           DB_cont.put({_id: value.name, file: filedata, type: filetype}, function(err, response) {
 
-           }).catch(function(error) {
-           });
         });
     }, 'rcontent');
+}
+
+function putBlobInDB(dbname, name, type, buffer) {
+    blobUtil.arrayBufferToBlob(buffer, type).then(function(blob) {
+        dbname.put({
+            _id: name,
+            _attachments: {
+                'file': {
+                    content_type: type,
+                    data: blob
+                }
+            }
+        });
+    });
 }
 
 function initMap() {
@@ -879,7 +906,11 @@ function loadRoutes() {
 function parseRoutesData(data) {
     if(map) {map.removeLayer(markersHLT);}
     $(data).each(function(index, value) {
-        $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ value.map.map_file_name +"'>"+value["name_"+lang]+"</option");
+        var mapfilename = value.map ? value.map.map_file_name : null;
+        var routename = value["name_"+lang];
+        if(mapfilename==null) { routename = routename + '<ERROR!>';}
+
+        $("#selectRoutes").append("<option value='"+(index+1)+"' data-serverid='" + value.server_id + "' data-mapid='"+ mapfilename +"'>"+routename+"</option");
 
         // Create an element to hold all your text and markup
         var container = $('<div />');
@@ -894,7 +925,7 @@ function parseRoutesData(data) {
         });
 
         // Insert whatever you want into the container, using whichever approach you prefer
-        container.html("<b><a class='mapPopupLink' href='#' data-serverid='" + value.server_id + "' data-arraypos='" + index + "' data-mapid='"  + value.map.map_file_name + "'>" + value["name_"+lang] + "</a></b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
+        container.html("<b><a class='mapPopupLink' href='#' data-serverid='" + value.server_id + "' data-arraypos='" + index + "' data-mapid='"  + mapfilename + "'>" + routename + "</a></b></br><p>" + value.track.steps[0].latitude + ","+ value.track.steps[0].longitude+ "</p>");
 
         var latlngs = [];
         var steps = value.track.steps;
