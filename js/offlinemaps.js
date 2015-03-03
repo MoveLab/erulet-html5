@@ -587,7 +587,7 @@ function getBundleFile(serverid) {
                 case 'mp4':
 					filetype = 'video/' + extension;
 					//filedata = value.asBinary();
-					putBlobInDB(DB_contvalue.name, filetype, blob);
+					putBlobInDB(DB_cont, value.name, filetype, value.asArrayBuffer());
 					break;
            }
 
