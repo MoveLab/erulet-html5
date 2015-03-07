@@ -181,5 +181,9 @@
     <string name="deleteLocal">Esborra dades del navegador</string>
     <string name="general">General</string>
 
+    <string name="close">Tanca</string>
+    <string name="back">Enrere</string>
+    <string name="working">Muntant la pàgina, pot trigar uns minuts. Les imatges i videos poden trigar més.</string>
+
     <string name="db_error">No s'ha pogut completar la operació.</string>
 </resources>

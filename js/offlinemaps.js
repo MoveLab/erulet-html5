@@ -1,6 +1,6 @@
 // OFFMAP_NAME + " for jQuery Mobile
 //
-// Copyright (c) 2014 Jordi López
+// Copyright (c) 2014,2015 Jordi López
 // MIT License - http://opensource.org/licenses/mit-license.php
 
 /* Leaflet map with an offline layer created from a MBTiles file
@@ -11,10 +11,12 @@ console.log(OFFMAP_NAME + ": Initializing");
 
 var dbname = "offmaps";
 var dbname_con = "offcont";
+var dbname_gcon = "offgcont";
 var sqlite = null;
 var sqlite_general = null;
 var DB = null;
 var DB_cont = null;
+var DB_gcont = null;
 var metadata = null;
 
 //Map data
@@ -265,6 +267,7 @@ function viewRoute(elem, locate) {
 function loadGeneralMap() {
     console.log(OFFMAP_NAME + ": loadGeneralMap()");
     if(!DB) { DB = new PouchDB(dbname);}
+    //DB.get("generalMap").then( function(doc) {
     DB.get('generalMap').then(function(doc) {
         DB.remove(doc);
     }).catch(function(err) {
@@ -283,12 +286,23 @@ function loadGeneralMap() {
       var zip = new JSZip();
       zip.load(uInt8Array);
       var fName = zip.files[Object.keys(zip.files)[0]].name;
-      var mbtiles = zip.file(fName).asUint8Array();
+      var mbtilesf = zip.file(fName).asUint8Array();
       console.log("Downloaded DB : " + fName);
-      sqlite_general = new SQL.Database(mbtiles);
+      sqlite_general = new SQL.Database(mbtilesf);
 
-      DB.put({_id: "generalMap", mbtiles:fName ,database: mbtiles}).catch(function(err){ });
-      addDBMap();
+      mbtilesf = zip.file(fName).asArrayBuffer();
+      //DB.put({_id: "generalMap", mbtiles:fName ,database: mbtiles}).catch(function(err){ });)
+      /*DB.put({
+        _id: "generalMap",
+        _attachments: {
+            'database': {
+                name: fName,
+                mbtiles: mbtilesf
+            }
+        }
+      });*/
+      putBlobInDB(DB, "generalMap", "application/x-sqlite3", mbtilesf, function(){addDBMap();});
+      //addDBMap();
     }, 'gmap');
 
     url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_GENERALCONTENT + $(window).width();
@@ -297,12 +311,22 @@ function loadGeneralMap() {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
-        $.each(zip.files, function(index, value) {
 
-            DB.put({_id: value.name, file:value.asUint8Array()}, function(err, response) {
+        storeContentsInDB(zip, DB_gcont);
+        /*$.each(zip.files, function(index, value) {
 
-            }).catch(function(error) { });
-        });
+            *//*DB.put({_id: value.name, file:value.asUint8Array()}, function(err, response) {
+
+            }).catch(function(error) { });*//*
+            DB_cont.put({
+                _id: value.name,
+                _attachments: {
+                    'file': {
+                        data: value.asArrayBuffer()
+                    }
+                }
+            });
+        });*/
         //$.mobile.loading("hide");
 
     }, 'gcontent');
@@ -322,57 +346,12 @@ if(!DB_cont) { DB_cont = new PouchDB(dbname_con);}
                     var url = 'route_' + serverid + '/highlight_' + value.highlights[0]["server_id"] + '/reference_' + value.highlights[0].references[0]["server_id"];
                     var urlHTML = url + '/reference_' + lang + '.html';
                     //console.log(urlHTML);
-                    DB_cont.get(urlHTML).then(function(response) {
-                        var content = $.parseHTML(response.file);
-
-                        $("#waypointHtmlPopup_content").html("").append(content);
-                        $("#waypointHtmlPopup_content img").each(function(index, value) {
-                            //console.log(url+value.src.substr(value.src.lastIndexOf('/'), value.src.length));
-                            /*DB_cont.get(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), function(err, response) {
-
-                                // Generate base64 data and put in the img element
-                                var imgURL = 'data:' + response.type + ';base64,' + JSZip.base64.encode(response.file);
-                                value.src = imgURL;
-                            }).catch(function(error) {
-
-                            });*/
-                            DB_cont.getAttachment(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), 'file').then(function(blob) {
-                                var imgURL = blobUtil.createObjectURL(blob);
-                                value.src = imgURL;
-                            });
-
-                        });
-                        $("#waypointHtmlPopup_content link").each(function(index, value) {
-                            if(value.rel=="stylesheet") {
-                                var urlCSS = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
-                                //console.log(urlCSS);  // Check for CSS file links
-                                DB_cont.get(url + urlCSS).then(function(response) {
-                                    //console.log(response.file);
-                                    $("head").append("<style type='text/css'>" + response.file + "</style>"); // Append CSS style
-                                });
-                            }
-                        });
-
-                        $("#waypointHtmlPopup_content a").each(function(index, value) {
-                            if(value.href.indexOf('.mp4') > -1) { // if file extension is .mp4, we have a video
-                                var urlVID = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
-                                $("#waypointHtmlPopup_content").append('<video type="video/webm" width="320" height="240" id="' + urlVID + '" controls>Your browser does not support the video tag.</video>');
-                                DB_cont.getAttachment(url + urlVID, 'file').then(function(blob) {
-                                    var videoURL = blobUtil.createObjectURL(blob);
-                                    $("#"+urlVID).attr('src', videoURL);
-                                })
-                            }
-                        });
+                        $("#waypointHtmlPopup_loading").show();
+                        $("#waypointHtmlPopup_content").html("");
+                        parseHTMLFromDB(DB_cont, url, urlHTML);
                        // $('#waypointHtmlPopup_content').css('max-height', $(window).height()-100 + 'px');
                        // $("#waypointHtmlPopup_content").css('overflow-y', 'scroll');
-                    }).catch(function(error) {
-                        switch(error.status) {
-                            case 404:
-                                console.warn(OFFMAP_NAME +  ": Not found on DB");
-                                $("#waypointHtmlPopup_content").append("No data");
-                            break;
-                        }
-                    });
+
                 });
                 break;
             case 1:
@@ -438,11 +417,17 @@ function openDB() {
 
     DB = new PouchDB(dbname);
     DB_cont = new PouchDB(dbname_con);
+    DB_gcont = new PouchDB(dbname_gcon);
 
-    DB.get("generalMap").then( function(doc) {
-        sqlite_general = createSQLiteObject(sqlite_general, doc);
-        setLedIcon($(".status-led-gmap"), $(".status-text-gmap"), true);
-        addDBMap();
+    //DB.get("generalMap").then( function(doc) {
+    DB.getAttachment("generalMap", "file").then(function(doc) {
+        blobUtil.blobToArrayBuffer(doc).then(function(result) {
+            var uint8Array = new Uint8Array(result);
+            sqlite_general = createSQLiteObject(sqlite_general, uint8Array);
+            setLedIcon($(".status-led-gmap"), $(".status-text-gmap"), true);
+
+        }).then(function() {addDBMap();});
+
     }).catch(function(error) {
         switch(error.status) {
         case 404:
@@ -452,9 +437,13 @@ function openDB() {
         }
     });
 
-    DB_cont.get("routeMap").then( function(doc) {
-        sqlite = createSQLiteObject(sqlite, doc);
-        setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), true);
+    //DB_cont.get("routeMap").then( function(doc) {
+    DB.getAttachment("routeMap", "file").then(function(doc) {
+        blobUtil.blobToArrayBuffer(doc).then(function(result) {
+            var uint8Array = new Uint8Array(result);
+            sqlite = createSQLiteObject(sqlite, uint8Array);
+            setLedIcon($(".status-led-rmap"), $(".status-text-rmap"), true);
+        });
     }).catch(function(error) {
       switch(error.status) {
         case 404:
@@ -465,7 +454,7 @@ function openDB() {
     });
 
     // TODO: Think of a better way to check general/route content is present.
-    DB.info(function(err, info) {
+    DB_gcont.info(function(err, info) {
        // console.log(info.doc_count);
         switch(info.doc_count) {
             case 0:
@@ -494,9 +483,10 @@ function openDB() {
 
 function createSQLiteObject(sql, doc) {
     console.log(OFFMAP_NAME + ": opened MBTiles...");
-    console.log(doc.mbtiles);
+    //console.log(doc.mbtiles);
 
-    sql = new SQL.Database(doc.database);
+    //sql = new SQL.Database(doc.database);
+    sql = new SQL.Database(doc);
     console.log("Tables found on the DB: ");
     var result=sql.exec("SELECT name FROM sqlite_master WHERE type = 'table'");
     console.table(result[0].values);
@@ -536,7 +526,8 @@ function getBundleFile(serverid) {
         //console.log(contents);
         // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
 
-        DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}).then( function(response) {
+        mbtiles = zip.file(fName).asArrayBuffer();
+       /* DB_cont.put({_id: "routeMap", mbtiles:fName ,database: mbtiles}).then( function(response) {
               $.mobile.loading("hide");
         }).catch(function(error) {
             //localStorage.setItem("selectedRoute_name", null);
@@ -550,7 +541,8 @@ function getBundleFile(serverid) {
                 $("#dialogMessage-text").text(error);
                 $("#dialogMessage").popup('open');
               }
-          });
+          });*/
+          putBlobInDB(DB, "routeMap", "application/x-sqlite3", mbtiles, function(){});
     }, 'rmap');
 
     url = HOLETSERVER_APIURL + HOLETSERVER_APIURL_ROUTECONTENT + serverid + "/" + $(window).width();
@@ -560,42 +552,122 @@ function getBundleFile(serverid) {
 
         var zip = new JSZip();
         zip.load(uInt8Array);
-        $.each(zip.files, function(index, value) {
 
-           var filedata; //= value.asUint8Array();
-           var filetype; //= 'text/html';
-           var extension = value.name.substr(value.name.indexOf('.')+1, value.name.length);
-          // console.log(extension);
-           switch(extension) {
-                case 'html':
-                case 'css':
-                    filetype = 'text/' + extension;
-                    filedata = value.asBinary();
-                    DB_cont.put({
-                        file: filedata,
-                        type: filetype
-                    }, value.name).catch(function(err) {});
+        storeContentsInDB(zip, DB_cont);
 
-                    break;
-                case 'jpg':
-                case 'jpeg':
-                case 'png':
-                    filetype = 'image/' + extension;
-                    //filedata = value.asBinary();
-                    putBlobInDB(DB_cont, value.name, filetype, value.asArrayBuffer());
-                    break;
-                case 'mp4':
-					filetype = 'video/' + extension;
-					//filedata = value.asBinary();
-					putBlobInDB(DB_cont, value.name, filetype, value.asArrayBuffer());
-					break;
-           }
 
-        });
     }, 'rcontent');
 }
 
-function putBlobInDB(dbname, name, type, buffer) {
+function parseHTMLFromDB(dbname, url, urlHTML) {
+    dbname.get(urlHTML).then(function(response) {
+        $("#waypointHtmlPopup_loading").hide();
+        var content = $.parseHTML(response.file);
+
+        $("#waypointHtmlPopup_content").html("").append(content);
+        $("#waypointHtmlPopup_content img").each(function(index, value) {
+            //console.log(url+value.src.substr(value.src.lastIndexOf('/'), value.src.length));
+            /*DB_cont.get(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), function(err, response) {
+
+                // Generate base64 data and put in the img element
+                var imgURL = 'data:' + response.type + ';base64,' + JSZip.base64.encode(response.file);
+                value.src = imgURL;
+            }).catch(function(error) {
+
+            });*/
+            dbname.getAttachment(url + value.src.substr(value.src.lastIndexOf('/'), value.src.length), 'file').then(function(blob) {
+                var imgURL = blobUtil.createObjectURL(blob);
+                value.src = imgURL;
+            });
+
+        });
+        $("#waypointHtmlPopup_content link").each(function(index, value) {
+            if(value.rel=="stylesheet") {
+                var urlCSS = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
+                //console.log(urlCSS);  // Check for CSS file links
+                dbname.get(url + urlCSS).then(function(response) {
+                    //console.log(response.file);
+                    $("head").append("<style type='text/css'>" + response.file + "</style>"); // Append CSS style
+                });
+            }
+        });
+        $("#waypointHtmlPopup_content a").each(function(index, value) {
+
+            if(value.href.indexOf('.mp4') > -1) { // if file extension is .mp4, we have a video
+                var urlVID = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
+                $("#waypointHtmlPopup_content").append('<video type="video/webm" width="320" height="240" id="video' + index + '" controls>Your browser does not support the video tag.</video>');
+                dbname.getAttachment(url + urlVID, 'file').then(function(blob) {
+                    var videoURL = blobUtil.createObjectURL(blob);
+                    $("#video"+index).attr('src', videoURL);
+                })
+            }
+            if(value.href.indexOf('general_references') > -1) { // external link, use general offline content
+
+                $(value).on('click', function(e) {
+                    e.preventDefault();
+                    $("#waypointHtmlPopup_loading").show();
+                    var urlLNK = value.href.substr(value.href.lastIndexOf('/'), value.href.length);
+                    parseHTMLFromDB(DB_gcont, '', urlLNK);
+                });
+                /*$("#waypointHtmlPopup_content").html("");
+                var urlLNK = value.href.substr(value.href.lastIndexOf('/')+1, value.href.length);
+                //parseHTMLFromDB(DB_gcont, '', urlLNK);
+                DB_gcont.get(urlLNK).then(function(response) {
+
+                    //$(value).append(response);
+                });*/
+
+            }
+        });
+    }).catch(function(error) {
+        switch(error.status) {
+            case 404:
+                console.warn(OFFMAP_NAME +  ": Not found on DB");
+                $("#waypointHtmlPopup_content").append("No data");
+            break;
+        }
+    });
+}
+
+function storeContentsInDB(zip, dbname) {
+    $.each(zip.files, function(index, value) {
+
+        if(value.name.indexOf('/') === -1) {  // Check for initial /, unify names
+            value.name = '/' + value.name;
+        }
+
+        var filedata; //= value.asUint8Array();
+        var filetype; //= 'text/html';
+        var extension = value.name.substr(value.name.indexOf('.')+1, value.name.length);
+        // console.log(extension);
+        switch(extension) {
+            case 'html':
+            case 'css':
+                filetype = 'text/' + extension;
+                filedata = value.asBinary();
+                dbname.put({
+                    file: filedata,
+                    type: filetype
+                }, value.name).catch(function(err) {});
+
+                break;
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+                filetype = 'image/' + extension;
+                //filedata = value.asBinary();
+                putBlobInDB(dbname, value.name, filetype, value.asArrayBuffer());
+                break;
+            case 'mp4':
+                filetype = 'video/' + extension;
+                //filedata = value.asBinary();
+                putBlobInDB(dbname, value.name, filetype, value.asArrayBuffer());
+                break;
+        }
+    });
+}
+
+function putBlobInDB(dbname, name, type, buffer, thenf) {
     blobUtil.arrayBufferToBlob(buffer, type).then(function(blob) {
         dbname.put({
             _id: name,
@@ -606,7 +678,7 @@ function putBlobInDB(dbname, name, type, buffer) {
                 }
             }
         });
-    });
+    }).then(thenf);
 }
 
 function initMap() {
@@ -782,6 +854,22 @@ function deleteDB() {
                     $("#dialogMessage-text").text($(document).localizandroid('getString', 'db_error'));
                     $("#dialogMessage").popup('open');
                });
+        }
+        if(DB_gcont!=null) {
+            DB_gcont.destroy(function(err, info) {
+                 if(!err) {
+                   console.log("Database " + dbname_gcon+ " deleted");
+                   //setLedIcon($(".status-led-gmap"), $(".status-text-gmap"), false);
+                   setLedIcon($(".status-led-gcontent"), $(".status-text-gcontent"), false);
+                   $(".status-text-rname").html($(document).localizandroid('getString', 'nothing'));
+               }
+               }).catch(function(error) {
+                    //alert("Could not delete DB: ", error);
+                    $("#dialogMessage-header").text($(document).localizandroid('getString', 'sync_error_title'));
+                    $("#dialogMessage-text").text($(document).localizandroid('getString', 'db_error'));
+                    $("#dialogMessage").popup('open');
+               });
+
         }
     }
 }
