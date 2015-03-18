@@ -82,3 +82,11 @@
 	top: 50%;
 	left: 50%;
 }
+
+@media (min-width:640px) {
+	#popupRoute,
+	#popupSync {
+			max-width: 50%;
+			left: 30%;
+	}
+}
