@@ -76,3 +76,9 @@
 	max-height: 20px;
 }
 
+#waypointInfoImgHeader {
+	max-width: 32px;
+	position: relative;
+	top: 50%;
+	left: 50%;
+}
