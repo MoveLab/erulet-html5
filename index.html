@@ -305,6 +305,10 @@
     <div data-role="popup" id="waypointHtmlPopup" data-overlay-theme="b" data-theme="b" data-dismissible="false">
         <div data-role="header" data-theme="a">
             <h1 class="localizable" data-lclstring="detail_highlight">Erulet</h1>
+
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <a href="#" data-rel="back" data-position-to="window" data-transition="pop" class="ui-btn ui-mini ui-btn-icon-right ui-corner-all ui-btn-icon-notext ui-icon-check"></a>
+            </div>
         </div>
         <div role="main" class="ui-content">
             <div id="waypointHtmlPopup_loading"><img src="images/ajax-loader.gif" style="max-width:32px;"><p class="localizable" data-lclstring="working"></p></div>
@@ -325,7 +329,9 @@
             <b id="waypointInfoLong" class="localizable" data-lclstring="longitude"></b><p id="waypointInfoLongField"></p>
             <b id="waypointInfoAlt" class="localizable" data-lclstring="altitude"></b><p id="waypointInfoAltField"></p>
             <b id="waypointInfoRating" class="localizable" data-lclstring="your_rating"></b><div class="rateit"></div>
-            <a href="#" id="waypointInfoButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b localizable" data-lclstring="yes" data-rel="back">OK</a>
+
+            <a href="#" id="waypointInfoButton" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-check" data-rel="back"></a>
+
         </div>
     </div>
 
