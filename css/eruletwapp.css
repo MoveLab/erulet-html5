@@ -61,6 +61,7 @@
 /* Downloads popup styling */
 .dloadPopup .ui-body {
 	font-size: 12px;
+	min-width: 150px;
 }
 .dloadPopup .ui-block-b {
 	float: left;
